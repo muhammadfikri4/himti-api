@@ -1,5 +1,5 @@
-import { RoleModel } from 'config/model/role'
 import dotenv from 'dotenv'
+import { RoleModel } from '../../config/model/role'
 import { MESSAGE_CODE } from '../../utils/ErrorCode'
 import { AppError } from '../../utils/HttpError'
 import { MESSAGES } from '../../utils/Messages'

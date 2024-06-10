@@ -3,7 +3,7 @@ import { MESSAGE_CODE } from "../../utils/ErrorCode";
 import { HandleResponse } from "../../utils/HandleResponse";
 import { HttpError } from "../../utils/HttpError";
 import { MESSAGES } from "../../utils/Messages";
-import { createDosenService, deleteDosenService, getDosenService, updateDosenService } from "../dosen/dosenService";
+import { createDosenService, deleteDosenService, getDosenService, updateDosenService } from "./dosenService";
 
 export const createDosenController = async (req: Request, res: Response) => {
 
