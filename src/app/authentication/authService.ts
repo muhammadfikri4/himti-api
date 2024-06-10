@@ -19,7 +19,7 @@ export const registerService = async ({ email, name, password }: RegisterAuthBod
 
     const user = await UserModel.findOne({ email })
     if (user) {
-        return AppError(MESSAGES.ERROR.ALREADY.USER.ACCOUNT, 400, MESSAGE_CODE.BAD_REQUEST)
+        return AppError(MESSAGES.ERROR.ALREADY.USER, 400, MESSAGE_CODE.BAD_REQUEST)
     }
 
     if (password.length < 8) {
@@ -38,12 +38,12 @@ export const loginService = async (
 
     const user = await UserModel.findOne({ email })
     if (!user) {
-        return AppError(MESSAGES.ERROR.NOT_FOUND.USER.ACCOUNT, 404, "NOT FOUND")
+        return AppError(MESSAGES.ERROR.NOT_FOUND.USER.ACCOUNT, 404, MESSAGE_CODE.NOT_FOUND)
     }
 
     const match = await bcrypt.compare(password, user.password)
     if (!match) {
-        return AppError(MESSAGES.ERROR.INVALID.USER.PASSWORD, 401, "NOT FOUND")
+        return AppError(MESSAGES.ERROR.INVALID.USER.PASSWORD, 401, MESSAGE_CODE.UNAUTHORIZED)
     }
 
     const token = jwt.sign({

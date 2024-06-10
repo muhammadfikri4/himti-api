@@ -6,7 +6,7 @@ import { ENV } from './libs'
 import routes from './routes'
 
 const app = express()
-const port = ENV.PORT || 5000
+const port = ENV.PORT || 8000
 dotenv.config()
 dbconect()
 app.use(cookieParser())
@@ -15,7 +15,7 @@ app.use(express.json())
 app.use(routes)
 
 app.listen(port, () => {
-    console.log("Run at port 3000🚀")
+    console.log(`Server running on port ${port}`)
 })
 
 export default app

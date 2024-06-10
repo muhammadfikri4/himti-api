@@ -12,12 +12,6 @@
     "skipLibCheck": true,
     "incremental": true,
     "tsBuildInfoFile": "./dist/.tsbuildinfo",
-    "paths": {
-      "@app/*": ["app/*"],
-      "@model/*": ["config/model/*"],
-      "@utils/*": ["utils/*"],
-      "@interface/*": ["interface/*"]
-    }
   },
   "include": ["src"]
 }

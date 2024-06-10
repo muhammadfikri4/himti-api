@@ -1,5 +1,5 @@
-import { MESSAGE_CODE } from "@utils/ErrorCode";
 import { type Request, type Response } from "express";
+import { MESSAGE_CODE } from "../../utils/ErrorCode";
 import { HandleResponse } from "../../utils/HandleResponse";
 import { HttpError } from "../../utils/HttpError";
 import { MESSAGES } from "../../utils/Messages";
@@ -11,15 +11,15 @@ export const registerController = async (req: Request, res: Response) => {
     const { name, email, password } = req.body
 
     if (!email) {
-        return HandleResponse(res, 404, MESSAGE_CODE.NOT_FOUND, MESSAGES.ERROR.NOT_FOUND.USER.EMAIL)
+        return HandleResponse(res, 404, MESSAGE_CODE.NOT_FOUND, MESSAGES.ERROR.REQUIRED.EMAIL)
     }
 
     if (!password) {
-        return HandleResponse(res, 404, MESSAGE_CODE.NOT_FOUND, MESSAGES.ERROR.NOT_FOUND.USER.PASSWORD)
+        return HandleResponse(res, 404, MESSAGE_CODE.NOT_FOUND, MESSAGES.ERROR.REQUIRED.PASSWORD)
     }
 
     if (!name) {
-        return HandleResponse(res, 404, MESSAGE_CODE.NOT_FOUND, MESSAGES.ERROR.NOT_FOUND.USER.NAME)
+        return HandleResponse(res, 404, MESSAGE_CODE.NOT_FOUND, MESSAGES.ERROR.REQUIRED.NAME)
     }
     const register = await registerService({ name, email, password });
 
@@ -33,11 +33,11 @@ export const loginController = async (req: Request, res: Response) => {
     const { email, password } = req.body
 
     if (!email) {
-        return HandleResponse(res, 404, MESSAGE_CODE.NOT_FOUND, MESSAGES.ERROR.NOT_FOUND.USER.EMAIL)
+        return HandleResponse(res, 404, MESSAGE_CODE.NOT_FOUND, MESSAGES.ERROR.REQUIRED.EMAIL)
     }
 
     if (!password) {
-        return HandleResponse(res, 404, MESSAGE_CODE.NOT_FOUND, MESSAGES.ERROR.NOT_FOUND.USER.PASSWORD)
+        return HandleResponse(res, 404, MESSAGE_CODE.NOT_FOUND, MESSAGES.ERROR.REQUIRED.PASSWORD)
     }
 
     const login = await loginService({ email, password });
