@@ -32,7 +32,7 @@ export const createDosenService = async ({ email, isActive, mataKuliah, name, ni
 
 }
 
-export const getDosenService = async ({ name }: SearchDosenTypes) => {
+export const getDosenService = async ({ name, page = 1, perPage = 10 }: SearchDosenTypes) => {
 
     if (name) {
         const dosens = await DosenModel.find() as DosenModelTypes[]
@@ -48,8 +48,18 @@ export const getDosenService = async ({ name }: SearchDosenTypes) => {
     }
     const dosen = await DosenModel.find<DosenModelTypes>()
 
-    const result = dosenMapper(dosen)
-    return result
+    const total = dosen.length
+
+    // Hitung total halaman
+    const totalPages = Math.ceil(total / perPage);
+
+    // Batasi jumlah dokumen yang diambil pada satu halaman
+    const res = await DosenModel.find<DosenModelTypes>()
+        .limit(perPage)
+        .skip((page - 1) * perPage);
+    const result = dosenMapper(res)
+    const response = { result, meta: { page, perPage, total, totalPages } }
+    return response
 }
 
 export const deleteDosenService = async ({ id }: DosenBodyDTO) => {

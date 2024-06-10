@@ -14,5 +14,9 @@ export interface DosenModelTypes {
 export interface SearchDosenTypes {
     name?: string,
     email?: string,
-    nidn?: number
+    nidn?: number,
+    page?: number,
+    perPage?: number
+    totalData?: number,
+    totalPage?: number
 }

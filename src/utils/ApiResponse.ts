@@ -1,10 +1,11 @@
 import { ResponseInterface } from "../interface/ResponseInterface";
 
-export function ApiResponse<Res = unknown>({ data, status, message, code }: ResponseInterface<Res>) {
+export function ApiResponse<Res = unknown>({ data, status, message, code, meta }: ResponseInterface<Res>) {
     return {
         status,
         code,
         message,
-        data
+        data,
+        meta
     }
 }

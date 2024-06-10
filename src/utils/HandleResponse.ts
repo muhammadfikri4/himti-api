@@ -1,4 +1,5 @@
 import { type Response } from 'express'
+import { ResponseInterface } from 'interface/ResponseInterface'
 import { ApiResponse } from './ApiResponse'
 
 export function HandleResponse<Res = unknown>(
@@ -6,7 +7,8 @@ export function HandleResponse<Res = unknown>(
     status: number,
     code: string,
     message: string,
-    data?: Res
+    data?: Res,
+    meta?: ResponseInterface['meta']
 ) {
-    return res.status(status).json(ApiResponse<Res>({ status, message, data, code }))
+    return res.status(status).json(ApiResponse<Res>({ status, message, data, code, meta }))
 }
