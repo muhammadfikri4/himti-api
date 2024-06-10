@@ -10,7 +10,7 @@ export const createAngkatanController = async (req: Request, res: Response) => {
     const { angkatan, isActive } = req.body
 
     if (!angkatan) {
-        return HandleResponse(res, 404, MESSAGE_CODE.NOT_FOUND, MESSAGES.ERROR.REQUIRED.ROLE_NAME)
+        return HandleResponse(res, 400, MESSAGE_CODE.BAD_REQUEST, MESSAGES.ERROR.REQUIRED.ROLE_NAME)
     }
 
     const angkatanCreation = await createAngkatanService({ angkatan, isActive });
@@ -47,6 +47,10 @@ export const deleteAngkatanController = async (req: Request, res: Response) => {
 export const updateAngkatanController = async (req: Request, res: Response) => {
     const { id } = req.params;
     const { angkatan, isActive } = req.body
+
+    if (!angkatan) {
+        return HandleResponse(res, 404, MESSAGE_CODE.NOT_FOUND, MESSAGES.ERROR.REQUIRED.ANGKATAN_NAME)
+    }
 
     const updateAngkatan = await updateAngkatanService({ id, angkatan, isActive });
     if ((updateAngkatan as HttpError)?.message) {

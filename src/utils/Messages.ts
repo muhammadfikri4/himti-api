@@ -4,7 +4,8 @@ export const MESSAGES = {
             ACCOUNT: "User created successfully"
         },
         ROLE: "Role created successfully",
-        ANGKATAN: "Angkatan created successfully"
+        ANGKATAN: "Angkatan created successfully",
+        DOSEN: "Dosen created successfully"
     },
     ERROR: {
         NOT_FOUND: {
@@ -12,18 +13,28 @@ export const MESSAGES = {
                 ACCOUNT: "User not found",
 
             },
-            ANGKATAN: "Angkatan not found"
+            ANGKATAN: "Angkatan not found",
+            ROLE: "Role not found",
+            DOSEN: "Dosen not found"
         },
         ALREADY: {
+            GLOBAL: {
+                EMAIL: "Email is already exist",
+                NIDN: "NIDN is already exist"
+            },
             USER: "User already exist",
             ROLE: "Role is already exist",
-            ANGKATAN: "Angkatan is already exist"
+            ANGKATAN: "Angkatan is already exist",
+            DOSEN: "Dosen is already exist"
         },
         INVALID: {
+            GLOBAL: {
+                EMAIL: "Email is invalid"
+            },
             USER: {
                 PASSWORD: "Password is wrong",
                 PASSWORD_LENGTH: "Password must be at least 8 characters",
-                EMAIL: "Email is invalid"
+
             },
             ANGKATAN: "Angkatan must be a number",
             ID: "ID is invalid"
@@ -36,7 +47,8 @@ export const MESSAGES = {
             PASSWORD: "Password is required",
             NAME: "Name is required",
             ROLE_NAME: "Role Name is required",
-            ANGKATAN_NAME: "Angkatan Name is required"
+            ANGKATAN_NAME: "Angkatan Name is required",
+            NIDN: "NIDN is required"
         }
     },
     SUCCESS: {
@@ -45,6 +57,11 @@ export const MESSAGES = {
             GET: "Success to fetch angkatan",
             DELETE: "Success to delete angkatan",
             UPDATE: "Success to update angkatan"
+        },
+        DOSEN: {
+            GET: "Success to fetch dosen",
+            DELETE: "Success to delete dosen",
+            UPDATE: "Success to update dosen"
         }
     }
 }

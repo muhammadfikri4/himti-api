@@ -14,7 +14,7 @@ dotenv.config()
 export const registerService = async ({ email, name, password }: RegisterAuthBodyDTO) => {
 
     if (!REGEX.email.test(email)) {
-        return AppError(MESSAGES.ERROR.INVALID.USER.EMAIL, 400, MESSAGE_CODE.BAD_REQUEST)
+        return AppError(MESSAGES.ERROR.INVALID.GLOBAL.EMAIL, 400, MESSAGE_CODE.BAD_REQUEST)
     }
 
     const user = await UserModel.findOne({ email })
