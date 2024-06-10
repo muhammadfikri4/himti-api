@@ -5,7 +5,8 @@ export interface DosenModelTypes {
     name: string,
     email: string,
     numberPhone: number,
-    mataKuliah?: string
+    mataKuliah?: string,
+    isActive: boolean,
     createdAt: Date,
     updatedAt: Date
 }

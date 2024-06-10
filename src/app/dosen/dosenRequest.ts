@@ -8,7 +8,10 @@ export const dosenMapper = (dosens: DosenModelTypes[]) => {
             name: dosen.name,
             email: dosen.email,
             numberPhone: dosen.numberPhone,
-            mataKuliah: dosen.mataKuliah
+            mataKuliah: dosen.mataKuliah,
+            isActive: dosen.isActive,
+            createdAt: dosen.createdAt,
+            updatedAt: dosen.updatedAt
 
         }
     })
