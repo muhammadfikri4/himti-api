@@ -1,4 +1,5 @@
 export interface AngkatanBodyDTO {
-    angkatan: string
+    id?: string
+    angkatan?: string
     isActive?: boolean
 }

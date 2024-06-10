@@ -11,7 +11,8 @@ export const MESSAGES = {
             USER: {
                 ACCOUNT: "User not found",
 
-            }
+            },
+            ANGKATAN: "Angkatan not found"
         },
         ALREADY: {
             USER: "User already exist",
@@ -24,7 +25,8 @@ export const MESSAGES = {
                 PASSWORD_LENGTH: "Password must be at least 8 characters",
                 EMAIL: "Email is invalid"
             },
-            ANGKATAN: "Angkatan must be a number"
+            ANGKATAN: "Angkatan must be a number",
+            ID: "ID is invalid"
         },
         UNAUTHORIZED: {
             AUTH: "If you are not logged in, please log in first"
@@ -38,6 +40,11 @@ export const MESSAGES = {
         }
     },
     SUCCESS: {
-        USER: "User logged in successfully"
+        USER: "User logged in successfully",
+        ANGKATAN: {
+            GET: "Success to fetch angkatan",
+            DELETE: "Success to delete angkatan",
+            UPDATE: "Success to update angkatan"
+        }
     }
 }
