@@ -60,6 +60,7 @@ export const getDosenService = async ({ name, page = 1, perPage = 10 }: SearchDo
         .limit(perPage)
         .skip((page - 1) * perPage);
     const result = dosenMapper(res)
+
     const response = { result, meta: { page, perPage, totalData, totalPages } }
     return response
 }
