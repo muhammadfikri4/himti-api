@@ -1,6 +1,7 @@
+import { ObjectId } from "mongoose"
 
 export interface DosenModelTypes {
-    _id: string
+    _id: ObjectId
     nidn: number,
     name: string,
     email: string,

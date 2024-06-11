@@ -35,30 +35,38 @@ export const createDosenService = async ({ email, isActive, mataKuliah, name, ni
 export const getDosenService = async ({ name, page = 1, perPage = 10 }: SearchDosenTypes) => {
 
     if (name) {
-        const dosens = await DosenModel.find() as DosenModelTypes[]
-        const filtering = dosens?.filter((item) => {
-            const lowerTitle = item.name?.toLowerCase()
 
-            return lowerTitle?.includes(name?.toLowerCase())
-        })
-        const result = dosenMapper(filtering)
+        const allDosen = await DosenModel.find({ name: new RegExp(name, 'i') }) as DosenModelTypes[];
+        const dosens = await DosenModel.find({ name: new RegExp(name, 'i') }).limit(perPage)
+            .skip((page - 1) * perPage) as unknown as DosenModelTypes[]
+        const totalData = dosens.length
 
-        return result
+        // Hitung total halaman
+        const totalPages = Math.ceil(totalData / perPage);
+
+        // Batasi jumlah dokumen yang diambil pada satu halaman
+        const res = await DosenModel.find<DosenModelTypes>()
+            .limit(perPage)
+            .skip((page - 1) * perPage);
+
+        const result = dosenMapper(dosens)
+
+        return { result, meta: { page, perPage, totalData, totalPages } }
 
     }
     const dosen = await DosenModel.find<DosenModelTypes>()
 
-    const total = dosen.length
+    const totalData = dosen.length
 
     // Hitung total halaman
-    const totalPages = Math.ceil(total / perPage);
+    const totalPages = Math.ceil(totalData / perPage);
 
     // Batasi jumlah dokumen yang diambil pada satu halaman
     const res = await DosenModel.find<DosenModelTypes>()
         .limit(perPage)
         .skip((page - 1) * perPage);
     const result = dosenMapper(res)
-    const response = { result, meta: { page, perPage, total, totalPages } }
+    const response = { result, meta: { page, perPage, totalData, totalPages } }
     return response
 }
 
