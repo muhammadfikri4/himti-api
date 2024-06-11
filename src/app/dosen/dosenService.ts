@@ -1,5 +1,6 @@
 import dotenv from 'dotenv'
 import mongoose from 'mongoose'
+import { Meta } from 'utils/Meta'
 import { DosenModel } from '../../config/model/dosen'
 import { MESSAGE_CODE } from '../../utils/ErrorCode'
 import { AppError } from '../../utils/HttpError'
@@ -36,7 +37,12 @@ export const getDosenService = async ({ name, page = 1, perPage = 10 }: SearchDo
 
     if (name) {
 
-        const dosens = await DosenModel.find({ name: new RegExp(name, 'i') }).limit(perPage)
+        const dosens = await DosenModel.find({
+            $where: function () {
+                return this.name.includes(name)
+
+            }
+        }).limit(perPage)
             .skip((page - 1) * perPage) as unknown as DosenModelTypes[]
         const totalData = dosens.length
 
@@ -52,16 +58,13 @@ export const getDosenService = async ({ name, page = 1, perPage = 10 }: SearchDo
 
     const totalData = dosen.length
 
-    // Hitung total halaman
-    const totalPages = Math.ceil(totalData / perPage);
-
     // Batasi jumlah dokumen yang diambil pada satu halaman
     const res = await DosenModel.find<DosenModelTypes>()
         .limit(perPage)
         .skip((page - 1) * perPage);
     const result = dosenMapper(res)
 
-    const response = { result, meta: { page, perPage, totalData, totalPages } }
+    const response = { result, meta: Meta(page, perPage, totalData) }
     return response
 }
 
@@ -70,10 +73,10 @@ export const deleteDosenService = async ({ id }: DosenBodyDTO) => {
     if (!mongoose.Types.ObjectId.isValid(id as string)) {
         return AppError(MESSAGES.ERROR.INVALID.ID, 400, MESSAGE_CODE.BAD_REQUEST);
     }
-    const matchAngkatan = await DosenModel.findOne({ _id: id })
+    const matchDosen = await DosenModel.findOne({ _id: id })
 
-    if (!matchAngkatan) {
-        return AppError(MESSAGES.ERROR.NOT_FOUND.ANGKATAN, 404, MESSAGE_CODE.NOT_FOUND)
+    if (!matchDosen) {
+        return AppError(MESSAGES.ERROR.NOT_FOUND.DOSEN, 404, MESSAGE_CODE.NOT_FOUND)
     }
 
     const deleteAngkatan = await DosenModel.deleteOne({ _id: id })
@@ -84,10 +87,10 @@ export const updateDosenService = async ({ id, name, isActive, email, mataKuliah
     if (!mongoose.Types.ObjectId.isValid(id as string)) {
         return AppError(MESSAGES.ERROR.INVALID.ID, 400, MESSAGE_CODE.BAD_REQUEST);
     }
-    const matchAngkatan = await DosenModel.findOne({ _id: id })
+    const matchDosen = await DosenModel.findOne({ _id: id })
 
-    if (!matchAngkatan) {
-        return AppError(MESSAGES.ERROR.NOT_FOUND.ANGKATAN, 404, MESSAGE_CODE.NOT_FOUND)
+    if (!matchDosen) {
+        return AppError(MESSAGES.ERROR.NOT_FOUND.DOSEN, 404, MESSAGE_CODE.NOT_FOUND)
     }
 
     const deleteAngkatan = await DosenModel.updateOne(
