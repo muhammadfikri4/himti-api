@@ -5,6 +5,6 @@ const route = Router()
 
 route.post("/register", registerController)
 
-route.get("/login", loginController)
+route.post("/login", loginController)
 
 export default route

@@ -5,7 +5,7 @@ import { MESSAGE_CODE } from '../../utils/ErrorCode'
 import { AppError } from '../../utils/HttpError'
 import { MESSAGES } from '../../utils/Messages'
 import { AngkatanBodyDTO } from './angkatanDTO'
-import { angkatanMapper } from './angkatanRequest'
+import { angkatanMapper } from './angkatanResponse'
 import { AngkatanModelTypes, SearchAngkatanTypes } from './angkatanTypes'
 
 dotenv.config()

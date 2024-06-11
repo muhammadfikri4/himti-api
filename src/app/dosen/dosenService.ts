@@ -6,7 +6,7 @@ import { AppError } from '../../utils/HttpError'
 import { MESSAGES } from '../../utils/Messages'
 import { REGEX } from '../../utils/Regex'
 import { DosenBodyDTO } from './dosenDTO'
-import { dosenMapper } from './dosenRequest'
+import { dosenMapper } from './dosenResponse'
 import { DosenModelTypes, SearchDosenTypes } from './dosenTypes'
 
 dotenv.config();
@@ -36,18 +36,12 @@ export const getDosenService = async ({ name, page = 1, perPage = 10 }: SearchDo
 
     if (name) {
 
-        const allDosen = await DosenModel.find({ name: new RegExp(name, 'i') }) as DosenModelTypes[];
         const dosens = await DosenModel.find({ name: new RegExp(name, 'i') }).limit(perPage)
             .skip((page - 1) * perPage) as unknown as DosenModelTypes[]
         const totalData = dosens.length
 
         // Hitung total halaman
         const totalPages = Math.ceil(totalData / perPage);
-
-        // Batasi jumlah dokumen yang diambil pada satu halaman
-        const res = await DosenModel.find<DosenModelTypes>()
-            .limit(perPage)
-            .skip((page - 1) * perPage);
 
         const result = dosenMapper(dosens)
 

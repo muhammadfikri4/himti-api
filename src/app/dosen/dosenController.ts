@@ -29,9 +29,9 @@ export const createDosenController = async (req: Request, res: Response) => {
 
 export const getDosenController = async (req: Request, res: Response) => {
 
-    const { name } = req.query
+    const { name, page, perPage } = req.query
 
-    const dosen = await getDosenService({ name: name as string })
+    const dosen = await getDosenService({ name: name as string, page: Number(page), perPage: Number(perPage) });
 
     if (!dosen) {
         return HandleResponse(res, 404, MESSAGE_CODE.NOT_FOUND, MESSAGES.ERROR.NOT_FOUND.DOSEN, dosen)
