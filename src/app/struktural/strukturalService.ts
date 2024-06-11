@@ -52,8 +52,8 @@ export const createStrukturalService = async ({ name, nim, email, angkatanId, ja
     }
 
     const image = req.file?.path.replace("src/assets/", "")
-    console.log(image)
-    const imageUrl = `${req.protocol}://${req.get("host")}/${image}`
+
+    const imageUrl = `${req.protocol}${req.subdomains}://${req.get("host")}/${image}`
 
     const newStruktural = await StrukturalModel.create({ name, email, isActive, nim, angkatanId, facebook, instagram, jabatan, linkedin, twitter, image, imageUrl })
     return newStruktural
