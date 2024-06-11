@@ -5,7 +5,8 @@ export const MESSAGES = {
         },
         ROLE: "Role created successfully",
         ANGKATAN: "Angkatan created successfully",
-        DOSEN: "Dosen created successfully"
+        DOSEN: "Dosen created successfully",
+        STRUKTURAL: "Struktural created successfully"
     },
     ERROR: {
         NOT_FOUND: {
@@ -13,14 +14,19 @@ export const MESSAGES = {
                 ACCOUNT: "User not found",
 
             },
-            ANGKATAN: "Angkatan not found",
+            ANGKATAN: {
+                ID: "Angkatan ID not found",
+                NAME: "Angkatan not found"
+            },
             ROLE: "Role not found",
-            DOSEN: "Dosen not found"
+            DOSEN: "Dosen not found",
+            STRUKTURAL: "Struktural not found"
         },
         ALREADY: {
             GLOBAL: {
                 EMAIL: "Email is already exist",
-                NIDN: "NIDN is already exist"
+                NIDN: "NIDN is already exist",
+                NIM: "NIM is already exist"
             },
             USER: "User already exist",
             ROLE: "Role is already exist",
@@ -48,7 +54,9 @@ export const MESSAGES = {
             NAME: "Name is required",
             ROLE_NAME: "Role Name is required",
             ANGKATAN_NAME: "Angkatan Name is required",
-            NIDN: "NIDN is required"
+            NIDN: "NIDN is required",
+            NIM: "NIM is required",
+            ANGKATAN_ID: "Angkatan Id is required"
         }
     },
     SUCCESS: {
@@ -62,6 +70,11 @@ export const MESSAGES = {
             GET: "Success to fetch dosen",
             DELETE: "Success to delete dosen",
             UPDATE: "Success to update dosen"
+        },
+        STRUKTURAL: {
+            GET: "Success to fetch Struktural",
+            DELETE: "Success to delete Struktural",
+            UPDATE: "Success to update Struktural"
         }
     }
 }

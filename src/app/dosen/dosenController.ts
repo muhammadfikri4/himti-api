@@ -1,4 +1,6 @@
+import { Result } from "app/struktural/strukturalTypes";
 import { type Request, type Response } from "express";
+import { MetaResponse } from "interface/ResponseInterface";
 import { MESSAGE_CODE } from "../../utils/ErrorCode";
 import { HandleResponse } from "../../utils/HandleResponse";
 import { HttpError } from "../../utils/HttpError";
@@ -6,7 +8,6 @@ import { MESSAGES } from "../../utils/Messages";
 import { createDosenService, deleteDosenService, getDosenService, updateDosenService } from "./dosenService";
 import { DosenModelTypes } from "./dosenTypes";
 
-interface Result { result: DosenModelTypes[], meta: { page: number, perPage: number, total: number, totalPages: number } }
 
 export const createDosenController = async (req: Request, res: Response) => {
 
@@ -36,7 +37,7 @@ export const getDosenController = async (req: Request, res: Response) => {
     if (!dosen) {
         return HandleResponse(res, 404, MESSAGE_CODE.NOT_FOUND, MESSAGES.ERROR.NOT_FOUND.DOSEN, dosen)
     }
-    HandleResponse<DosenModelTypes[]>(res, 200, MESSAGE_CODE.SUCCESS, MESSAGES.SUCCESS.DOSEN.GET, (dosen as unknown as Result)?.result, (dosen as unknown as Result)?.meta)
+    HandleResponse<DosenModelTypes[]>(res, 200, MESSAGE_CODE.SUCCESS, MESSAGES.SUCCESS.DOSEN.GET, (dosen as unknown as Result<DosenModelTypes[]>)?.result, (dosen as unknown as Result<DosenModelTypes[]>)?.meta as MetaResponse)
 
 }
 

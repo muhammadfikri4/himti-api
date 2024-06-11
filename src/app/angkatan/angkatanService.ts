@@ -60,7 +60,7 @@ export const deleteAngkatanService = async ({ id }: AngkatanBodyDTO) => {
     const matchAngkatan = await AngkatanModel.findOne({ _id: id })
 
     if (!matchAngkatan) {
-        return AppError(MESSAGES.ERROR.NOT_FOUND.ANGKATAN, 404, MESSAGE_CODE.NOT_FOUND)
+        return AppError(MESSAGES.ERROR.NOT_FOUND.ANGKATAN.NAME, 404, MESSAGE_CODE.NOT_FOUND)
     }
 
     const deleteAngkatan = await AngkatanModel.deleteOne({ _id: id })
@@ -74,7 +74,7 @@ export const updateAngkatanService = async ({ id, angkatan, isActive }: Angkatan
     const matchAngkatan = await AngkatanModel.findOne({ _id: id })
 
     if (!matchAngkatan) {
-        return AppError(MESSAGES.ERROR.NOT_FOUND.ANGKATAN, 404, MESSAGE_CODE.NOT_FOUND)
+        return AppError(MESSAGES.ERROR.NOT_FOUND.ANGKATAN.NAME, 404, MESSAGE_CODE.NOT_FOUND)
     }
 
     const deleteAngkatan = await AngkatanModel.updateOne(
