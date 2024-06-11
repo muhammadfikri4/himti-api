@@ -28,7 +28,7 @@ export const getAngkatanController = async (req: Request, res: Response) => {
     const angkatan = await getAngkatanService({ search: search as string })
 
     if (!angkatan.length) {
-        return HandleResponse(res, 404, MESSAGE_CODE.NOT_FOUND, MESSAGES.ERROR.NOT_FOUND.ANGKATAN, angkatan)
+        return HandleResponse(res, 404, MESSAGE_CODE.NOT_FOUND, MESSAGES.ERROR.NOT_FOUND.ANGKATAN.NAME, angkatan)
     }
     HandleResponse(res, 200, MESSAGE_CODE.SUCCESS, MESSAGES.SUCCESS.ANGKATAN.GET, angkatan)
 
