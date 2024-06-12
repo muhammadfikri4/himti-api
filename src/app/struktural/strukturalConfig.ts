@@ -9,6 +9,7 @@ const storage = multer.diskStorage({
     },
 });
 
+
 const fileFilter = async (req: Request, file: Express.Multer.File, cb: FileFilterCallback) => {
 
     if (
@@ -23,5 +24,6 @@ const fileFilter = async (req: Request, file: Express.Multer.File, cb: FileFilte
 };
 
 const upload = multer({ storage, fileFilter });
+// const upload = multer({ storage: multer.memoryStorage() });
 
 export { fileFilter, storage, upload };

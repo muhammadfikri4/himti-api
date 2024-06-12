@@ -15,10 +15,10 @@ export const createStrukturalController = async (req: Request, res: Response, ne
 
     const strukturalCreation = await createStrukturalService({ email, isActive, jabatan, angkatanId, facebook, instagram, linkedin, name, twitter, nim }, req as Request);
     if ((strukturalCreation as HttpError)?.message) {
+        console.log("tes")
         return HandleResponse(res, (strukturalCreation as HttpError).statusCode, (strukturalCreation as HttpError).code, (strukturalCreation as HttpError).message)
     }
-
-    HandleResponse(res, 201, MESSAGE_CODE.SUCCESS, MESSAGES.CREATED.STRUKTURAL)
+    return HandleResponse(res, 201, MESSAGE_CODE.SUCCESS, MESSAGES.CREATED.STRUKTURAL)
 }
 
 export const getStrukturalController = async (req: Request, res: Response) => {

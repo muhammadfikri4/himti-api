@@ -1,3 +1,4 @@
+import bodyParser from 'body-parser'
 import cookieParser from 'cookie-parser'
 import dotenv from 'dotenv'
 import express from 'express'
@@ -11,6 +12,7 @@ const port = ENV.PORT || 8000
 dotenv.config()
 dbconect()
 app.use(cookieParser())
+app.use(bodyParser.json())
 app.use(express.json())
 app.use("/images", express.static(path.join(__dirname, "../src/assets/images")));
 // app.use(upload.single("image"))

@@ -15,7 +15,6 @@ import { SearchStrukturalTypes, StrukturalModelTypes } from './strukturalTypes'
 dotenv.config();
 
 export const createStrukturalService = async ({ name, nim, email, angkatanId, jabatan, isActive, facebook, instagram, linkedin, twitter }: StrukturalBodyDTO, req: Request) => {
-
     if (!nim) {
 
         return AppError(MESSAGE_CODE.BAD_REQUEST, 400, MESSAGES.ERROR.REQUIRED.NIM)
@@ -31,7 +30,7 @@ export const createStrukturalService = async ({ name, nim, email, angkatanId, ja
     const matchNIM = await StrukturalModel.findOne({ nim })
     if (matchNIM) {
 
-        return AppError(MESSAGES.ERROR.ALREADY.GLOBAL.NIDN, 400, MESSAGE_CODE.BAD_REQUEST)
+        return AppError(MESSAGES.ERROR.ALREADY.GLOBAL.NIM, 400, MESSAGE_CODE.BAD_REQUEST)
     }
     // const matchEmail = await StrukturalModel.findOne({ email })
     // if (matchEmail) {
@@ -48,16 +47,16 @@ export const createStrukturalService = async ({ name, nim, email, angkatanId, ja
 
     if (!matchAngkatan) {
 
-        return AppError(MESSAGES.ERROR.NOT_FOUND.ANGKATAN.ID, 404, MESSAGE_CODE.NOT_FOUND)
+        return AppError(MESSAGES.ERROR.NOT_FOUND.ANGKATAN.ID, 404, MESSAGE_CODE.NOT_FOUND);
     }
 
     const image = req.file?.path.replace("src/assets/", "")
-
+    console.log(req.file?.destination)
+    console.log(req.file)
     const imageUrl = `${req.protocol}${req.subdomains}://${req.get("host")}/${image}`
-
-    const newStruktural = await StrukturalModel.create({ name, email, isActive, nim, angkatanId, facebook, instagram, jabatan, linkedin, twitter, image, imageUrl })
+    // const blob = await put(req.file?.originalname as string, req.file?.path as string, { contentType: req.file?.mimetype, token: ENV.BLOB_TOKEN as string, access: 'public' })
+    const newStruktural = await StrukturalModel.create({ name, email, isActive, nim, angkatanId, facebook, instagram, jabatan, linkedin, twitter, imageUrl })
     return newStruktural
-
 }
 
 export const getStrukturalService = async ({ name, page = 1, perPage = 10 }: SearchStrukturalTypes) => {
