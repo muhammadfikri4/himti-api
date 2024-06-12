@@ -1,29 +1,20 @@
-import { Request } from "express";
-import multer, { type FileFilterCallback } from "multer";
-const storage = multer.diskStorage({
-    destination: (req, file, callback) => {
-        callback(null, "src/assets/images/struktural");
-    },
-    filename: (req, file, callback) => {
-        callback(null, `${new Date().getTime()}_${file.originalname}`);
+import { v2 as cloudinary } from 'cloudinary';
+import multer from 'multer';
+import { CloudinaryStorage } from 'multer-storage-cloudinary';
+
+cloudinary.config({
+    cloud_name: 'dgciwba8m',
+    api_key: "872533227445899",
+    api_secret: "X5qKOS7MnFHDsfNs3jmMKl9wCw8"
+});
+
+// Konfigurasi Multer-Cloudinary Storage
+const storage = new CloudinaryStorage({
+    cloudinary: cloudinary,
+    params: {
+        public_id: () => `struktural/${+new Date()}`,
     },
 });
 
-
-const fileFilter = async (req: Request, file: Express.Multer.File, cb: FileFilterCallback) => {
-
-    if (
-        file.mimetype === "image/png" ||
-        file.mimetype === "image/jpg" ||
-        file.mimetype === "image/jpeg"
-    ) {
-        cb(null, true);
-    } else {
-        cb(null, false);
-    }
-};
-
-const upload = multer({ storage, fileFilter });
-// const upload = multer({ storage: multer.memoryStorage() });
-
-export { fileFilter, storage, upload };
+const upload = multer({ storage });
+export { upload };

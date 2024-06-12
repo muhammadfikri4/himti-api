@@ -50,12 +50,9 @@ export const createStrukturalService = async ({ name, nim, email, angkatanId, ja
         return AppError(MESSAGES.ERROR.NOT_FOUND.ANGKATAN.ID, 404, MESSAGE_CODE.NOT_FOUND);
     }
 
-    const image = req.file?.path.replace("src/assets/", "")
-    console.log(req.file?.destination)
-    console.log(req.file)
-    const imageUrl = `${req.protocol}${req.subdomains}://${req.get("host")}/${image}`
-    // const blob = await put(req.file?.originalname as string, req.file?.path as string, { contentType: req.file?.mimetype, token: ENV.BLOB_TOKEN as string, access: 'public' })
-    const newStruktural = await StrukturalModel.create({ name, email, isActive, nim, angkatanId, facebook, instagram, jabatan, linkedin, twitter, imageUrl })
+    const { path } = req.file as Express.Multer.File
+
+    const newStruktural = await StrukturalModel.create({ name, email, isActive, nim, angkatanId, facebook, instagram, jabatan, linkedin, twitter, imageUrl: path })
     return newStruktural
 }
 
