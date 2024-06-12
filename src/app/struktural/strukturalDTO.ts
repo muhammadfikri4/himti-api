@@ -6,6 +6,7 @@ export interface StrukturalBodyDTO {
     angkatanId?: number,
     jabatan?: string,
     image?: string,
+    imageUrl?: string,
     instagram?: string,
     facebook?: string,
     twitter?: string,

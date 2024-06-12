@@ -100,7 +100,7 @@ export const deleteStrukturalService = async ({ id }: StrukturalBodyDTO) => {
     const deleteAngkatan = await StrukturalModel.deleteOne({ _id: id })
     return deleteAngkatan;
 }
-export const updateStrukturalService = async ({ id, name, isActive, email, angkatanId, facebook, instagram, jabatan, linkedin, nim, twitter }: StrukturalBodyDTO) => {
+export const updateStrukturalService = async ({ id, name, isActive, email, angkatanId, facebook, instagram, jabatan, linkedin, nim, twitter, image }: StrukturalBodyDTO) => {
 
     if (!mongoose.Types.ObjectId.isValid(id as string)) {
         return AppError(MESSAGES.ERROR.INVALID.ID, 400, MESSAGE_CODE.BAD_REQUEST);
@@ -108,25 +108,28 @@ export const updateStrukturalService = async ({ id, name, isActive, email, angka
     const matchStruktural = await StrukturalModel.findOne({ _id: id })
 
     if (!matchStruktural) {
-        return AppError(MESSAGES.ERROR.NOT_FOUND.ANGKATAN.NAME, 404, MESSAGE_CODE.NOT_FOUND)
+        return AppError(MESSAGES.ERROR.NOT_FOUND.STRUKTURAL, 404, MESSAGE_CODE.NOT_FOUND)
     }
+    const updateFields: Partial<StrukturalBodyDTO> = {};
+
+    if (name !== undefined) updateFields.name = name;
+    if (isActive !== undefined) updateFields.isActive = isActive;
+    if (email !== undefined) updateFields.email = email;
+    if (angkatanId !== undefined) updateFields.angkatanId = angkatanId;
+    if (facebook !== undefined) updateFields.facebook = facebook;
+    if (instagram !== undefined) updateFields.instagram = instagram;
+    if (jabatan !== undefined) updateFields.jabatan = jabatan;
+    if (linkedin !== undefined) updateFields.linkedin = linkedin;
+    if (nim !== undefined) updateFields.nim = nim;
+    if (twitter !== undefined) updateFields.twitter = twitter;
+    if (image !== undefined) updateFields.imageUrl = image;
 
     const updateStruktural = await StrukturalModel.updateOne(
         { _id: id },
         {
-            $set: {
-                name,
-                isActive,
-                email,
-                angkatanId,
-                facebook,
-                instagram,
-                jabatan,
-                linkedin,
-                nim,
-                twitter
-            }
+            $set: updateFields
 
         })
+
     return updateStruktural;
 }
