@@ -11,6 +11,6 @@ route.post("/", upload.single("image"), createStrukturalController)
 // route.post("/", createStrukturalController)
 route.get("/", getStrukturalController)
 route.delete("/:id", deleteStrukturalController)
-route.put("/:id", updateStrukturalController)
+route.put("/:id", upload.single("image"), updateStrukturalController)
 
 export default route

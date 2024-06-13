@@ -48,14 +48,7 @@ export const updateStrukturalController = async (req: Request, res: Response) =>
     const { id } = req.params;
     const { email, isActive, jabatan, angkatanId, facebook, instagram, linkedin, name, twitter, nim } = req.body
 
-    if (!nim) {
-        return HandleResponse(res, 400, MESSAGE_CODE.BAD_REQUEST, MESSAGES.ERROR.REQUIRED.NIM)
-    }
-    if (!name) {
-        return HandleResponse(res, 400, MESSAGE_CODE.BAD_REQUEST, MESSAGES.ERROR.REQUIRED.NAME)
-    }
-
-    const updateStruktural = await updateStrukturalService({ id, email, isActive, name, nim, angkatanId, facebook, instagram, linkedin, jabatan, twitter });
+    const updateStruktural = await updateStrukturalService({ id, email, isActive, name, nim, angkatanId, facebook, instagram, linkedin, jabatan, twitter, image: req.file?.path });
     if ((updateStruktural as HttpError)?.message) {
         return HandleResponse(res, (updateStruktural as HttpError).statusCode, (updateStruktural as HttpError).code, (updateStruktural as HttpError).message)
     }

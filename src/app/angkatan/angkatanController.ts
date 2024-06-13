@@ -9,10 +9,6 @@ export const createAngkatanController = async (req: Request, res: Response) => {
 
     const { angkatan, isActive } = req.body
 
-    if (!angkatan) {
-        return HandleResponse(res, 400, MESSAGE_CODE.BAD_REQUEST, MESSAGES.ERROR.REQUIRED.ROLE_NAME)
-    }
-
     const angkatanCreation = await createAngkatanService({ angkatan, isActive });
 
     if ((angkatanCreation as HttpError)?.message) {
