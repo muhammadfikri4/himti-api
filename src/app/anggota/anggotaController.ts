@@ -15,7 +15,6 @@ export const createAnggotaController = async (req: Request, res: Response, next:
 
     const anggotaCreation = await createAnggotaService({ email, isActive, angkatanId, name, nim }, req as Request);
     if ((anggotaCreation as HttpError)?.message) {
-        console.log("tes")
         return HandleResponse(res, (anggotaCreation as HttpError).statusCode, (anggotaCreation as HttpError).code, (anggotaCreation as HttpError).message)
     }
     return HandleResponse(res, 201, MESSAGE_CODE.SUCCESS, MESSAGES.CREATED.ANGGOTA)

@@ -25,7 +25,7 @@ export const anggotaValidate = async ({ nim, name, email, angkatanId }: AnggotaB
     const matchNIM = await AnggotaModel.findOne({ nim })
     if (matchNIM) {
 
-        return AppError(MESSAGES.ERROR.ALREADY.GLOBAL.NIDN, 400, MESSAGE_CODE.BAD_REQUEST)
+        return AppError(MESSAGES.ERROR.ALREADY.GLOBAL.NIM, 400, MESSAGE_CODE.BAD_REQUEST)
     }
     const matchEmail = await AnggotaModel.findOne({ email })
     if (matchEmail) {
