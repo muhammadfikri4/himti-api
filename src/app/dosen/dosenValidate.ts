@@ -1,7 +1,7 @@
-import { MESSAGES } from "utils/Messages"
 import { DosenModel } from "../../config/model/dosen"
 import { MESSAGE_CODE } from "../../utils/ErrorCode"
 import { AppError } from "../../utils/HttpError"
+import { MESSAGES } from "../../utils/Messages"
 import { REGEX } from "../../utils/Regex"
 import { DosenBodyDTO } from "./dosenDTO"
 
