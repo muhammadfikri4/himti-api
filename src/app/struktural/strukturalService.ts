@@ -1,58 +1,28 @@
 import dotenv from 'dotenv'
 import { type Request } from 'express'
-import mongoose from 'mongoose'
-import { AngkatanModel } from '../../config/model/angkatan'
+import mongoose, { ObjectId } from 'mongoose'
 import { StrukturalModel } from '../../config/model/struktural'
 import { MESSAGE_CODE } from '../../utils/ErrorCode'
-import { AppError } from '../../utils/HttpError'
+import { AppError, HttpError } from '../../utils/HttpError'
 import { MESSAGES } from '../../utils/Messages'
 import { Meta } from '../../utils/Meta'
-import { REGEX } from '../../utils/Regex'
 import { StrukturalBodyDTO } from './strukturalDTO'
 import { strukturalMapper } from './strukturalResponse'
 import { SearchStrukturalTypes, StrukturalModelTypes } from './strukturalTypes'
+import { strukturalValidate } from './strukturalValidate'
 
 dotenv.config();
 
 export const createStrukturalService = async ({ name, nim, email, angkatanId, jabatan, isActive, facebook, instagram, linkedin, twitter }: StrukturalBodyDTO, req: Request) => {
-    if (!nim) {
 
-        return AppError(MESSAGE_CODE.BAD_REQUEST, 400, MESSAGES.ERROR.REQUIRED.NIM)
-    }
-    if (!name) {
-
-        return AppError(MESSAGE_CODE.BAD_REQUEST, 400, MESSAGES.ERROR.REQUIRED.NAME)
-    }
-    if (email && !REGEX.email.test(email as string)) {
-
-        return AppError(MESSAGES.ERROR.INVALID.GLOBAL.EMAIL, 400, MESSAGE_CODE.BAD_REQUEST)
-    }
-    const matchNIM = await StrukturalModel.findOne({ nim })
-    if (matchNIM) {
-
-        return AppError(MESSAGES.ERROR.ALREADY.GLOBAL.NIM, 400, MESSAGE_CODE.BAD_REQUEST)
-    }
-    // const matchEmail = await StrukturalModel.findOne({ email })
-    // if (matchEmail) {
-
-    //     return AppError(MESSAGES.ERROR.ALREADY.GLOBAL.EMAIL, 400, MESSAGE_CODE.BAD_REQUEST)
-    // }
-
-    if (!angkatanId) {
-
-        return AppError(MESSAGES.ERROR.REQUIRED.ANGKATAN_ID, 400, MESSAGE_CODE.BAD_REQUEST)
-    }
-
-    const matchAngkatan = await AngkatanModel.findOne({ _id: angkatanId })
-
-    if (!matchAngkatan) {
-
-        return AppError(MESSAGES.ERROR.NOT_FOUND.ANGKATAN.ID, 404, MESSAGE_CODE.NOT_FOUND);
+    const validate = await strukturalValidate({ name: name as string, email: email as string, nim: nim as string, angkatanId: angkatanId as ObjectId, image: req.file?.path, jabatan })
+    if ((validate as HttpError)?.message) {
+        return AppError((validate as HttpError).message, (validate as HttpError).statusCode, (validate as HttpError).code)
     }
 
     const { path } = req.file as Express.Multer.File
 
-    const newStruktural = await StrukturalModel.create({ name, email, isActive, nim, angkatanId, facebook, instagram, jabatan, linkedin, twitter, imageUrl: path })
+    const newStruktural = await StrukturalModel.create({ name, email, isActive, nim, angkatanId, facebook: facebook || null, instagram, jabatan, linkedin: linkedin || null, twitter: twitter || null, imageUrl: path })
     return newStruktural
 }
 
@@ -64,12 +34,9 @@ export const getStrukturalService = async ({ name, page = 1, perPage = 10 }: Sea
             .skip((page - 1) * perPage) as unknown as StrukturalModelTypes[]
         const totalData = dosens.length
 
-        // Hitung total halaman
-        const totalPages = Math.ceil(totalData / perPage);
-
         const result = await strukturalMapper(dosens)
 
-        return { result, meta: { page, perPage, totalData, totalPages } }
+        return { result, meta: Meta(page, perPage, totalData) }
 
     }
     const dosen = await StrukturalModel.find<StrukturalModelTypes>()

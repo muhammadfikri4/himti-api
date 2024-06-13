@@ -12,7 +12,9 @@ dotenv.config()
 
 export const createAngkatanService = async ({ angkatan, isActive }: AngkatanBodyDTO) => {
 
-
+    if (!angkatan) {
+        return AppError(MESSAGES.ERROR.REQUIRED.ANGKATAN_NAME, 400, MESSAGE_CODE.BAD_REQUEST)
+    }
     if (typeof angkatan !== 'number') {
         return AppError(MESSAGES.ERROR.INVALID.ANGKATAN, 400, MESSAGE_CODE.BAD_REQUEST)
     }

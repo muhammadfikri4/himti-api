@@ -13,13 +13,6 @@ export const createDosenController = async (req: Request, res: Response) => {
 
     const { nidn, name, email, numberPhone, mataKuliah, isActive } = req.body
 
-    if (!nidn) {
-        return HandleResponse(res, 400, MESSAGE_CODE.BAD_REQUEST, MESSAGES.ERROR.REQUIRED.NIDN)
-    }
-    if (!name) {
-        return HandleResponse(res, 400, MESSAGE_CODE.BAD_REQUEST, MESSAGES.ERROR.REQUIRED.NAME)
-    }
-
     const dosenCreation = await createDosenService({ email, isActive, mataKuliah, name, nidn, numberPhone });
 
     if ((dosenCreation as HttpError)?.message) {
@@ -54,13 +47,6 @@ export const deleteDosenController = async (req: Request, res: Response) => {
 export const updateDosenController = async (req: Request, res: Response) => {
     const { id } = req.params;
     const { nidn, name, email, numberPhone, mataKuliah, isActive } = req.body
-
-    if (!nidn) {
-        return HandleResponse(res, 400, MESSAGE_CODE.BAD_REQUEST, MESSAGES.ERROR.REQUIRED.NIDN)
-    }
-    if (!name) {
-        return HandleResponse(res, 400, MESSAGE_CODE.BAD_REQUEST, MESSAGES.ERROR.REQUIRED.NAME)
-    }
 
     const updateDosen = await updateDosenService({ id, email, isActive, mataKuliah, name, nidn, numberPhone });
     if ((updateDosen as HttpError)?.message) {

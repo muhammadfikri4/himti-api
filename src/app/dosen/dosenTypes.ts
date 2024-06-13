@@ -18,6 +18,4 @@ export interface SearchDosenTypes {
     nidn?: number,
     page?: number,
     perPage?: number
-    totalData?: number,
-    totalPage?: number
 }

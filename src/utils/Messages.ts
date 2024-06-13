@@ -6,7 +6,8 @@ export const MESSAGES = {
         ROLE: "Role created successfully",
         ANGKATAN: "Angkatan created successfully",
         DOSEN: "Dosen created successfully",
-        STRUKTURAL: "Struktural created successfully"
+        STRUKTURAL: "Struktural created successfully",
+        ANGGOTA: "Anggota created successfully"
     },
     ERROR: {
         NOT_FOUND: {
@@ -20,7 +21,8 @@ export const MESSAGES = {
             },
             ROLE: "Role not found",
             DOSEN: "Dosen not found",
-            STRUKTURAL: "Struktural not found"
+            STRUKTURAL: "Struktural not found",
+            ANGGOTA: "Anggota not found"
         },
         ALREADY: {
             GLOBAL: {
@@ -56,7 +58,9 @@ export const MESSAGES = {
             ANGKATAN_NAME: "Angkatan Name is required",
             NIDN: "NIDN is required",
             NIM: "NIM is required",
-            ANGKATAN_ID: "Angkatan Id is required"
+            ANGKATAN_ID: "Angkatan Id is required",
+            IMAGE: "Image is required",
+            JABATAN: "Jabatan is required",
         }
     },
     SUCCESS: {
@@ -75,6 +79,11 @@ export const MESSAGES = {
             GET: "Success to fetch Struktural",
             DELETE: "Success to delete Struktural",
             UPDATE: "Success to update Struktural"
+        },
+        ANGGOTA: {
+            GET: "Success to fetch Anggota",
+            DELETE: "Success to delete Anggota",
+            UPDATE: "Success to update Anggota"
         }
     }
 }
