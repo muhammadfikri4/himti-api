@@ -2,33 +2,24 @@ import dotenv from 'dotenv'
 import mongoose from 'mongoose'
 import { DosenModel } from '../../config/model/dosen'
 import { MESSAGE_CODE } from '../../utils/ErrorCode'
-import { AppError } from '../../utils/HttpError'
+import { AppError, HttpError } from '../../utils/HttpError'
 import { MESSAGES } from '../../utils/Messages'
 import { Meta } from '../../utils/Meta'
-import { REGEX } from '../../utils/Regex'
 import { DosenBodyDTO } from './dosenDTO'
 import { dosenMapper } from './dosenResponse'
 import { DosenModelTypes, SearchDosenTypes } from './dosenTypes'
+import { dosenValidate } from './dosenValidate'
 
 dotenv.config();
 
 export const createDosenService = async ({ email, isActive, mataKuliah, name, nidn, numberPhone }: DosenBodyDTO) => {
 
-
-    if (!REGEX.email.test(email as string)) {
-        return AppError(MESSAGES.ERROR.INVALID.GLOBAL.EMAIL, 400, MESSAGE_CODE.BAD_REQUEST)
-    }
-    const matchNIDN = await DosenModel.findOne({ nidn })
-    if (matchNIDN) {
-        return AppError(MESSAGES.ERROR.ALREADY.GLOBAL.NIDN, 400, MESSAGE_CODE.BAD_REQUEST)
-    }
-    const matchEmail = await DosenModel.findOne({ email })
-    if (matchEmail) {
-        return AppError(MESSAGES.ERROR.ALREADY.GLOBAL.EMAIL, 400, MESSAGE_CODE.BAD_REQUEST)
+    const validate = await dosenValidate({ email, name, nidn })
+    if ((validate as HttpError)?.message) {
+        return AppError((validate as HttpError).message, (validate as HttpError).statusCode, (validate as HttpError).code)
     }
 
-
-    const newDosen = await DosenModel.create({ name, email, isActive, mataKuliah, nidn, numberPhone })
+    const newDosen = await DosenModel.create({ name, email, isActive, mataKuliah: mataKuliah || null, nidn, numberPhone })
     return newDosen
 
 }
@@ -46,12 +37,9 @@ export const getDosenService = async ({ name, page = 1, perPage = 10 }: SearchDo
             .skip((page - 1) * perPage) as unknown as DosenModelTypes[]
         const totalData = dosens.length
 
-        // Hitung total halaman
-        const totalPages = Math.ceil(totalData / perPage);
-
         const result = dosenMapper(dosens)
 
-        return { result, meta: { page, perPage, totalData, totalPages } }
+        return { result, meta: Meta(page, perPage, totalData) }
 
     }
     const dosen = await DosenModel.find<DosenModelTypes>()
@@ -93,18 +81,19 @@ export const updateDosenService = async ({ id, name, isActive, email, mataKuliah
         return AppError(MESSAGES.ERROR.NOT_FOUND.DOSEN, 404, MESSAGE_CODE.NOT_FOUND)
     }
 
-    const deleteAngkatan = await DosenModel.updateOne(
+    const updateFields: Partial<DosenBodyDTO> = {};
+
+    if (name !== undefined) updateFields.name = name;
+    if (isActive !== undefined) updateFields.isActive = isActive;
+    if (email !== undefined) updateFields.email = email;
+    if (mataKuliah !== undefined) updateFields.mataKuliah = mataKuliah;
+    if (nidn !== undefined) updateFields.nidn = nidn;
+    if (numberPhone !== undefined) updateFields.numberPhone = numberPhone;
+
+    const updateDosen = await DosenModel.updateOne(
         { _id: id },
         {
-            $set:
-            {
-                name,
-                isActive,
-                email,
-                mataKuliah,
-                nidn,
-                numberPhone
-            }
+            $set: updateFields
         })
-    return deleteAngkatan;
+    return updateDosen;
 }
