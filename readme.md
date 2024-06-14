@@ -255,62 +255,6 @@ Delete Anggota
     method: DELETE
 ```
 
-### Dosen 
-Get Dosen
-```bash
-  {
-    path: "/dosen",
-    method: GET,
-    queryParams: {
-        page: 1 -> (default = 1),
-        perPage: 10 -> (default = 10),
-        name: "fikri"
-    }
-  }
-```
-With Query Params
-```bash
-  /dosen?page=1&perPage=10&name=fikri
-```
-
-Create Dosen
-```bash
-  {
-    path: "/dosen",
-    method: POST
-    body: {
-        nidn: 259525024 -> required, 
-        name: "Fikri" -> required, 
-        email: "fikri5@gmail.com" -> required, 
-        numberPhone: 8951212 -> required, 
-        mataKuliah: "Pemrograman Dasar" -> optional, 
-        isActive: true -> optional (default = true) 
-    }
-  }
-```
-
-Update Dosen
-```bash
-  {
-    path: "/dosen/:id",
-    method: PUT
-    body: {
-        nidn: 259525024, 
-        name: "Fikri", 
-        email: "fikri5@gmail.com", 
-        numberPhone: 8951212, 
-        mataKuliah: "Pemrograman Dasar", 
-        isActive: true
-  }
-```
-
-Delete Dosen
-```bash
-  {
-    path: "/dosen/:id",
-    method: DELETE
-```
-
 ### Struktural 
 Get Struktural
 ```bash
