@@ -13,7 +13,7 @@ cloudinary.config({
 const storage = new CloudinaryStorage({
     cloudinary: cloudinary,
     params: {
-        public_id: () => `struktural/${+new Date()}`,
+        public_id: () => `alumni/${+new Date()}`,
     },
 });
 

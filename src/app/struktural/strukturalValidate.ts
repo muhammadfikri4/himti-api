@@ -8,11 +8,11 @@ import { StrukturalBodyDTO } from './strukturalDTO'
 
 export const strukturalValidate = async ({ nim, name, email, angkatanId, image, jabatan }: StrukturalBodyDTO) => {
     if (!nim) {
-        return AppError(MESSAGE_CODE.BAD_REQUEST, 400, MESSAGES.ERROR.REQUIRED.NIM)
+        return AppError(MESSAGES.ERROR.REQUIRED.NIM, 400, MESSAGE_CODE.BAD_REQUEST)
     }
     if (!name) {
 
-        return AppError(MESSAGE_CODE.BAD_REQUEST, 400, MESSAGES.ERROR.REQUIRED.NAME)
+        return AppError(MESSAGES.ERROR.REQUIRED.NAME, 400, MESSAGE_CODE.BAD_REQUEST)
     }
     if (email && !REGEX.email.test(email as string)) {
 

@@ -7,7 +7,9 @@ export const MESSAGES = {
         ANGKATAN: "Angkatan created successfully",
         DOSEN: "Dosen created successfully",
         STRUKTURAL: "Struktural created successfully",
-        ANGGOTA: "Anggota created successfully"
+        ANGGOTA: "Anggota created successfully",
+        ALUMNI: "Alumni created successfully",
+        ACARA: "Acara created successfully",
     },
     ERROR: {
         NOT_FOUND: {
@@ -22,7 +24,9 @@ export const MESSAGES = {
             ROLE: "Role not found",
             DOSEN: "Dosen not found",
             STRUKTURAL: "Struktural not found",
-            ANGGOTA: "Anggota not found"
+            ANGGOTA: "Anggota not found",
+            ALUMNI: "Alumni not found",
+            ACARA: "Acara not found"
         },
         ALREADY: {
             GLOBAL: {
@@ -33,7 +37,10 @@ export const MESSAGES = {
             USER: "User already exist",
             ROLE: "Role is already exist",
             ANGKATAN: "Angkatan is already exist",
-            DOSEN: "Dosen is already exist"
+            DOSEN: "Dosen is already exist",
+            STRUKTURAL: "Struktural is already exist",
+            ANGGOTA: "Anggota is already exist",
+            ALUMNI: "Alumni is already exist"
         },
         INVALID: {
             GLOBAL: {
@@ -61,6 +68,10 @@ export const MESSAGES = {
             ANGKATAN_ID: "Angkatan Id is required",
             IMAGE: "Image is required",
             JABATAN: "Jabatan is required",
+            ANGGOTA_ID: "Anggota Id is required",
+            COMPANY: "Company is required",
+            START_DATE: "First Date is required when acara is open",
+            END_DATE: "End Date is required when acara is open",
         }
     },
     SUCCESS: {
@@ -84,6 +95,16 @@ export const MESSAGES = {
             GET: "Success to fetch Anggota",
             DELETE: "Success to delete Anggota",
             UPDATE: "Success to update Anggota"
+        },
+        ALUMNI: {
+            GET: "Success to fetch Anggota",
+            DELETE: "Success to delete Anggota",
+            UPDATE: "Success to update Anggota"
+        },
+        ACARA: {
+            GET: "Success to fetch Acara",
+            DELETE: "Success to delete Acara",
+            UPDATE: "Success to update Acara"
         }
     }
 }

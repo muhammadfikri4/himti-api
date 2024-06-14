@@ -2,6 +2,7 @@ import dotenv from 'dotenv'
 import { type Request } from 'express'
 import mongoose, { ObjectId } from 'mongoose'
 import { AnggotaModel } from '../../config/model/anggota'
+import { Result } from '../../utils/ApiResponse'
 import { MESSAGE_CODE } from '../../utils/ErrorCode'
 import { AppError, HttpError } from '../../utils/HttpError'
 import { MESSAGES } from '../../utils/Messages'
@@ -24,7 +25,7 @@ export const createAnggotaService = async ({ name, nim, email, angkatanId, isAct
     return newStruktural
 }
 
-export const getAnggotaService = async ({ name, page = 1, perPage = 10 }: SearchAnggotaTypes) => {
+export const getAnggotaService = async ({ name, page = 1, perPage = 10 }: SearchAnggotaTypes): Promise<Result> => {
 
     if (name) {
 
@@ -32,9 +33,9 @@ export const getAnggotaService = async ({ name, page = 1, perPage = 10 }: Search
             .skip((page - 1) * perPage) as unknown as AnggotaModelTypes[]
         const totalData = dosens.length
 
-        const result = await strukturalMapper(dosens)
+        const data = await strukturalMapper(dosens)
 
-        return { result, meta: Meta(page, perPage, totalData) }
+        return { data, meta: Meta(page, perPage, totalData) }
 
     }
     const dosen = await AnggotaModel.find<AnggotaModelTypes>()
@@ -45,9 +46,9 @@ export const getAnggotaService = async ({ name, page = 1, perPage = 10 }: Search
     const res = await AnggotaModel.find<AnggotaModelTypes>()
         .limit(perPage)
         .skip((page - 1) * perPage);
-    const result = await strukturalMapper(res)
+    const data = await strukturalMapper(res)
 
-    const response = { result, meta: Meta(page, perPage, totalData) }
+    const response = { data, meta: Meta(page, perPage, totalData) }
     return response
 }
 

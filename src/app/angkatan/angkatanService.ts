@@ -1,9 +1,11 @@
 import dotenv from 'dotenv'
 import mongoose from 'mongoose'
 import { AngkatanModel } from '../../config/model/angkatan'
+import { Result } from '../../utils/ApiResponse'
 import { MESSAGE_CODE } from '../../utils/ErrorCode'
 import { AppError } from '../../utils/HttpError'
 import { MESSAGES } from '../../utils/Messages'
+import { Meta } from '../../utils/Meta'
 import { AngkatanBodyDTO } from './angkatanDTO'
 import { angkatanMapper } from './angkatanResponse'
 import { AngkatanModelTypes, SearchAngkatanTypes } from './angkatanTypes'
@@ -28,7 +30,7 @@ export const createAngkatanService = async ({ angkatan, isActive }: AngkatanBody
 
 }
 
-export const getAngkatanService = async ({ search }: SearchAngkatanTypes) => {
+export const getAngkatanService = async ({ search, page = 1, perPage = 10, }: SearchAngkatanTypes): Promise<Result<AngkatanModelTypes[]>> => {
 
     if (search) {
         const angkatan = await AngkatanModel.aggregate([
@@ -42,16 +44,21 @@ export const getAngkatanService = async ({ search }: SearchAngkatanTypes) => {
                     angkatanStr: { $regex: search, $options: 'i' }
                 }
             }
-        ]);
+        ]).sort({ angkatan: 1 }).limit(perPage)
+            .skip((page - 1) * perPage);
 
-        const result = angkatanMapper(angkatan)
-        return result
+        const totalData = await AngkatanModel.countDocuments()
+        const data = angkatanMapper(angkatan)
+        return { data, meta: Meta(page, perPage, totalData) }
 
     }
-    const angkatan = await AngkatanModel.find<AngkatanModelTypes>()
 
-    const result = angkatanMapper(angkatan)
-    return result
+    const angkatan = await AngkatanModel.find<AngkatanModelTypes>().limit(perPage)
+        .skip((page - 1) * perPage).sort({ angkatan: 1 })
+
+    const totalData = await AngkatanModel.countDocuments()
+    const data = angkatanMapper(angkatan)
+    return { data, meta: Meta(page, perPage, totalData) }
 }
 
 export const deleteAngkatanService = async ({ id }: AngkatanBodyDTO) => {

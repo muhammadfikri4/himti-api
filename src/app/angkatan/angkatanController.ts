@@ -4,6 +4,7 @@ import { HandleResponse } from "../../utils/HandleResponse";
 import { HttpError } from "../../utils/HttpError";
 import { MESSAGES } from "../../utils/Messages";
 import { createAngkatanService, deleteAngkatanService, getAngkatanService, updateAngkatanService } from "../angkatan/angkatanService";
+import { SearchAngkatanTypes } from "./angkatanTypes";
 
 export const createAngkatanController = async (req: Request, res: Response) => {
 
@@ -19,14 +20,14 @@ export const createAngkatanController = async (req: Request, res: Response) => {
 
 export const getAngkatanController = async (req: Request, res: Response) => {
 
-    const { search } = req.query
+    const { search, page, perPage } = req.query as SearchAngkatanTypes
 
-    const angkatan = await getAngkatanService({ search: search as string })
+    const angkatan = await getAngkatanService({ search: search as string, page: Number(page) || undefined, perPage: Number(perPage) || undefined })
 
-    if (!angkatan.length) {
-        return HandleResponse(res, 404, MESSAGE_CODE.NOT_FOUND, MESSAGES.ERROR.NOT_FOUND.ANGKATAN.NAME, angkatan)
+    if (!angkatan.data.length) {
+        return HandleResponse(res, 404, MESSAGE_CODE.NOT_FOUND, MESSAGES.ERROR.NOT_FOUND.ANGKATAN.NAME, angkatan.data, angkatan.meta)
     }
-    HandleResponse(res, 200, MESSAGE_CODE.SUCCESS, MESSAGES.SUCCESS.ANGKATAN.GET, angkatan)
+    HandleResponse(res, 200, MESSAGE_CODE.SUCCESS, MESSAGES.SUCCESS.ANGKATAN.GET, angkatan.data, angkatan.meta)
 
 }
 
