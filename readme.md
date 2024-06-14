@@ -43,6 +43,7 @@ Login
     }
 }
 ```
+
 ### Angkatan 
 Get Angkatan
 ```bash
@@ -201,59 +202,6 @@ Delete Dosen
     method: DELETE
 ```
 
-### Anggota 
-Get Anggota
-```bash
-  {
-    path: "/anggota",
-    method: GET,
-    queryParams: {
-        page: 1 -> (default = 1),
-        perPage: 10 -> (default = 10),
-        name: "fikri"
-    }
-  }
-```
-With Query Params
-```bash
-  /anggota?page=1&perPage=10&name=fikri
-```
-
-Create Anggota
-```bash
-  {
-    path: "/anggota",
-    method: POST
-    body: {
-        nim: 22552012333 -> required,
-        name: "Muhammad Fikri" -> required,
-        angkatanId: "6666fd9be909b426c8aede32" -> required,
-        email: "muhfikriantoaji2@gmail.com" -> optional,
-        isActive: true -> optional (default = true)
-    }
-  }
-```
-
-Update Anggota
-```bash
-  {
-    path: "/anggota/:id",
-    method: PUT
-    body: {
-        nim: 22552012333,
-        name: "Muhammad Fikri new",
-        angkatanId: "6666fd9be909b426c8aede32",
-        email: "muhfikriantoaji2@gmail.com",
-        isActive: false
-  }
-```
-
-Delete Anggota
-```bash
-  {
-    path: "/anggota/:id",
-    method: DELETE
-```
 
 ### Struktural 
 Get Struktural
