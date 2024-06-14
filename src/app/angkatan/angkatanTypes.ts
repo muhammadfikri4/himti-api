@@ -1,13 +1,16 @@
 import { ObjectId } from "mongoose"
 
 export interface AngkatanModelTypes {
-    _id: ObjectId
+    _id?: ObjectId
+    id?: ObjectId
     angkatan: number,
     isActive: boolean,
-    createdAt: Date,
-    updatedAt: Date
+    createdAt?: Date,
+    updatedAt?: Date
 }
 
 export interface SearchAngkatanTypes {
-    search?: string
+    search?: string,
+    page?: number,
+    perPage?: number
 }
