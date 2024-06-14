@@ -1,6 +1,6 @@
-import { AnggotaModel } from 'config/model/anggota'
 import mongoose from 'mongoose'
 import { AlumniModel } from '../../config/model/alumni'
+import { AnggotaModel } from '../../config/model/anggota'
 import { AngkatanModel } from '../../config/model/angkatan'
 import { MESSAGE_CODE } from '../../utils/ErrorCode'
 import { AppError } from '../../utils/HttpError'
