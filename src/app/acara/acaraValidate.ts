@@ -3,18 +3,18 @@ import { AppError } from '../../utils/HttpError'
 import { MESSAGES } from '../../utils/Messages'
 import { AcaraBodyDTO } from './acaraDTO'
 
-export const acaraValidate = async ({ name, image, endDate, isOpen, startDate }: AcaraBodyDTO) => {
+export const acaraValidate = async ({ name, image, endTime, isOpen, startTime }: AcaraBodyDTO) => {
 
     if (!name) {
 
         return AppError(MESSAGES.ERROR.REQUIRED.NAME, 400, MESSAGE_CODE.BAD_REQUEST)
     }
 
-    if (isOpen && !startDate) {
+    if (isOpen && !startTime) {
         return AppError(MESSAGES.ERROR.REQUIRED.START_DATE, 400, MESSAGE_CODE.BAD_REQUEST)
     }
 
-    if (isOpen && !endDate) {
+    if (isOpen && !endTime) {
         return AppError(MESSAGES.ERROR.REQUIRED.END_DATE, 400, MESSAGE_CODE.BAD_REQUEST)
     }
 

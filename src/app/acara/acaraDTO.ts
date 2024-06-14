@@ -5,6 +5,6 @@ export interface AcaraBodyDTO {
     description?: string,
     image?: string,
     isOpen?: boolean,
-    startDate?: Date,
-    endDate?: Date
+    startTime?: Date,
+    endTime?: Date
 }

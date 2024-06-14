@@ -1,5 +1,5 @@
-import { AngkatanModelTypes } from "app/angkatan/angkatanTypes";
 import { AngkatanModel } from "../../config/model/angkatan";
+import { AngkatanModelTypes } from "../angkatan/angkatanTypes";
 import { AnggotaModelTypes } from "./anggotaTypes";
 
 export const strukturalMapper = async (anggotas: AnggotaModelTypes[]) => {

@@ -12,10 +12,10 @@ import { AcaraModelTypes } from "./acaraTypes";
 
 export const createAcaraController = async (req: Request, res: Response, next: NextFunction) => {
 
-    const { name, description, endDate, image, isOpen, startDate, } = req.body as AcaraBodyDTO
+    const { name, description, endTime, image, isOpen, startTime, } = req.body as AcaraBodyDTO
 
 
-    const strukturalCreation = await createAcaraService({ name, description, endDate, image, isOpen, startDate }, req as Request);
+    const strukturalCreation = await createAcaraService({ name, description, endTime, image, isOpen, startTime }, req as Request);
     if ((strukturalCreation as HttpError)?.message) {
 
         return HandleResponse(res, (strukturalCreation as HttpError).statusCode, (strukturalCreation as HttpError).code, (strukturalCreation as HttpError).message)
@@ -48,9 +48,9 @@ export const deleteAcaraController = async (req: Request, res: Response) => {
 
 export const updateAcaraController = async (req: Request, res: Response) => {
     const { id } = req.params;
-    const { name, description, endDate, image, isOpen, startDate, } = req.body as AcaraBodyDTO
+    const { name, description, endTime, image, isOpen, startTime, } = req.body as AcaraBodyDTO
 
-    const updateStruktural = await updateAcaraService({ id, name, description, endDate, isOpen, startDate, image: req.file?.path });
+    const updateStruktural = await updateAcaraService({ id, name, description, endTime, isOpen, startTime, image: req.file?.path });
     if ((updateStruktural as HttpError)?.message) {
         return HandleResponse(res, (updateStruktural as HttpError).statusCode, (updateStruktural as HttpError).code, (updateStruktural as HttpError).message)
     }

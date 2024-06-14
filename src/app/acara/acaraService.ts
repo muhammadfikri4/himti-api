@@ -14,16 +14,16 @@ import { acaraValidate } from './acaraValidate'
 
 dotenv.config();
 
-export const createAcaraService = async ({ name, description, endDate, image, isOpen, startDate }: AcaraBodyDTO, req: Request) => {
+export const createAcaraService = async ({ name, description, endTime, image, isOpen, startTime }: AcaraBodyDTO, req: Request) => {
 
-    const validate = await acaraValidate({ name: name as string, image: req.file?.path, endDate, startDate, isOpen })
+    const validate = await acaraValidate({ name: name as string, image: req.file?.path, endTime, startTime, isOpen })
     if ((validate as HttpError)?.message) {
         return AppError((validate as HttpError).message, (validate as HttpError).statusCode, (validate as HttpError).code)
     }
 
     const { path } = req.file as Express.Multer.File
 
-    const newAcara = await AcaraModel.create({ name, imageUrl: path, description: description || null, isOpen, endDate, startDate })
+    const newAcara = await AcaraModel.create({ name, imageUrl: path, description: description || null, isOpen, endTime: endTime || null, startTime: startTime || null })
     return newAcara
 }
 
@@ -68,7 +68,7 @@ export const deleteAcaraService = async ({ id }: AcaraBodyDTO) => {
     const deleteAngkatan = await AcaraModel.deleteOne({ _id: id })
     return deleteAngkatan;
 }
-export const updateAcaraService = async ({ id, name, image, description, endDate, isOpen, startDate, }: AcaraBodyDTO) => {
+export const updateAcaraService = async ({ id, name, image, description, endTime, isOpen, startTime, }: AcaraBodyDTO) => {
 
     if (!mongoose.Types.ObjectId.isValid(id as string)) {
         return AppError(MESSAGES.ERROR.INVALID.ID, 400, MESSAGE_CODE.BAD_REQUEST);
@@ -84,8 +84,8 @@ export const updateAcaraService = async ({ id, name, image, description, endDate
     if (description !== undefined) updateFields.description = description;
     if (image !== undefined) updateFields.imageUrl = image;
     if (isOpen !== undefined) updateFields.isOpen = isOpen;
-    if (startDate !== undefined) updateFields.startDate = startDate;
-    if (endDate !== undefined) updateFields.endDate = endDate;
+    if (startTime !== undefined) updateFields.startTime = startTime;
+    if (endTime !== undefined) updateFields.endTime = endTime;
 
     const updateStruktural = await AcaraModel.updateOne(
         { _id: id },

@@ -8,18 +8,14 @@ export interface AcaraModelTypes {
     image?: string,
     imageUrl?: string,
     isOpen?: boolean,
-    startDate?: Date,
-    endDate?: Date
+    startTime?: Date,
+    endTime?: Date
     createdAt: Date,
     updatedAt: Date
 }
 
 export interface SearchAcaraTypes {
     name?: string,
-    email?: string,
-    nidn?: number,
     page?: number,
     perPage?: number
-    totalData?: number,
-    totalPage?: number
 }

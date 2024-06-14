@@ -1,8 +1,8 @@
-import { AngkatanModelTypes } from "app/angkatan/angkatanTypes";
 import { ObjectId } from "mongoose";
 import { AnggotaModel } from "../../config/model/anggota";
 import { AngkatanModel } from "../../config/model/angkatan";
 import { AnggotaModelTypes } from "../anggota/anggotaTypes";
+import { AngkatanModelTypes } from "../angkatan/angkatanTypes";
 import { AlumniModelTypes } from "./alumniTypes";
 
 export const alumniMapper = async (alumnis: AlumniModelTypes[]): Promise<AlumniModelTypes[]> => {

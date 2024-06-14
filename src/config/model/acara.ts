@@ -15,11 +15,11 @@ const acaraSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    startDate: {
+    startTime: {
         type: Date,
         required: false
     },
-    endDate: {
+    endTime: {
         type: Date,
         required: false
     },

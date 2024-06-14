@@ -18,7 +18,7 @@ export const createAnggotaController = async (req: Request, res: Response, next:
     if ((anggotaCreation as HttpError)?.message) {
         return HandleResponse(res, (anggotaCreation as HttpError).statusCode, (anggotaCreation as HttpError).code, (anggotaCreation as HttpError).message)
     }
-    return HandleResponse(res, 201, MESSAGE_CODE.SUCCESS, MESSAGES.CREATED.ANGGOTA)
+    return HandleResponse(res, 201, MESSAGE_CODE.CREATED, MESSAGES.CREATED.ANGGOTA)
 }
 
 export const getAnggotaController = async (req: Request, res: Response) => {
