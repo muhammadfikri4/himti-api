@@ -9,17 +9,15 @@ const alumniSchema = new mongoose.Schema({
 
     anggotaId: {
         type: String,
-        required: false
+        required: true
     },
     company: {
         type: String,
         required: true,
-        unique: true
     },
     imageUrl: {
         type: String,
         required: true,
-        unique: true
     },
     isActive: {
         type: Boolean,

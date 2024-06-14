@@ -21,7 +21,7 @@ export const createAnggotaService = async ({ name, nim, email, angkatanId, isAct
         return AppError((validate as HttpError).message, (validate as HttpError).statusCode, (validate as HttpError).code)
     }
 
-    const newStruktural = await AnggotaModel.create({ name, email, isActive, nim, angkatanId })
+    const newStruktural = await AnggotaModel.create({ name, email: email || null, isActive, nim, angkatanId })
     return newStruktural
 }
 

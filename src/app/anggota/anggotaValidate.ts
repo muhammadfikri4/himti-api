@@ -14,10 +14,10 @@ export const anggotaValidate = async ({ nim, name, email, angkatanId }: AnggotaB
 
         return AppError(MESSAGE_CODE.BAD_REQUEST, 400, MESSAGES.ERROR.REQUIRED.NAME)
     }
-    if (!email) {
+    // if (!email) {
 
-        return AppError(MESSAGE_CODE.BAD_REQUEST, 400, MESSAGES.ERROR.REQUIRED.EMAIL)
-    }
+    //     return AppError(MESSAGE_CODE.BAD_REQUEST, 400, MESSAGES.ERROR.REQUIRED.EMAIL)
+    // }
     if (email && !REGEX.email.test(email as string)) {
 
         return AppError(MESSAGES.ERROR.INVALID.GLOBAL.EMAIL, 400, MESSAGE_CODE.BAD_REQUEST)
