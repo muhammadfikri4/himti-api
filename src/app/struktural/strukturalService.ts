@@ -2,6 +2,7 @@ import dotenv from 'dotenv'
 import { type Request } from 'express'
 import mongoose, { ObjectId } from 'mongoose'
 import { StrukturalModel } from '../../config/model/struktural'
+import { Result } from '../../utils/ApiResponse'
 import { MESSAGE_CODE } from '../../utils/ErrorCode'
 import { AppError, HttpError } from '../../utils/HttpError'
 import { MESSAGES } from '../../utils/Messages'
@@ -26,17 +27,17 @@ export const createStrukturalService = async ({ name, nim, email, angkatanId, ja
     return newStruktural
 }
 
-export const getStrukturalService = async ({ name, page = 1, perPage = 10 }: SearchStrukturalTypes) => {
+export const getStrukturalService = async ({ name, page = 1, perPage = 10 }: SearchStrukturalTypes): Promise<Result<StrukturalModelTypes[]>> => {
 
     if (name) {
 
-        const dosens = await StrukturalModel.find({ name: new RegExp(name, 'i') }).limit(perPage)
+        const strukturals = await StrukturalModel.find({ name: new RegExp(name, 'i') }).limit(perPage)
             .skip((page - 1) * perPage) as unknown as StrukturalModelTypes[]
-        const totalData = dosens.length
+        const totalData = strukturals.length
 
-        const result = await strukturalMapper(dosens)
+        const data = await strukturalMapper(strukturals)
 
-        return { result, meta: Meta(page, perPage, totalData) }
+        return { data, meta: Meta(page, perPage, totalData) }
 
     }
     const dosen = await StrukturalModel.find<StrukturalModelTypes>()
@@ -47,9 +48,9 @@ export const getStrukturalService = async ({ name, page = 1, perPage = 10 }: Sea
     const res = await StrukturalModel.find<StrukturalModelTypes>()
         .limit(perPage)
         .skip((page - 1) * perPage);
-    const result = await strukturalMapper(res)
+    const data = await strukturalMapper(res)
 
-    const response = { result, meta: Meta(page, perPage, totalData) }
+    const response = { data, meta: Meta(page, perPage, totalData) }
     return response
 }
 

@@ -1,9 +1,8 @@
 import { ObjectId } from "mongoose"
-import { MetaResponse } from "../../interface/ResponseInterface"
 
 export interface AnggotaModelTypes {
     _id: ObjectId
-    nim?: string
+    nim?: number
     name?: string,
     email?: string,
     angkatanId?: ObjectId,
@@ -22,8 +21,3 @@ export interface SearchAnggotaTypes {
     totalPage?: number
 }
 
-
-export interface Result<Res = unknown> {
-    result: Res,
-    meta: MetaResponse
-}

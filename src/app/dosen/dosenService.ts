@@ -28,31 +28,25 @@ export const getDosenService = async ({ name, page = 1, perPage = 10 }: SearchDo
 
     if (name) {
 
-        const dosens = await DosenModel.find({
-            $where: function () {
-                return this.name.includes(name)
-
-            }
-        }).limit(perPage)
+        const dosens = await DosenModel.find({ name: new RegExp(name, 'i') }).limit(perPage)
             .skip((page - 1) * perPage) as unknown as DosenModelTypes[]
         const totalData = dosens.length
 
-        const result = dosenMapper(dosens)
+        const data = dosenMapper(dosens)
 
-        return { result, meta: Meta(page, perPage, totalData) }
+        return { data, meta: Meta(page, perPage, totalData) }
 
     }
-    const dosen = await DosenModel.find<DosenModelTypes>()
 
-    const totalData = dosen.length
+    const totalData = await DosenModel.countDocuments()
 
     // Batasi jumlah dokumen yang diambil pada satu halaman
     const res = await DosenModel.find<DosenModelTypes>()
         .limit(perPage)
         .skip((page - 1) * perPage);
-    const result = dosenMapper(res)
+    const data = dosenMapper(res)
 
-    const response = { result, meta: Meta(page, perPage, totalData) }
+    const response = { data, meta: Meta(page, perPage, totalData) }
     return response
 }
 

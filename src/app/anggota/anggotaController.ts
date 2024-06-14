@@ -1,10 +1,11 @@
 import { NextFunction, type Request, type Response } from "express";
+import { Result } from "../../utils/ApiResponse";
 import { MESSAGE_CODE } from "../../utils/ErrorCode";
 import { HandleResponse } from "../../utils/HandleResponse";
 import { HttpError } from "../../utils/HttpError";
 import { MESSAGES } from "../../utils/Messages";
 import { createAnggotaService, deleteAnggotaService, getAnggotaService, updateAnggotaService } from "./anggotaService";
-import { AnggotaModelTypes, Result } from "./anggotaTypes";
+import { AnggotaModelTypes } from "./anggotaTypes";
 
 
 
@@ -24,12 +25,12 @@ export const getAnggotaController = async (req: Request, res: Response) => {
 
     const { name, page, perPage } = req.query
 
-    const anggota = await getAnggotaService({ name: name as string, page: page ? Number(page) : undefined, perPage: perPage ? Number(perPage) : undefined });
+    const anggota = await getAnggotaService({ name: name as string, page: page ? Number(page) : undefined, perPage: perPage ? Number(perPage) : undefined }) as Result<AnggotaModelTypes[]>
 
-    if (!anggota.result.length) {
-        return HandleResponse(res, 404, MESSAGE_CODE.NOT_FOUND, MESSAGES.ERROR.NOT_FOUND.STRUKTURAL, (anggota as unknown as Result<AnggotaModelTypes[]>)?.result, (anggota as Result)?.meta)
+    if (!anggota.data.length) {
+        return HandleResponse(res, 404, MESSAGE_CODE.NOT_FOUND, MESSAGES.ERROR.NOT_FOUND.STRUKTURAL, (anggota as unknown as Result<AnggotaModelTypes[]>)?.data, (anggota as Result)?.meta)
     }
-    HandleResponse<AnggotaModelTypes[]>(res, 200, MESSAGE_CODE.SUCCESS, MESSAGES.SUCCESS.ANGGOTA.GET, (anggota as unknown as Result<AnggotaModelTypes[]>)?.result, (anggota as unknown as Result)?.meta)
+    HandleResponse<AnggotaModelTypes[]>(res, 200, MESSAGE_CODE.SUCCESS, MESSAGES.SUCCESS.ANGGOTA.GET, (anggota as unknown as Result<AnggotaModelTypes[]>)?.data, (anggota as unknown as Result)?.meta)
 
 }
 

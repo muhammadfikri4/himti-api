@@ -2,7 +2,7 @@ import { AngkatanModelTypes } from "app/angkatan/angkatanTypes";
 import { AngkatanModel } from "../../config/model/angkatan";
 import { StrukturalModelTypes } from "./strukturalTypes";
 
-export const strukturalMapper = async (strukturals: StrukturalModelTypes[]) => {
+export const strukturalMapper = async (strukturals: StrukturalModelTypes[]): Promise<StrukturalModelTypes[]> => {
     const mapper = await Promise.all(strukturals.map(async (struktural) => {
         const angkatan = await AngkatanModel.findOne({ _id: struktural.angkatanId }) as unknown as AngkatanModelTypes
 
@@ -18,7 +18,6 @@ export const strukturalMapper = async (strukturals: StrukturalModelTypes[]) => {
                 isActive: angkatan?.isActive
 
             },
-            image: struktural.image,
             imageUrl: struktural.imageUrl,
             isActive: struktural.isActive,
             createdAt: struktural.createdAt,

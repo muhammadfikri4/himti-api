@@ -1,6 +1,6 @@
-import { Result } from "app/struktural/strukturalTypes";
 import { type Request, type Response } from "express";
 import { MetaResponse } from "interface/ResponseInterface";
+import { Result } from "../../utils/ApiResponse";
 import { MESSAGE_CODE } from "../../utils/ErrorCode";
 import { HandleResponse } from "../../utils/HandleResponse";
 import { HttpError } from "../../utils/HttpError";
@@ -27,10 +27,10 @@ export const getDosenController = async (req: Request, res: Response) => {
 
     const dosen = await getDosenService({ name: name as string, page: page ? Number(page) : undefined, perPage: perPage ? Number(perPage) : undefined });
 
-    if (!dosen.result.length) {
-        return HandleResponse(res, 404, MESSAGE_CODE.NOT_FOUND, MESSAGES.ERROR.NOT_FOUND.DOSEN, (dosen as unknown as Result<DosenModelTypes>)?.result, (dosen as unknown as Result<DosenModelTypes>)?.meta as MetaResponse)
+    if (!dosen.data.length) {
+        return HandleResponse(res, 404, MESSAGE_CODE.NOT_FOUND, MESSAGES.ERROR.NOT_FOUND.DOSEN, (dosen as unknown as Result<DosenModelTypes>)?.data, (dosen as unknown as Result<DosenModelTypes>)?.meta as MetaResponse)
     }
-    HandleResponse<DosenModelTypes[]>(res, 200, MESSAGE_CODE.SUCCESS, MESSAGES.SUCCESS.DOSEN.GET, (dosen as unknown as Result<DosenModelTypes[]>)?.result, (dosen as unknown as Result<DosenModelTypes[]>)?.meta as MetaResponse)
+    HandleResponse<DosenModelTypes[]>(res, 200, MESSAGE_CODE.SUCCESS, MESSAGES.SUCCESS.DOSEN.GET, (dosen as unknown as Result<DosenModelTypes[]>)?.data, (dosen as unknown as Result<DosenModelTypes[]>)?.meta as MetaResponse)
 
 }
 

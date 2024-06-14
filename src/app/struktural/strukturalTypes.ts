@@ -1,10 +1,9 @@
 import { ObjectId } from "mongoose"
-import { MetaResponse } from "../../interface/ResponseInterface"
 
 export interface StrukturalModelTypes {
-    _id: ObjectId
-    id?: string
-    nim?: string
+    _id?: ObjectId
+    id?: ObjectId
+    nim?: number
     name?: string,
     email?: string,
     // angkatan?: {
@@ -35,8 +34,3 @@ export interface SearchStrukturalTypes {
     totalPage?: number
 }
 
-
-export interface Result<Res = unknown> {
-    result: Res,
-    meta: MetaResponse
-}
