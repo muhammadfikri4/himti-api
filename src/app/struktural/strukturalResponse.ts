@@ -7,7 +7,7 @@ import { IStrukturalResponse, StrukturalModelTypes } from "./strukturalTypes";
 
 export const strukturalMapper = async (strukturals: StrukturalModelTypes[]): Promise<IStrukturalResponse[]> => {
     const mapper = await Promise.all(strukturals.map(async (struktural) => {
-        const anggota = await AnggotaModel.findOne({ _id: struktural.anggotaId }) as unknown as AnggotaModelTypes
+        const anggota = await AnggotaModel.findOne({ _id: struktural.anggotaId }) as unknown as AnggotaModelTypes;
         const angkatan = await AngkatanModel.findOne({ _id: anggota.angkatanId }) as unknown as AngkatanModelTypes
         const { _id, image, jabatan, isActive, createdAt, updatedAt, facebook, instagram, linkedin, twitter } = struktural
         return {

@@ -42,3 +42,4 @@ const strukturalSchema = new mongoose.Schema({
 const StrukturalModel = mongoose.model("Struktural", strukturalSchema)
 
 export { StrukturalModel };
+
