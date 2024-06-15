@@ -34,6 +34,7 @@
     "body-parser": "^1.20.2",
     "cloudinary": "^2.2.0",
     "cookie-parser": "^1.4.6",
+    "discord.js": "^14.15.3",
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
     "firebase": "^10.12.2",
@@ -46,7 +47,7 @@
     "vercel": "^34.2.6"
   },
   "scripts": {
-    "start": "npx tsc -w ",
+    "start": "node dist/index.js",
     "dev": "npx nodemon",
     "build": "tsc",
     "lint": "npx eslint ./src --ext .ts",
