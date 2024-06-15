@@ -13,7 +13,7 @@ dbconect()
 app.use(cookieParser())
 app.use(bodyParser.json())
 app.use(express.json())
-app.use(routes)
+app.use(routes);
 
 
 
