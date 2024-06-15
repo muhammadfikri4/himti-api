@@ -1,29 +1,17 @@
 import mongoose from "mongoose";
 
 const strukturalSchema = new mongoose.Schema({
-    name: {
+    anggotaId: {
         type: String,
         required: true
     },
-    nim: {
-        type: Number,
-        required: true,
-        unique: true
-    },
+
     jabatan: {
         type: String,
         required: false,
         unique: true
     },
-    angkatanId: {
-        type: String,
-        required: false
-    },
     image: {
-        type: String,
-        required: false,
-    },
-    imageUrl: {
         type: String,
         required: false,
     },

@@ -1,5 +1,4 @@
 import dotenv from 'dotenv'
-import { type Request } from 'express'
 import mongoose from 'mongoose'
 import { AcaraModel } from '../../config/model/acara'
 import { Result } from '../../utils/ApiResponse'
@@ -14,16 +13,15 @@ import { acaraValidate } from './acaraValidate'
 
 dotenv.config();
 
-export const createAcaraService = async ({ name, description, endTime, image, isOpen, startTime }: AcaraBodyDTO, req: Request) => {
+export const createAcaraService = async ({ name, description, endTime, image, isOpen, startTime }: AcaraBodyDTO) => {
 
-    const validate = await acaraValidate({ name: name as string, image: req.file?.path, endTime, startTime, isOpen })
+    const validate = await acaraValidate({ name: name as string, image, endTime, startTime, isOpen })
     if ((validate as HttpError)?.message) {
         return AppError((validate as HttpError).message, (validate as HttpError).statusCode, (validate as HttpError).code)
     }
 
-    const { path } = req.file as Express.Multer.File
 
-    const newAcara = await AcaraModel.create({ name, imageUrl: path, description: description || null, isOpen, endTime: endTime || null, startTime: startTime || null })
+    const newAcara = await AcaraModel.create({ name, image, description: description || null, isOpen, endTime: endTime || null, startTime: startTime || null })
     return newAcara
 }
 
@@ -82,7 +80,7 @@ export const updateAcaraService = async ({ id, name, image, description, endTime
 
     if (name !== undefined) updateFields.name = name;
     if (description !== undefined) updateFields.description = description;
-    if (image !== undefined) updateFields.imageUrl = image;
+    if (image !== undefined) updateFields.image = image;
     if (isOpen !== undefined) updateFields.isOpen = isOpen;
     if (startTime !== undefined) updateFields.startTime = startTime;
     if (endTime !== undefined) updateFields.endTime = endTime;

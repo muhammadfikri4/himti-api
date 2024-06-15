@@ -4,16 +4,17 @@ import { MESSAGE_CODE } from "../../utils/ErrorCode";
 import { HandleResponse } from "../../utils/HandleResponse";
 import { HttpError } from "../../utils/HttpError";
 import { MESSAGES } from "../../utils/Messages";
+import { StrukturalBodyDTO } from "./strukturalDTO";
 import { createStrukturalService, deleteStrukturalService, getStrukturalService, updateStrukturalService } from "./strukturalService";
 import { StrukturalModelTypes } from "./strukturalTypes";
 
 
 export const createStrukturalController = async (req: Request, res: Response, next: NextFunction) => {
 
-    const { name, nim, email, jabatan, angkatanId, instagram, twitter, facebook, linkedin, isActive } = req.body
+    const { anggotaId, jabatan, instagram, twitter, facebook, linkedin, isActive } = req.body
 
 
-    const strukturalCreation = await createStrukturalService({ email, isActive, jabatan, angkatanId, facebook, instagram, linkedin, name, twitter, nim }, req as Request);
+    const strukturalCreation = await createStrukturalService({ isActive, jabatan, anggotaId, facebook, instagram, linkedin, twitter }, req as Request);
     if ((strukturalCreation as HttpError)?.message) {
 
         return HandleResponse(res, (strukturalCreation as HttpError).statusCode, (strukturalCreation as HttpError).code, (strukturalCreation as HttpError).message)
@@ -46,9 +47,9 @@ export const deleteStrukturalController = async (req: Request, res: Response) =>
 
 export const updateStrukturalController = async (req: Request, res: Response) => {
     const { id } = req.params;
-    const { email, isActive, jabatan, angkatanId, facebook, instagram, linkedin, name, twitter, nim } = req.body
+    const { isActive, jabatan, anggotaId, facebook, instagram, linkedin, twitter } = req.body as StrukturalBodyDTO
 
-    const updateStruktural = await updateStrukturalService({ id, email, isActive, name, nim, angkatanId, facebook, instagram, linkedin, jabatan, twitter, image: req.file?.path });
+    const updateStruktural = await updateStrukturalService({ id, isActive, anggotaId, facebook, instagram, linkedin, jabatan, twitter, image: req.file?.path });
     if ((updateStruktural as HttpError)?.message) {
         return HandleResponse(res, (updateStruktural as HttpError).statusCode, (updateStruktural as HttpError).code, (updateStruktural as HttpError).message)
     }

@@ -9,7 +9,7 @@ const alumniSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    imageUrl: {
+    image: {
         type: String,
         required: true,
     },

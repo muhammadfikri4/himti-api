@@ -1,27 +1,36 @@
-import { AngkatanModelTypes } from "app/angkatan/angkatanTypes";
+import { ObjectId } from "mongoose";
+import { AnggotaModelTypes } from "../../app/anggota/anggotaTypes";
+import { AngkatanModelTypes } from "../../app/angkatan/angkatanTypes";
+import { AnggotaModel } from "../../config/model/anggota";
 import { AngkatanModel } from "../../config/model/angkatan";
-import { StrukturalModelTypes } from "./strukturalTypes";
+import { IStrukturalResponse, StrukturalModelTypes } from "./strukturalTypes";
 
-export const strukturalMapper = async (strukturals: StrukturalModelTypes[]): Promise<StrukturalModelTypes[]> => {
+export const strukturalMapper = async (strukturals: StrukturalModelTypes[]): Promise<IStrukturalResponse[]> => {
     const mapper = await Promise.all(strukturals.map(async (struktural) => {
-        const angkatan = await AngkatanModel.findOne({ _id: struktural.angkatanId }) as unknown as AngkatanModelTypes
-
+        const anggota = await AnggotaModel.findOne({ _id: struktural.anggotaId }) as unknown as AnggotaModelTypes
+        const angkatan = await AngkatanModel.findOne({ _id: anggota.angkatanId }) as unknown as AngkatanModelTypes
+        const { _id, image, jabatan, isActive, createdAt, updatedAt, facebook, instagram, linkedin, twitter } = struktural
         return {
-            id: struktural._id,
-            nim: struktural.nim,
-            name: struktural.name,
-            email: struktural.email,
-            jabatan: struktural.jabatan,
-            angkatan: {
-                id: angkatan?._id,
-                angkatan: angkatan?.angkatan,
-                isActive: angkatan?.isActive
-
+            id: _id,
+            anggota: {
+                id: anggota._id,
+                name: anggota.name as string,
+                nim: anggota.nim as number,
+                isActive: anggota.isActive as boolean,
+                angkatan: {
+                    id: angkatan?._id as ObjectId,
+                    angkatan: angkatan.angkatan as number,
+                }
             },
-            imageUrl: struktural.imageUrl,
-            isActive: struktural.isActive,
-            createdAt: struktural.createdAt,
-            updatedAt: struktural.updatedAt
+            jabatan,
+            image,
+            instagram,
+            facebook,
+            twitter,
+            linkedin,
+            isActive,
+            createdAt,
+            updatedAt
 
         }
     }))

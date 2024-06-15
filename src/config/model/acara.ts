@@ -11,7 +11,7 @@ const acaraSchema = new mongoose.Schema({
         type: String,
         required: false
     },
-    imageUrl: {
+    image: {
         type: String,
         required: true,
     },

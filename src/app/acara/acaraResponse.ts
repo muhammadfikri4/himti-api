@@ -1,8 +1,8 @@
-import { AcaraModelTypes } from "./acaraTypes";
+import { AcaraModelTypes, IAcaraResponse } from "./acaraTypes";
 
-export const acaraMapper = async (acaras: AcaraModelTypes[]) => {
+export const acaraMapper = async (acaras: AcaraModelTypes[]): Promise<IAcaraResponse[]> => {
     const mapper = await Promise.all(acaras.map(async (acara) => {
-        const { _id, createdAt, updatedAt, description, endTime, imageUrl, isOpen, name, startTime } = acara
+        const { _id, createdAt, updatedAt, description, endTime, image, isOpen, name, startTime, } = acara
         return {
             id: _id,
             name,
@@ -10,7 +10,7 @@ export const acaraMapper = async (acaras: AcaraModelTypes[]) => {
             startTime,
             endTime,
             isOpen,
-            imageUrl,
+            image,
             createdAt,
             updatedAt,
         }
