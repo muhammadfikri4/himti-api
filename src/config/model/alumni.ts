@@ -1,12 +1,6 @@
 import mongoose from "mongoose";
 
 const alumniSchema = new mongoose.Schema({
-
-    angkatanId: {
-        type: String,
-        required: true
-    },
-
     anggotaId: {
         type: String,
         required: true

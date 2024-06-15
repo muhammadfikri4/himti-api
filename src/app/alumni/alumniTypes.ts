@@ -3,7 +3,6 @@ import { ObjectId } from "mongoose"
 export interface AlumniModelTypes {
     _id?: ObjectId
     id?: ObjectId
-    angkatanId?: ObjectId,
     anggotaId?: ObjectId,
     anggota?: {
         id: ObjectId,

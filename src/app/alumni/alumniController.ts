@@ -10,9 +10,9 @@ import { AlumniModelTypes } from "./alumniTypes";
 
 export const createAlumniController = async (req: Request, res: Response, next: NextFunction) => {
 
-    const { angkatanId, isActive, anggotaId, company } = req.body as AlumniBodyDTO
+    const { isActive, anggotaId, company } = req.body as AlumniBodyDTO
 
-    const strukturalCreation = await createAlumniService({ isActive, angkatanId, anggotaId, company, image: req.file?.path });
+    const strukturalCreation = await createAlumniService({ isActive, anggotaId, company, image: req.file?.path });
     if ((strukturalCreation as HttpError)?.message) {
         return HandleResponse(res, (strukturalCreation as HttpError).statusCode, (strukturalCreation as HttpError).code, (strukturalCreation as HttpError).message)
     }
@@ -44,9 +44,9 @@ export const deleteAlumniController = async (req: Request, res: Response) => {
 
 export const updateAlumniController = async (req: Request, res: Response) => {
     const { id } = req.params;
-    const { isActive, angkatanId, anggotaId } = req.body
+    const { isActive, anggotaId, company } = req.body
 
-    const updateStruktural = await updateAlumniService({ id, isActive, angkatanId, image: req.file?.path, anggotaId });
+    const updateStruktural = await updateAlumniService({ id, isActive, image: req.file?.path, anggotaId, company });
     if ((updateStruktural as HttpError)?.message) {
         return HandleResponse(res, (updateStruktural as HttpError).statusCode, (updateStruktural as HttpError).code, (updateStruktural as HttpError).message)
     }

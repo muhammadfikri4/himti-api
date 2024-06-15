@@ -1,8 +1,7 @@
-import mongoose, { ObjectId } from "mongoose"
+import { ObjectId } from "mongoose"
 
 export interface AlumniBodyDTO {
-    id?: string
-    angkatanId?: mongoose.mongo.ObjectId,
+    id?: string,
     anggotaId?: ObjectId,
     imageUrl?: string,
     image?: string,

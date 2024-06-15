@@ -72,6 +72,9 @@ export const MESSAGES = {
             COMPANY: "Company is required",
             START_DATE: "First Date is required when acara is open",
             END_DATE: "End Date is required when acara is open",
+        },
+        RELATION: {
+            ANGKATAN: "Angkatan cannot be deleted because it has a relationship"
         }
     },
     SUCCESS: {
@@ -97,9 +100,9 @@ export const MESSAGES = {
             UPDATE: "Success to update Anggota"
         },
         ALUMNI: {
-            GET: "Success to fetch Anggota",
-            DELETE: "Success to delete Anggota",
-            UPDATE: "Success to update Anggota"
+            GET: "Success to fetch Alumni",
+            DELETE: "Success to delete Alumni",
+            UPDATE: "Success to update Alumni"
         },
         ACARA: {
             GET: "Success to fetch Acara",

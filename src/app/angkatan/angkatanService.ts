@@ -1,5 +1,6 @@
 import dotenv from 'dotenv'
 import mongoose from 'mongoose'
+import { AnggotaModel } from '../../config/model/anggota'
 import { AngkatanModel } from '../../config/model/angkatan'
 import { Result } from '../../utils/ApiResponse'
 import { MESSAGE_CODE } from '../../utils/ErrorCode'
@@ -70,6 +71,11 @@ export const deleteAngkatanService = async ({ id }: AngkatanBodyDTO) => {
 
     if (!matchAngkatan) {
         return AppError(MESSAGES.ERROR.NOT_FOUND.ANGKATAN.NAME, 404, MESSAGE_CODE.NOT_FOUND)
+    }
+
+    const isUsed = await AnggotaModel.findOne({ angkatanId: id })
+    if (isUsed) {
+        return AppError(MESSAGES.ERROR.RELATION.ANGKATAN, 400, MESSAGE_CODE.BAD_REQUEST)
     }
 
     const deleteAngkatan = await AngkatanModel.deleteOne({ _id: id })

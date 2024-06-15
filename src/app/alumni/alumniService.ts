@@ -13,14 +13,14 @@ import { alumniValidate } from './alumniValidate'
 
 dotenv.config();
 
-export const createAlumniService = async ({ angkatanId, isActive, company, anggotaId, image }: AlumniBodyDTO) => {
+export const createAlumniService = async ({ isActive, company, anggotaId, image }: AlumniBodyDTO) => {
 
-    const validate = await alumniValidate({ angkatanId, image, anggotaId, company })
+    const validate = await alumniValidate({ image, anggotaId, company })
     if ((validate as HttpError)?.message) {
         return AppError((validate as HttpError).message, (validate as HttpError).statusCode, (validate as HttpError).code)
     }
 
-    const newStruktural = await AlumniModel.create({ isActive, angkatanId, company: company || null, imageUrl: image, anggotaId })
+    const newStruktural = await AlumniModel.create({ isActive, company: company || null, imageUrl: image, anggotaId })
     return newStruktural
 }
 
@@ -65,7 +65,7 @@ export const deleteAlumniService = async ({ id }: AlumniBodyDTO) => {
     const deleteAngkatan = await AlumniModel.deleteOne({ _id: id })
     return deleteAngkatan;
 }
-export const updateAlumniService = async ({ id, isActive, angkatanId, anggotaId, company, image }: AlumniBodyDTO) => {
+export const updateAlumniService = async ({ id, isActive, anggotaId, company, image }: AlumniBodyDTO) => {
 
     if (!mongoose.Types.ObjectId.isValid(id as string)) {
         return AppError(MESSAGES.ERROR.INVALID.ID, 400, MESSAGE_CODE.BAD_REQUEST);
@@ -79,9 +79,8 @@ export const updateAlumniService = async ({ id, isActive, angkatanId, anggotaId,
 
     if (isActive !== undefined) updateFields.isActive = isActive;
     if (image !== undefined) updateFields.imageUrl = image;
-    if (angkatanId !== undefined) updateFields.angkatanId = angkatanId;
     if (anggotaId !== undefined) updateFields.anggotaId = anggotaId;
-    if (company !== undefined) updateFields.imageUrl = company;
+    if (company !== undefined) updateFields.company = company;
 
     const updateStruktural = await AlumniModel.updateOne(
         { _id: id },

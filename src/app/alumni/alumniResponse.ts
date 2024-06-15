@@ -7,9 +7,9 @@ import { AlumniModelTypes } from "./alumniTypes";
 
 export const alumniMapper = async (alumnis: AlumniModelTypes[]): Promise<AlumniModelTypes[]> => {
     const mapper = await Promise.all(alumnis.map(async (alumni) => {
-        const { _id, createdAt, updatedAt, anggotaId, angkatanId, company, image, imageUrl, isActive } = alumni
-        const angkatan = await AngkatanModel.findOne({ _id: angkatanId }) as unknown as AngkatanModelTypes
+        const { _id, createdAt, updatedAt, anggotaId, company, image, imageUrl, isActive } = alumni
         const anggota = await AnggotaModel.findOne({ _id: anggotaId }) as unknown as AnggotaModelTypes
+        const angkatan = await AngkatanModel.findOne({ _id: anggota.angkatanId }) as unknown as AngkatanModelTypes
 
         return {
             id: _id,
@@ -25,6 +25,7 @@ export const alumniMapper = async (alumnis: AlumniModelTypes[]): Promise<AlumniM
 
                 },
             },
+            company: alumni.company,
             imageUrl: imageUrl as string,
             isActive: isActive as boolean,
             createdAt: createdAt as Date,
