@@ -51,10 +51,11 @@
     "vercel": "^34.2.6"
   },
   "scripts": {
-    "start": "node dist/index.js",
+  "start": "npx tsc -w ",
     "dev": "npx nodemon",
     "build": "prisma generate && tsc",
     "lint": "npx eslint ./src --ext .ts",
-    "lint:fix": "npx eslint ./src --ext .ts --fix"
+    "lint:fix": "npx eslint ./src --ext .ts --fix",
+    "postinstall": "prisma generate"
   }
 }
