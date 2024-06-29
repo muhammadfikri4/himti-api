@@ -1,4 +1,4 @@
-import { prisma } from "config"
+import { prisma } from "../../config"
 import { AnggotaBodyDTO } from "./anggotaDTO"
 import { IFilterAnggota } from "./anggotaTypes"
 

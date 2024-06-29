@@ -1,5 +1,5 @@
 import { type Request, type Response } from "express";
-import { MetaResponse } from "interface/ResponseInterface";
+import { MetaResponse } from "../../interface/ResponseInterface";
 import { Result } from "../../utils/ApiResponse";
 import { MESSAGE_CODE } from "../../utils/ErrorCode";
 import { HandleResponse } from "../../utils/HandleResponse";

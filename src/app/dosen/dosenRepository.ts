@@ -1,4 +1,4 @@
-import { prisma } from "config";
+import { prisma } from "../../config";
 import { DosenBodyDTO } from "./dosenDTO";
 import { IFilterDosen } from "./dosenTypes";
 

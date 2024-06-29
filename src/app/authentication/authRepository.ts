@@ -1,4 +1,4 @@
-import { prisma } from "config"
+import { prisma } from "../../config"
 import { RegisterAuthBodyDTO } from "./authDTO"
 
 export const createUser = async ({ email, name, password }: RegisterAuthBodyDTO) => {

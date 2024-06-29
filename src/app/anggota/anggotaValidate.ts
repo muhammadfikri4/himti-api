@@ -1,9 +1,9 @@
 
-import { getAngkatanById } from 'app/angkatan/angkatanRepository'
 import { MESSAGE_CODE } from '../../utils/ErrorCode'
 import { AppError } from '../../utils/HttpError'
 import { MESSAGES } from '../../utils/Messages'
 import { REGEX } from '../../utils/Regex'
+import { getAngkatanById } from '../angkatan/angkatanRepository'
 import { AnggotaBodyDTO } from './anggotaDTO'
 import { getAnggotaByEmail, getAnggotaByNIM } from './anggotaRepository'
 
