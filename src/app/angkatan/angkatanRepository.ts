@@ -1,4 +1,4 @@
-import { prisma } from "config";
+import { prisma } from "../../config";
 import { AngkatanBodyDTO } from "./angkatanDTO";
 import { IFilterAngkatan } from "./angkatanTypes";
 
