@@ -53,7 +53,7 @@
   "scripts": {
     "start": "node dist/index.js",
     "dev": "npx nodemon",
-    "build": "tsc",
+    "build": "prisma generate && tsc",
     "lint": "npx eslint ./src --ext .ts",
     "lint:fix": "npx eslint ./src --ext .ts --fix"
   }

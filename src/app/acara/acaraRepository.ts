@@ -1,4 +1,4 @@
-import { prisma } from "config";
+import { prisma } from "../../config";
 import { AcaraBodyDTO } from "./acaraDTO";
 import { IFilterAcara } from "./acaraTypes";
 
