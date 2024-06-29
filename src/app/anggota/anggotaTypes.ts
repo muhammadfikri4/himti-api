@@ -1,36 +1,42 @@
-import { ObjectId } from "mongoose"
 
 export interface AnggotaModelTypes {
-    _id: ObjectId
-    nim: number
+    id: string
+    nim: string
     name: string,
-    email: string,
-    angkatanId: ObjectId,
+    email?: string | null,
+    angkatanId?: string,
+    angkatan: {
+        id: string
+        year: number
+        isActive: boolean
+    }
     isActive: boolean,
     createdAt: Date
     updatedAt: Date
 }
 
-export interface SearchAnggotaTypes {
+export interface IFilterAnggota {
     name?: string,
     email?: string,
-    nidn?: number,
+    nim?: number,
     page?: number,
     perPage?: number
     totalData?: number,
     totalPage?: number
 }
 
-export interface IAnggotaResponse {
-    id: AnggotaModelTypes['_id']
-    nim: AnggotaModelTypes['nim']
-    name: AnggotaModelTypes['name'],
-    email: AnggotaModelTypes['email'],
+export interface AnggotaResponseTypes {
+    id: string
+    nim: number
+    name: string,
+    email: string,
     angkatan: {
-        id: ObjectId,
-        angkatan: number
-    },
-    isActive: AnggotaModelTypes['isActive'],
-    createdAt: AnggotaModelTypes['createdAt']
-    updatedAt: AnggotaModelTypes['updatedAt']
+        id: string
+        year: number
+        isActive: boolean
+    }
+
+    isActive: boolean,
+    createdAt: Date
+    updatedAt: Date
 }

@@ -1,105 +1,78 @@
+import { getAnggotaByAngkatanId } from 'app/anggota/anggotaRepository'
 import dotenv from 'dotenv'
 import mongoose from 'mongoose'
-import { AnggotaModel } from '../../config/model/anggota'
-import { AngkatanModel } from '../../config/model/angkatan'
+import { REGEX } from 'utils/Regex'
 import { Result } from '../../utils/ApiResponse'
 import { MESSAGE_CODE } from '../../utils/ErrorCode'
 import { AppError } from '../../utils/HttpError'
 import { MESSAGES } from '../../utils/Messages'
 import { Meta } from '../../utils/Meta'
 import { AngkatanBodyDTO } from './angkatanDTO'
+import { createAngkatan, deleteAngkatanRepository, getAngkatan, getAngkatanById, getAngkatanByYear, getProductsCount, updateAngkatan } from './angkatanRepository'
 import { angkatanMapper } from './angkatanResponse'
-import { AngkatanModelTypes, SearchAngkatanTypes } from './angkatanTypes'
+import { AngkatanModelTypes, IFilterAngkatan } from './angkatanTypes'
 
 dotenv.config()
 
-export const createAngkatanService = async ({ angkatan, isActive }: AngkatanBodyDTO) => {
+export const createAngkatanService = async ({ year, isActive }: AngkatanBodyDTO) => {
 
-    if (!angkatan) {
-        return AppError(MESSAGES.ERROR.REQUIRED.ANGKATAN_NAME, 400, MESSAGE_CODE.BAD_REQUEST)
+    const year_string = year?.toString()
+
+    if (!year) {
+        return AppError(MESSAGES.ERROR.REQUIRED.ANGKATAN_YEAR, 400, MESSAGE_CODE.BAD_REQUEST)
     }
-    if (typeof angkatan !== 'number') {
+    if (!REGEX.number.test(year_string as string)) {
         return AppError(MESSAGES.ERROR.INVALID.ANGKATAN, 400, MESSAGE_CODE.BAD_REQUEST)
     }
-    const matchAngkatan = await AngkatanModel.findOne({ angkatan })
+    const matchAngkatan = await getAngkatanByYear(year_string as string)
     if (matchAngkatan) {
         return AppError(MESSAGES.ERROR.ALREADY.ANGKATAN, 400, MESSAGE_CODE.BAD_REQUEST)
     }
 
-    const newAngkatan = await AngkatanModel.create({ angkatan, isActive })
+    const newAngkatan = await createAngkatan({ isActive, year: year_string as string })
     return newAngkatan
 
 }
 
-export const getAngkatanService = async ({ search, page = 1, perPage = 10, }: SearchAngkatanTypes): Promise<Result<AngkatanModelTypes[]>> => {
+export const getAngkatanService = async ({ search, page = 1, perPage = 10, }: IFilterAngkatan): Promise<Result<AngkatanModelTypes[]>> => {
 
-    if (search) {
-        const angkatan = await AngkatanModel.aggregate([
-            {
-                $addFields: {
-                    angkatanStr: { $toString: "$angkatan" }
-                }
-            },
-            {
-                $match: {
-                    angkatanStr: { $regex: search, $options: 'i' }
-                }
-            }
-        ]).sort({ angkatan: 1 }).limit(perPage)
-            .skip((page - 1) * perPage);
+    const [angkatan, totalData] = await Promise.all([getAngkatan({ page, perPage, search }), getProductsCount({ search })])
 
-        const totalData = await AngkatanModel.countDocuments()
-        const data = angkatanMapper(angkatan)
-        return { data, meta: Meta(page, perPage, totalData) }
-
-    }
-
-    const angkatan = await AngkatanModel.find<AngkatanModelTypes>().limit(perPage)
-        .skip((page - 1) * perPage).sort({ angkatan: 1 })
-
-    const totalData = await AngkatanModel.countDocuments()
     const data = angkatanMapper(angkatan)
     return { data, meta: Meta(page, perPage, totalData) }
 }
 
 export const deleteAngkatanService = async ({ id }: AngkatanBodyDTO) => {
 
-    if (!mongoose.Types.ObjectId.isValid(id as string)) {
+    if (!id) {
         return AppError(MESSAGES.ERROR.INVALID.ID, 400, MESSAGE_CODE.BAD_REQUEST);
     }
-    const matchAngkatan = await AngkatanModel.findOne({ _id: id })
+    const matchAngkatan = await getAngkatanById(id)
 
     if (!matchAngkatan) {
         return AppError(MESSAGES.ERROR.NOT_FOUND.ANGKATAN.NAME, 404, MESSAGE_CODE.NOT_FOUND)
     }
 
-    const isUsed = await AnggotaModel.findOne({ angkatanId: id })
+    const isUsed = await getAnggotaByAngkatanId(id)
     if (isUsed) {
         return AppError(MESSAGES.ERROR.RELATION.ANGKATAN, 400, MESSAGE_CODE.BAD_REQUEST)
     }
 
-    const deleteAngkatan = await AngkatanModel.deleteOne({ _id: id })
-    return deleteAngkatan;
+    return await deleteAngkatanRepository(id)
 }
-export const updateAngkatanService = async ({ id, angkatan, isActive }: AngkatanBodyDTO) => {
+export const updateAngkatanService = async ({ id, year, isActive }: AngkatanBodyDTO) => {
 
     if (!mongoose.Types.ObjectId.isValid(id as string)) {
         return AppError(MESSAGES.ERROR.INVALID.ID, 400, MESSAGE_CODE.BAD_REQUEST);
     }
-    const matchAngkatan = await AngkatanModel.findOne({ _id: id })
+    const matchAngkatan = await getAngkatanById(id as string)
 
     if (!matchAngkatan) {
         return AppError(MESSAGES.ERROR.NOT_FOUND.ANGKATAN.NAME, 404, MESSAGE_CODE.NOT_FOUND)
     }
+    const updateFields = {} as AngkatanBodyDTO
+    if (year !== undefined) updateFields.year = year;
+    if (isActive !== undefined) updateFields.isActive = isActive;
+    return await updateAngkatan(updateFields)
 
-    const deleteAngkatan = await AngkatanModel.updateOne(
-        { _id: id },
-        {
-            $set:
-            {
-                angkatan,
-                isActive
-            }
-        })
-    return deleteAngkatan;
 }

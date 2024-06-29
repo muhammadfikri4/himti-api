@@ -1,13 +1,13 @@
 import * as bcrypt from 'bcrypt'
 import dotenv from 'dotenv'
 import jwt from 'jsonwebtoken'
-import { UserModel } from '../../config/model/user'
 import { ENV } from '../../libs'
 import { MESSAGE_CODE } from '../../utils/ErrorCode'
 import { AppError } from '../../utils/HttpError'
 import { MESSAGES } from '../../utils/Messages'
 import { REGEX } from '../../utils/Regex'
 import { LoginAuthBodyDTO, RegisterAuthBodyDTO } from './authDTO'
+import { createUser, findUser } from './authRepository'
 
 dotenv.config()
 
@@ -17,7 +17,7 @@ export const registerService = async ({ email, name, password }: RegisterAuthBod
         return AppError(MESSAGES.ERROR.INVALID.GLOBAL.EMAIL, 400, MESSAGE_CODE.BAD_REQUEST)
     }
 
-    const user = await UserModel.findOne({ email })
+    const user = await findUser(email)
     if (user) {
         return AppError(MESSAGES.ERROR.ALREADY.USER, 400, MESSAGE_CODE.BAD_REQUEST)
     }
@@ -27,7 +27,7 @@ export const registerService = async ({ email, name, password }: RegisterAuthBod
     }
 
     const hashPassword = await bcrypt.hash(password, 10)
-    const newUser = await UserModel.create({ name, email, password: hashPassword })
+    const newUser = await createUser({ email, name, password: hashPassword })
     return newUser
 
 }
@@ -36,7 +36,7 @@ export const loginService = async (
     { email, password }: LoginAuthBodyDTO
 ) => {
 
-    const user = await UserModel.findOne({ email })
+    const user = await findUser(email)
     if (!user) {
         return AppError(MESSAGES.ERROR.NOT_FOUND.USER.ACCOUNT, 404, MESSAGE_CODE.NOT_FOUND)
     }
@@ -47,7 +47,7 @@ export const loginService = async (
     }
 
     const token = jwt.sign({
-        id: user._id,
+        id: user.id,
         name: user.name,
         email: user.email,
         role: user.role

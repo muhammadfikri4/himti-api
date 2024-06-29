@@ -12,10 +12,10 @@ import { AcaraModelTypes } from "./acaraTypes";
 
 export const createAcaraController = async (req: Request, res: Response, next: NextFunction) => {
 
-    const { name, description, endTime, image, isOpen, startTime, } = req.body as AcaraBodyDTO
+    const { name, description, endTime, isOpen, startTime, } = req.body as AcaraBodyDTO
 
 
-    const strukturalCreation = await createAcaraService({ name, description, endTime, image, isOpen, startTime });
+    const strukturalCreation = await createAcaraService({ name, description, endTime, image: req.file?.path, isOpen, startTime });
     if ((strukturalCreation as HttpError)?.message) {
 
         return HandleResponse(res, (strukturalCreation as HttpError).statusCode, (strukturalCreation as HttpError).code, (strukturalCreation as HttpError).message)

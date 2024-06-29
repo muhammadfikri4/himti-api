@@ -1,14 +1,13 @@
 import dotenv from 'dotenv'
-import mongoose from 'mongoose'
-import { AcaraModel } from '../../config/model/acara'
 import { Result } from '../../utils/ApiResponse'
 import { MESSAGE_CODE } from '../../utils/ErrorCode'
 import { AppError, HttpError } from '../../utils/HttpError'
 import { MESSAGES } from '../../utils/Messages'
 import { Meta } from '../../utils/Meta'
 import { AcaraBodyDTO } from './acaraDTO'
+import { createAcara, deleteAcara, getAcara, getAcaraById, getAcaraCount, updateAcara } from './acaraRepository'
 import { acaraMapper } from './acaraResponse'
-import { AcaraModelTypes, SearchAcaraTypes } from './acaraTypes'
+import { AcaraModelTypes, IFilterAcara } from './acaraTypes'
 import { acaraValidate } from './acaraValidate'
 
 dotenv.config();
@@ -21,57 +20,36 @@ export const createAcaraService = async ({ name, description, endTime, image, is
     }
 
 
-    const newAcara = await AcaraModel.create({ name, image, description: description || null, isOpen, endTime: endTime || null, startTime: startTime || null })
+    const newAcara = await createAcara({ name, image, description, isOpen, endTime, startTime })
     return newAcara
 }
 
-export const getAcaraService = async ({ name, page = 1, perPage = 10 }: SearchAcaraTypes): Promise<Result<AcaraModelTypes[]>> => {
+export const getAcaraService = async ({ name, page = 1, perPage = 10 }: IFilterAcara): Promise<Result<AcaraModelTypes[]>> => {
 
-    if (name) {
+    const [acara, totalData] = await Promise.all([
+        getAcara({ name, page, perPage }),
+        getAcaraCount({ name })
+    ])
 
-        const acaras = await AcaraModel.find({ name: new RegExp(name, 'i') }).limit(perPage)
-            .skip((page - 1) * perPage) as unknown as AcaraModelTypes[]
-        const totalData = acaras.length
-
-        const data = await acaraMapper(acaras)
-
-        return { data, meta: Meta(page, perPage, totalData) }
-
-    }
-    const dosen = await AcaraModel.find<AcaraModelTypes>()
-
-    const totalData = dosen.length
-
-    // Batasi jumlah dokumen yang diambil pada satu halaman
-    const res = await AcaraModel.find<AcaraModelTypes>()
-        .limit(perPage)
-        .skip((page - 1) * perPage);
-    const data = await acaraMapper(res)
-
+    const data = await acaraMapper(acara as unknown as AcaraModelTypes[])
     const response = { data, meta: Meta(page, perPage, totalData) }
     return response
 }
 
 export const deleteAcaraService = async ({ id }: AcaraBodyDTO) => {
 
-    if (!mongoose.Types.ObjectId.isValid(id as string)) {
-        return AppError(MESSAGES.ERROR.INVALID.ID, 400, MESSAGE_CODE.BAD_REQUEST);
-    }
-    const Struktural = await AcaraModel.findOne({ _id: id })
+    const acara = await getAcaraById(id as string)
 
-    if (!Struktural) {
+    if (!acara) {
         return AppError(MESSAGES.ERROR.NOT_FOUND.ANGKATAN.NAME, 404, MESSAGE_CODE.NOT_FOUND)
     }
 
-    const deleteAngkatan = await AcaraModel.deleteOne({ _id: id })
-    return deleteAngkatan;
+    const response = await deleteAcara(id as string)
+    return response;
 }
 export const updateAcaraService = async ({ id, name, image, description, endTime, isOpen, startTime, }: AcaraBodyDTO) => {
 
-    if (!mongoose.Types.ObjectId.isValid(id as string)) {
-        return AppError(MESSAGES.ERROR.INVALID.ID, 400, MESSAGE_CODE.BAD_REQUEST);
-    }
-    const matchStruktural = await AcaraModel.findOne({ _id: id })
+    const matchStruktural = await getAcaraById(id as string)
 
     if (!matchStruktural) {
         return AppError(MESSAGES.ERROR.NOT_FOUND.STRUKTURAL, 404, MESSAGE_CODE.NOT_FOUND)
@@ -85,12 +63,7 @@ export const updateAcaraService = async ({ id, name, image, description, endTime
     if (startTime !== undefined) updateFields.startTime = startTime;
     if (endTime !== undefined) updateFields.endTime = endTime;
 
-    const updateStruktural = await AcaraModel.updateOne(
-        { _id: id },
-        {
-            $set: updateFields
+    const response = await updateAcara(updateFields)
 
-        })
-
-    return updateStruktural;
+    return response;
 }

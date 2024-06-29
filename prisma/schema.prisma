@@ -1,0 +1,118 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(uuid())
+  name      String
+  email     String   @unique
+  password  String
+  role      Role     @default(ADMIN)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Dosen {
+  id          String   @id @default(uuid())
+  nidn        String   @unique
+  name        String
+  email       String?  @unique
+  numberPhone BigInt?  @map("number_phone")
+  lesson      String?
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Angkatan {
+  id        String    @id @default(uuid())
+  year      String
+  isActive  Boolean   @default(true)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  Anggota   Anggota[]
+}
+
+model Anggota {
+  id         String       @id @default(uuid())
+  name       String
+  email      String?
+  nim        String       @unique
+  angkatan   Angkatan     @relation(fields: [angkatanId], references: [id])
+  angkatanId String       @map("angkatan_id")
+  isActive   Boolean?     @default(true)
+  createdAt  DateTime     @default(now())
+  updatedAt  DateTime     @updatedAt
+  Alumni     Alumni[]
+  Struktural Struktural[]
+}
+
+model Alumni {
+  id        String   @id @default(uuid())
+  anggota   Anggota  @relation(fields: [anggotaId], references: [id])
+  anggotaId String   @map("anggota_id")
+  company   String?
+  image     String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Department {
+  id        String   @id @default(uuid())
+  name      String
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Struktural {
+  id        String   @id @default(uuid())
+  anggota   Anggota  @relation(fields: [anggotaId], references: [id])
+  anggotaId String
+  jabatan   Jabatan
+  instagram String?
+  facebook  String?
+  twitter   String?
+  linkedin  String?
+  image     String
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Acara {
+  id          String   @id @default(uuid())
+  name        String
+  description String?
+  image       String
+  startTime   DateTime @default(now()) @map("start_time")
+  endTime     DateTime @default(now()) @map("end_time")
+  isOpen      Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+enum Jabatan {
+  KETUA_HIMPUNAN
+  WAKIL_KETUA_HIMPUNAN
+  BENDAHARA
+  SEKRETARIS
+  KETUA_DEPARTMENT
+}
+
+enum Role {
+  SUPER_ADMIN
+  ADMIN
+  USER
+}

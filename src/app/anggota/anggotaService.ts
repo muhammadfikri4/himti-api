@@ -1,52 +1,37 @@
 import dotenv from 'dotenv'
 import { type Request } from 'express'
-import mongoose, { ObjectId } from 'mongoose'
-import { AnggotaModel } from '../../config/model/anggota'
+import mongoose from 'mongoose'
 import { Result } from '../../utils/ApiResponse'
 import { MESSAGE_CODE } from '../../utils/ErrorCode'
 import { AppError, HttpError } from '../../utils/HttpError'
 import { MESSAGES } from '../../utils/Messages'
 import { Meta } from '../../utils/Meta'
 import { AnggotaBodyDTO } from './anggotaDTO'
-import { strukturalMapper } from './anggotaResponse'
-import { AnggotaModelTypes, SearchAnggotaTypes } from './anggotaTypes'
+import { createAnggota, deleteAnggota, getAnggota, getAnggotaById, getAnggotaCount, updateAnggota } from './anggotaRepository'
+import { anggotaMapper } from './anggotaResponse'
+import { AnggotaModelTypes, IFilterAnggota } from './anggotaTypes'
 import { anggotaValidate } from './anggotaValidate'
 
 dotenv.config();
 
 export const createAnggotaService = async ({ name, nim, email, angkatanId, isActive }: AnggotaBodyDTO, req: Request) => {
 
-    const validate = await anggotaValidate({ name: name as string, email: email as string, nim: nim as string, angkatanId: angkatanId as ObjectId })
+    const validate = await anggotaValidate({ name: name as string, email: email as string, nim, angkatanId })
     if ((validate as HttpError)?.message) {
         return AppError((validate as HttpError).message, (validate as HttpError).statusCode, (validate as HttpError).code)
     }
 
-    const newStruktural = await AnggotaModel.create({ name, email: email || null, isActive, nim, angkatanId })
-    return newStruktural
+    const anggota = await createAnggota({ email, angkatanId, isActive, name, nim })
+    return anggota
 }
 
-export const getAnggotaService = async ({ name, page = 1, perPage = 10 }: SearchAnggotaTypes): Promise<Result> => {
+export const getAnggotaService = async ({ name, email, nim, page = 1, perPage = 10 }: IFilterAnggota): Promise<Result> => {
 
-    if (name) {
 
-        const dosens = await AnggotaModel.find({ name: new RegExp(name, 'i') }).limit(perPage)
-            .skip((page - 1) * perPage) as unknown as AnggotaModelTypes[]
-        const totalData = dosens.length
 
-        const data = await strukturalMapper(dosens)
+    const [anggota, totalData] = await Promise.all([getAnggota({ email, name, nim, page, perPage }), getAnggotaCount({ email, name, nim })])
 
-        return { data, meta: Meta(page, perPage, totalData) }
-
-    }
-    const dosen = await AnggotaModel.find<AnggotaModelTypes>()
-
-    const totalData = dosen.length
-
-    // Batasi jumlah dokumen yang diambil pada satu halaman
-    const res = await AnggotaModel.find<AnggotaModelTypes>()
-        .limit(perPage)
-        .skip((page - 1) * perPage);
-    const data = await strukturalMapper(res)
+    const data = await anggotaMapper(anggota as unknown as AnggotaModelTypes[])
 
     const response = { data, meta: Meta(page, perPage, totalData) }
     return response
@@ -57,21 +42,21 @@ export const deleteAnggotaService = async ({ id }: AnggotaBodyDTO) => {
     if (!mongoose.Types.ObjectId.isValid(id as string)) {
         return AppError(MESSAGES.ERROR.INVALID.ID, 400, MESSAGE_CODE.BAD_REQUEST);
     }
-    const Struktural = await AnggotaModel.findOne({ _id: id })
+    const findAnggota = await getAnggotaById(id as string)
 
-    if (!Struktural) {
+    if (!findAnggota) {
         return AppError(MESSAGES.ERROR.NOT_FOUND.ANGGOTA, 404, MESSAGE_CODE.NOT_FOUND)
     }
 
-    const deleteAngkatan = await AnggotaModel.deleteOne({ _id: id })
-    return deleteAngkatan;
+    const anggota = await deleteAnggota(id as string)
+    return anggota;
 }
 export const updateAnggotaService = async ({ id, name, isActive, email, angkatanId, nim }: AnggotaBodyDTO) => {
 
     if (!mongoose.Types.ObjectId.isValid(id as string)) {
         return AppError(MESSAGES.ERROR.INVALID.ID, 400, MESSAGE_CODE.BAD_REQUEST);
     }
-    const matchAnggota = await AnggotaModel.findOne({ _id: id })
+    const matchAnggota = await getAnggotaById(id as string)
 
     if (!matchAnggota) {
         return AppError(MESSAGES.ERROR.NOT_FOUND.ANGGOTA, 404, MESSAGE_CODE.NOT_FOUND)
@@ -82,14 +67,9 @@ export const updateAnggotaService = async ({ id, name, isActive, email, angkatan
     if (isActive !== undefined) updateFields.isActive = isActive;
     if (email !== undefined) updateFields.email = email;
     if (angkatanId !== undefined) updateFields.angkatanId = angkatanId;
-    if (nim !== undefined) updateFields.nim = nim;
+    if (nim !== undefined) updateFields.nim = nim.toString();
 
-    const updateStruktural = await AnggotaModel.updateOne(
-        { _id: id },
-        {
-            $set: updateFields
-
-        })
+    const updateStruktural = await updateAnggota(updateFields)
 
     return updateStruktural;
 }

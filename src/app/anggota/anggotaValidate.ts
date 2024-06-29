@@ -1,12 +1,17 @@
-import { AnggotaModel } from '../../config/model/anggota'
-import { AngkatanModel } from '../../config/model/angkatan'
+
+import { getAngkatanById } from 'app/angkatan/angkatanRepository'
 import { MESSAGE_CODE } from '../../utils/ErrorCode'
 import { AppError } from '../../utils/HttpError'
 import { MESSAGES } from '../../utils/Messages'
 import { REGEX } from '../../utils/Regex'
 import { AnggotaBodyDTO } from './anggotaDTO'
+import { getAnggotaByEmail, getAnggotaByNIM } from './anggotaRepository'
 
 export const anggotaValidate = async ({ nim, name, email, angkatanId }: AnggotaBodyDTO) => {
+
+    if (typeof nim !== 'number') {
+        return AppError(MESSAGE_CODE.BAD_REQUEST, 400, MESSAGES.ERROR.INVALID.NIM)
+    }
     if (!nim) {
         return AppError(MESSAGE_CODE.BAD_REQUEST, 400, MESSAGES.ERROR.REQUIRED.NIM)
     }
@@ -14,20 +19,16 @@ export const anggotaValidate = async ({ nim, name, email, angkatanId }: AnggotaB
 
         return AppError(MESSAGE_CODE.BAD_REQUEST, 400, MESSAGES.ERROR.REQUIRED.NAME)
     }
-    // if (!email) {
-
-    //     return AppError(MESSAGE_CODE.BAD_REQUEST, 400, MESSAGES.ERROR.REQUIRED.EMAIL)
-    // }
     if (email && !REGEX.email.test(email as string)) {
 
         return AppError(MESSAGES.ERROR.INVALID.GLOBAL.EMAIL, 400, MESSAGE_CODE.BAD_REQUEST)
     }
-    const matchNIM = await AnggotaModel.findOne({ nim })
+    const matchNIM = await getAnggotaByNIM(String(nim))
     if (matchNIM) {
 
         return AppError(MESSAGES.ERROR.ALREADY.GLOBAL.NIM, 400, MESSAGE_CODE.BAD_REQUEST)
     }
-    const matchEmail = await AnggotaModel.findOne({ email })
+    const matchEmail = await getAnggotaByEmail(email as string)
     if (matchEmail) {
 
         return AppError(MESSAGES.ERROR.ALREADY.GLOBAL.EMAIL, 400, MESSAGE_CODE.BAD_REQUEST)
@@ -39,7 +40,7 @@ export const anggotaValidate = async ({ nim, name, email, angkatanId }: AnggotaB
     }
 
 
-    const matchAngkatan = await AngkatanModel.findOne({ _id: angkatanId })
+    const matchAngkatan = await getAngkatanById(angkatanId)
 
     if (!matchAngkatan) {
 

@@ -1,17 +1,12 @@
 import { DosenModelTypes } from "./dosenTypes";
 
-export const dosenMapper = (dosens: DosenModelTypes[]) => {
-    const mapper = dosens.map(dosen => {
+export const dosenMapper = (dosens: DosenModelTypes[]): DosenModelTypes[] => {
+    const mapper = dosens.map((dosen: DosenModelTypes) => {
+        const { nidn, numberPhone } = dosen
         return {
-            id: dosen._id,
-            nidn: dosen.nidn,
-            name: dosen.name,
-            email: dosen.email,
-            numberPhone: dosen.numberPhone,
-            mataKuliah: dosen.mataKuliah,
-            isActive: dosen.isActive,
-            createdAt: dosen.createdAt,
-            updatedAt: dosen.updatedAt
+            ...dosen,
+            nidn: Number(nidn),
+            numberPhone: Number(numberPhone)
 
         }
     })

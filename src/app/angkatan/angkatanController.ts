@@ -4,13 +4,14 @@ import { HandleResponse } from "../../utils/HandleResponse";
 import { HttpError } from "../../utils/HttpError";
 import { MESSAGES } from "../../utils/Messages";
 import { createAngkatanService, deleteAngkatanService, getAngkatanService, updateAngkatanService } from "../angkatan/angkatanService";
-import { SearchAngkatanTypes } from "./angkatanTypes";
+import { AngkatanBodyDTO } from "./angkatanDTO";
+import { IFilterAngkatan } from "./angkatanTypes";
 
 export const createAngkatanController = async (req: Request, res: Response) => {
 
-    const { angkatan, isActive } = req.body
+    const { year, isActive } = req.body as AngkatanBodyDTO
 
-    const angkatanCreation = await createAngkatanService({ angkatan, isActive });
+    const angkatanCreation = await createAngkatanService({ year: year?.toString(), isActive });
 
     if ((angkatanCreation as HttpError)?.message) {
         return HandleResponse(res, (angkatanCreation as HttpError).statusCode, (angkatanCreation as HttpError).code, (angkatanCreation as HttpError).message)
@@ -20,7 +21,7 @@ export const createAngkatanController = async (req: Request, res: Response) => {
 
 export const getAngkatanController = async (req: Request, res: Response) => {
 
-    const { search, page, perPage } = req.query as SearchAngkatanTypes
+    const { search, page, perPage } = req.query as IFilterAngkatan
 
     const angkatan = await getAngkatanService({ search: search as string, page: Number(page) || undefined, perPage: Number(perPage) || undefined })
 
@@ -43,13 +44,11 @@ export const deleteAngkatanController = async (req: Request, res: Response) => {
 
 export const updateAngkatanController = async (req: Request, res: Response) => {
     const { id } = req.params;
-    const { angkatan, isActive } = req.body
+    const { year, isActive } = req.body as AngkatanBodyDTO
 
-    if (!angkatan) {
-        return HandleResponse(res, 404, MESSAGE_CODE.NOT_FOUND, MESSAGES.ERROR.REQUIRED.ANGKATAN_NAME)
-    }
 
-    const updateAngkatan = await updateAngkatanService({ id, angkatan, isActive });
+
+    const updateAngkatan = await updateAngkatanService({ id, year: year ? year.toString() : undefined, isActive });
     if ((updateAngkatan as HttpError)?.message) {
         return HandleResponse(res, (updateAngkatan as HttpError).statusCode, (updateAngkatan as HttpError).code, (updateAngkatan as HttpError).message)
     }

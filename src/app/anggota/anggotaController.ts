@@ -23,12 +23,12 @@ export const createAnggotaController = async (req: Request, res: Response, next:
 
 export const getAnggotaController = async (req: Request, res: Response) => {
 
-    const { name, page, perPage } = req.query
+    const { name, page, perPage, nim, email } = req.query
 
-    const anggota = await getAnggotaService({ name: name as string, page: page ? Number(page) : undefined, perPage: perPage ? Number(perPage) : undefined }) as Result<AnggotaModelTypes[]>
+    const anggota = await getAnggotaService({ name: name as string, page: page ? Number(page) : undefined, perPage: perPage ? Number(perPage) : undefined, email: email as string, nim: nim ? Number(nim) : undefined }) as Result<AnggotaModelTypes[]>
 
     if (!anggota.data.length) {
-        return HandleResponse(res, 404, MESSAGE_CODE.NOT_FOUND, MESSAGES.ERROR.NOT_FOUND.STRUKTURAL, (anggota as unknown as Result<AnggotaModelTypes[]>)?.data, (anggota as Result)?.meta)
+        return HandleResponse(res, 404, MESSAGE_CODE.NOT_FOUND, MESSAGES.ERROR.NOT_FOUND.ANGGOTA, (anggota as unknown as Result<AnggotaModelTypes[]>)?.data, (anggota as Result)?.meta)
     }
     HandleResponse<AnggotaModelTypes[]>(res, 200, MESSAGE_CODE.SUCCESS, MESSAGES.SUCCESS.ANGGOTA.GET, (anggota as unknown as Result<AnggotaModelTypes[]>)?.data, (anggota as unknown as Result)?.meta)
 

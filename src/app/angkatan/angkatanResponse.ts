@@ -1,12 +1,11 @@
 import { AngkatanModelTypes } from "./angkatanTypes";
 
 export const angkatanMapper = (angkatans: AngkatanModelTypes[]) => {
-    const mapper = angkatans.map(angkatan => {
+    return angkatans.map((angkatan) => {
         return {
-            id: angkatan._id,
-            angkatan: angkatan.angkatan,
+            id: angkatan.id,
+            year: Number(angkatan.year),
             isActive: angkatan.isActive
         }
     })
-    return mapper
 }

@@ -1,10 +1,10 @@
-import { Router } from "express";
-import { createRoleController } from "./roleController";
+// import { Router } from "express";
+// import { createRoleController } from "./roleController";
 
-const route = Router()
+// const route = Router()
 
-route.post("/", createRoleController)
+// route.post("/", createRoleController)
 
-route.get("/")
+// route.get("/")
 
-export default route
+// export default route

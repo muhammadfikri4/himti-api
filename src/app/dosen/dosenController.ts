@@ -5,15 +5,16 @@ import { MESSAGE_CODE } from "../../utils/ErrorCode";
 import { HandleResponse } from "../../utils/HandleResponse";
 import { HttpError } from "../../utils/HttpError";
 import { MESSAGES } from "../../utils/Messages";
+import { DosenBodyDTO } from "./dosenDTO";
 import { createDosenService, deleteDosenService, getDosenService, updateDosenService } from "./dosenService";
-import { DosenModelTypes } from "./dosenTypes";
+import { DosenModelTypes, IFilterDosen } from "./dosenTypes";
 
 
 export const createDosenController = async (req: Request, res: Response) => {
 
-    const { nidn, name, email, numberPhone, mataKuliah, isActive } = req.body
+    const { nidn, name, email, numberPhone, lesson, isActive } = req.body as DosenBodyDTO
 
-    const dosenCreation = await createDosenService({ email, isActive, mataKuliah, name, nidn, numberPhone });
+    const dosenCreation = await createDosenService({ email, isActive, lesson, name, nidn, numberPhone });
 
     if ((dosenCreation as HttpError)?.message) {
         return HandleResponse(res, (dosenCreation as HttpError).statusCode, (dosenCreation as HttpError).code, (dosenCreation as HttpError).message)
@@ -23,14 +24,13 @@ export const createDosenController = async (req: Request, res: Response) => {
 
 export const getDosenController = async (req: Request, res: Response) => {
 
-    const { name, page, perPage } = req.query
+    const { name, email, nidn, page, perPage } = req.query as IFilterDosen
 
-    const dosen = await getDosenService({ name: name as string, page: page ? Number(page) : undefined, perPage: perPage ? Number(perPage) : undefined });
-
+    const dosen = await getDosenService({ name: name as string, page: page ? Number(page) : undefined, perPage: perPage ? Number(perPage) : undefined, email, nidn });
     if (!dosen.data.length) {
         return HandleResponse(res, 404, MESSAGE_CODE.NOT_FOUND, MESSAGES.ERROR.NOT_FOUND.DOSEN, (dosen as unknown as Result<DosenModelTypes>)?.data, (dosen as unknown as Result<DosenModelTypes>)?.meta as MetaResponse)
     }
-    HandleResponse<DosenModelTypes[]>(res, 200, MESSAGE_CODE.SUCCESS, MESSAGES.SUCCESS.DOSEN.GET, (dosen as unknown as Result<DosenModelTypes[]>)?.data, (dosen as unknown as Result<DosenModelTypes[]>)?.meta as MetaResponse)
+    return HandleResponse<DosenModelTypes[]>(res, 200, MESSAGE_CODE.SUCCESS, MESSAGES.SUCCESS.DOSEN.GET, (dosen as unknown as Result<DosenModelTypes[]>)?.data, (dosen as unknown as Result<DosenModelTypes[]>)?.meta as MetaResponse)
 
 }
 
@@ -46,9 +46,9 @@ export const deleteDosenController = async (req: Request, res: Response) => {
 
 export const updateDosenController = async (req: Request, res: Response) => {
     const { id } = req.params;
-    const { nidn, name, email, numberPhone, mataKuliah, isActive } = req.body
+    const { nidn, name, email, numberPhone, lesson, isActive } = req.body as DosenBodyDTO
 
-    const updateDosen = await updateDosenService({ id, email, isActive, mataKuliah, name, nidn, numberPhone });
+    const updateDosen = await updateDosenService({ id, email, isActive, lesson, name, nidn, numberPhone });
     if ((updateDosen as HttpError)?.message) {
         return HandleResponse(res, (updateDosen as HttpError).statusCode, (updateDosen as HttpError).code, (updateDosen as HttpError).message)
     }

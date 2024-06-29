@@ -1,23 +1,21 @@
+import { PrismaClient } from '@prisma/client';
 import dotenv from 'dotenv';
-import mongoose from "mongoose";
-import { ENV } from '../libs';
 
-dotenv.config()
-const mongoURI = process.env.DB_URL
+dotenv.config();
 
-mongoose.set('strictQuery', true)
+export const prisma = new PrismaClient();
 
-export const dbconect = async (): Promise<typeof mongoose | undefined> => {
-    try {
-        const conn = await mongoose.connect(mongoURI as string, {
-            dbName: ENV.DB_NAME,
-            user: ENV.DB_USER,
-            pass: ENV.DB_PASSWORD
-        })
-        console.log("DB connected🚀")
-        return conn
-    } catch (error: unknown) {
-        console.log((error as unknown as any).message)
-    }
-}
-// mongodb + srv://muhfikriantoaji:muhfikri04@cluster0.rupsheq.mongodb.net/
+// export const dbconnect = async () => {
+//     try {
+//         await prisma.$connect();
+//         console.log('DB connected🚀');
+//     } catch (error: unknown) {
+//         console.error('Failed to connect to the database:', error);
+//     }
+// };
+
+// // Jangan lupa untuk menutup koneksi Prisma Client saat aplikasi dihentikan
+// process.on('SIGINT', async () => {
+//     await prisma.$disconnect();
+//     process.exit(0);
+// });

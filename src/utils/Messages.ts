@@ -52,7 +52,8 @@ export const MESSAGES = {
 
             },
             ANGKATAN: "Angkatan must be a number",
-            ID: "ID is invalid"
+            ID: "ID is invalid",
+            NIM: "NIM must be a number",
         },
         UNAUTHORIZED: {
             AUTH: "If you are not logged in, please log in first"
@@ -62,7 +63,7 @@ export const MESSAGES = {
             PASSWORD: "Password is required",
             NAME: "Name is required",
             ROLE_NAME: "Role Name is required",
-            ANGKATAN_NAME: "Angkatan Name is required",
+            ANGKATAN_YEAR: "Angkatan year is required",
             NIDN: "NIDN is required",
             NIM: "NIM is required",
             ANGKATAN_ID: "Angkatan Id is required",
