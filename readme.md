@@ -228,12 +228,9 @@ Create Struktural
     contentType: "multipart/form-data",
     method: POST
     body: {
-        name: "John" -> required,
-        nim: 2255201238 -> required,
-        jabatan: "Kahim" -> required,
-        angkatanId: "6666fd9be909b426c8aede32" -> required,
+        
+        anggotaId: "6666fd9be909b426c8aede32" -> required,
         image: "/path/image.png" -> required,
-        email:muhfikriantoaji@gmail.com -> optional,
         instagram: "https://instagram.com" -> optional, 
         twitter: "https://twitter.com" -> optional, 
         facebook: "https://facebook.com" -> optional, 
@@ -250,12 +247,9 @@ Update Struktural
     method: PUT,
     contentType: "multipart/form-data",
     body: {
-        name: "John",
-        nim: 2255201238,
-        jabatan: "Kahim",
-        angkatanId: "6666fd9be909b426c8aede32",
+       
+        anggotaId: "6666fd9be909b426c8aede32",
         image: "/path/image.png",
-        email:muhfikriantoaji@gmail.com,
         instagram: "https://instagram.com", 
         twitter: "https://twitter.com", 
         facebook: "https://facebook.com", 
