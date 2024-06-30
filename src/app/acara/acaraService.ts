@@ -54,7 +54,7 @@ export const updateAcaraService = async ({ id, name, image, description, endTime
     if (!matchStruktural) {
         return AppError(MESSAGES.ERROR.NOT_FOUND.STRUKTURAL, 404, MESSAGE_CODE.NOT_FOUND)
     }
-    const updateFields: Partial<AcaraModelTypes> = {};
+    const updateFields: Partial<AcaraModelTypes> = { id };
 
     if (name !== undefined) updateFields.name = name;
     if (description !== undefined) updateFields.description = description;
