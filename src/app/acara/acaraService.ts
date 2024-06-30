@@ -54,16 +54,16 @@ export const updateAcaraService = async ({ id, name, image, description, endTime
     if (!matchStruktural) {
         return AppError(MESSAGES.ERROR.NOT_FOUND.STRUKTURAL, 404, MESSAGE_CODE.NOT_FOUND)
     }
-    const updateFields: Partial<AcaraModelTypes> = { id };
+    const updateFields: Partial<AcaraModelTypes> = {};
 
     if (name !== undefined) updateFields.name = name;
     if (description !== undefined) updateFields.description = description;
     if (image !== undefined) updateFields.image = image;
-    if (isOpen !== undefined) updateFields.isOpen = isOpen;
+    if (isOpen !== undefined) updateFields.isOpen = JSON.parse(String(isOpen));
     if (startTime !== undefined) updateFields.startTime = startTime;
     if (endTime !== undefined) updateFields.endTime = endTime;
 
-    const response = await updateAcara(updateFields)
+    const response = await updateAcara(updateFields, id as string)
 
     return response;
 }

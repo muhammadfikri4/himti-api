@@ -59,10 +59,10 @@ export const deleteAcara = async (id: string) => {
     })
 }
 
-export const updateAcara = async (data: AcaraBodyDTO) => {
+export const updateAcara = async (data: AcaraBodyDTO, id: string) => {
     return await prisma.acara.update({
         where: {
-            id: data.id
+            id
         },
         data
     })
