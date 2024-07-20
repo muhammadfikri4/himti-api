@@ -14,13 +14,14 @@ datasource db {
 }
 
 model User {
-  id        String   @id @unique @default(uuid())
+  id        String    @id @unique @default(uuid())
   name      String
-  email     String   @unique
+  email     String    @unique
   password  String
-  role      Role     @default(ADMIN)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  role      Role      @default(ADMIN)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  Absensi   Absensi[]
 }
 
 model Dosen {
@@ -61,7 +62,7 @@ model Anggota {
 model Alumni {
   id        String   @id @unique @default(uuid())
   anggota   Anggota  @relation(fields: [anggotaId], references: [id])
-  anggotaId String   @map("anggota_id")
+  anggotaId String
   company   String?
   image     String
   createdAt DateTime @default(now())
@@ -92,15 +93,27 @@ model Struktural {
 }
 
 model Acara {
-  id          String   @id @unique @default(uuid())
+  id          String    @id @unique @default(uuid())
   name        String
   description String?
   image       String
-  startTime   DateTime @default(now()) @map("start_time")
-  endTime     DateTime @default(now()) @map("end_time")
-  isOpen      Boolean  @default(true)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  startTime   DateTime  @default(now())
+  endTime     DateTime  @default(now())
+  isOpen      Boolean   @default(true)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  Absensi     Absensi[]
+}
+
+model Absensi {
+  id        Int      @id @unique @default(autoincrement())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  image     String
+  acaraId   String
+  acara     Acara    @relation(fields: [acaraId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 enum Jabatan {
@@ -112,7 +125,7 @@ enum Jabatan {
 }
 
 enum Role {
-  SUPER_ADMIN
   ADMIN
   USER
+  ANGGOTA
 }

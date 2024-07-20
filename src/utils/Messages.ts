@@ -54,9 +54,11 @@ export const MESSAGES = {
             ANGKATAN: "Angkatan must be a number",
             ID: "ID is invalid",
             NIM: "NIM must be a number",
+            AUTH: "Invalid credentials token",
         },
         UNAUTHORIZED: {
-            AUTH: "If you are not logged in, please log in first"
+            AUTH: "If you are not logged in, please log in first",
+            FORBIDDEN: "You are not Authorized"
         },
         REQUIRED: {
             EMAIL: "Email is required",
