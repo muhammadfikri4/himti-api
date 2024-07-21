@@ -14,5 +14,10 @@ export interface LoginAuthBodyDTO {
 }
 
 export interface LoginAuthResponse {
-    access_token: string
+    access_token: string,
+    user: {
+        name: string,
+        nim: string,
+        role: Role
+    }
 }

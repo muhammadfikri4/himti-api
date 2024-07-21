@@ -60,6 +60,12 @@ export const loginService = async (
         role: user.role
     }, ENV.JWT_SECRET as string)
 
-    return token
+    const userInfo = {
+        name: user.name,
+        nim: user.nim,
+        role: user.role,
+    }
+
+    return { access_token: token, user: userInfo }
 
 }
