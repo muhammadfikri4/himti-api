@@ -5,7 +5,7 @@ export const anggotaMapper = async (anggotas: AnggotaModelTypes[]) => {
         const { id, createdAt, updatedAt, email, isActive, name, nim } = anggota
 
         return {
-            id: Number(id),
+            id,
             nim: Number(nim),
             name: name,
             email: email,
