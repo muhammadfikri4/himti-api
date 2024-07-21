@@ -1,13 +1,14 @@
 import { prisma } from "../../config"
 import { RegisterAuthBodyDTO } from "./authDTO"
 
-export const createUser = async ({ email, name, password }: RegisterAuthBodyDTO) => {
+export const createUser = async ({ email, name, password, nim, role }: RegisterAuthBodyDTO) => {
     return await prisma.user.create({
         data: {
             email,
             name,
             password,
-            role: 'ADMIN'
+            nim,
+            role
         }
     })
 }

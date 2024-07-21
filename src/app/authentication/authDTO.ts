@@ -1,7 +1,11 @@
+import { Role } from "@prisma/client"
+
 export interface RegisterAuthBodyDTO {
     email: string
     password: string
     name: string
+    nim: string,
+    role?: Role
 }
 
 export interface LoginAuthBodyDTO {

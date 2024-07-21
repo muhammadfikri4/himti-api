@@ -1,3 +1,5 @@
+import { Role } from '@prisma/client'
+import { getAnggotaByNIM } from 'app/anggota/anggotaRepository'
 import * as bcrypt from 'bcrypt'
 import dotenv from 'dotenv'
 import jwt from 'jsonwebtoken'
@@ -11,7 +13,7 @@ import { createUser, findUser } from './authRepository'
 
 dotenv.config()
 
-export const registerService = async ({ email, name, password }: RegisterAuthBodyDTO) => {
+export const registerService = async ({ email, name, password, nim }: RegisterAuthBodyDTO) => {
 
     if (!REGEX.email.test(email)) {
         return AppError(MESSAGES.ERROR.INVALID.GLOBAL.EMAIL, 400, MESSAGE_CODE.BAD_REQUEST)
@@ -27,7 +29,12 @@ export const registerService = async ({ email, name, password }: RegisterAuthBod
     }
 
     const hashPassword = await bcrypt.hash(password, 10)
-    const newUser = await createUser({ email, name, password: hashPassword })
+    let role: Role = "USER"
+    const isAnggota = await getAnggotaByNIM(nim)
+    if (isAnggota) {
+        role = "ANGGOTA"
+    }
+    const newUser = await createUser({ email, name, password: hashPassword, role, nim })
     return newUser
 
 }

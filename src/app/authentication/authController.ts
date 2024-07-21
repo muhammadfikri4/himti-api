@@ -8,7 +8,7 @@ import { loginService, registerService } from "./authService";
 
 export const registerController = async (req: Request, res: Response) => {
 
-    const { name, email, password } = req.body
+    const { name, email, password, nim } = req.body
 
     if (!email) {
         return HandleResponse(res, 400, MESSAGE_CODE.BAD_REQUEST, MESSAGES.ERROR.REQUIRED.EMAIL)
@@ -21,7 +21,7 @@ export const registerController = async (req: Request, res: Response) => {
     if (!name) {
         return HandleResponse(res, 400, MESSAGE_CODE.BAD_REQUEST, MESSAGES.ERROR.REQUIRED.NAME)
     }
-    const register = await registerService({ name, email, password });
+    const register = await registerService({ name, email, password, nim });
 
     if ((register as HttpError)?.message) {
         return HandleResponse(res, (register as HttpError).statusCode, (register as HttpError).code, (register as HttpError).message)
