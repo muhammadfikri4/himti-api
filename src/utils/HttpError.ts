@@ -12,3 +12,17 @@ export const AppError = (message: string, statusCode: number, code: string) => {
     error.code = code
     return error;
 }
+
+
+export class ErrorApp extends Error {
+    message: string
+    statusCode: number
+    code: string
+    constructor(message: string, statusCode: number, code: string) {
+        super(message)
+        this.statusCode = statusCode
+        this.code = code
+        this.message = message
+
+    }
+}

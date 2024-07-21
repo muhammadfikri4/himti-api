@@ -4,10 +4,12 @@ import anggotaRoute from '../app/anggota/anggotaRoute';
 import angkatanRoute from '../app/angkatan/angkatanRoute';
 import authRoute from '../app/authentication/authRoute';
 import dosenRoute from '../app/dosen/dosenRoute';
+import profileRoute from '../app/profile/profileRoute';
 
 const route = Router();
 
 route.use("/auth", authRoute);
+route.use("/profile", profileRoute);
 // route.use("/role", roleRoute);
 route.use("/angkatan", angkatanRoute)
 route.use("/dosen", dosenRoute)

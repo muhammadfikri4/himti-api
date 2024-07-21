@@ -1,5 +1,4 @@
 import { Role } from '@prisma/client'
-import { getAnggotaByNIM } from 'app/anggota/anggotaRepository'
 import * as bcrypt from 'bcrypt'
 import dotenv from 'dotenv'
 import jwt from 'jsonwebtoken'
@@ -8,6 +7,7 @@ import { MESSAGE_CODE } from '../../utils/ErrorCode'
 import { AppError } from '../../utils/HttpError'
 import { MESSAGES } from '../../utils/Messages'
 import { REGEX } from '../../utils/Regex'
+import { getAnggotaByNIM } from '../anggota/anggotaRepository'
 import { LoginAuthBodyDTO, RegisterAuthBodyDTO } from './authDTO'
 import { createUser, findUser } from './authRepository'
 

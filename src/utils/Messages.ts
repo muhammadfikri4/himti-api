@@ -26,7 +26,8 @@ export const MESSAGES = {
             STRUKTURAL: "Struktural not found",
             ANGGOTA: "Anggota not found",
             ALUMNI: "Alumni not found",
-            ACARA: "Acara not found"
+            ACARA: "Acara not found",
+            USER_ID: "User ID not found"
         },
         ALREADY: {
             GLOBAL: {
@@ -111,6 +112,9 @@ export const MESSAGES = {
             GET: "Success to fetch Acara",
             DELETE: "Success to delete Acara",
             UPDATE: "Success to update Acara"
+        },
+        PROFILE: {
+            GET: "Success to fetch profile"
         }
     }
 }
