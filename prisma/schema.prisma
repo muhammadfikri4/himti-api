@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -18,11 +12,13 @@ model User {
   name      String
   email     String    @unique
   password  String
-  nim       String
   role      Role      @default(ADMIN)
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
+  nim       String
   Absensi   Absensi[]
+
+  @@index([name, nim])
 }
 
 model Dosen {
@@ -35,6 +31,8 @@ model Dosen {
   isActive    Boolean  @default(true)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+
+  @@index([name, nidn, createdAt])
 }
 
 model Angkatan {
@@ -44,6 +42,8 @@ model Angkatan {
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
   Anggota   Anggota[]
+
+  @@index([year, createdAt])
 }
 
 model Anggota {
@@ -51,46 +51,50 @@ model Anggota {
   name       String
   email      String?
   nim        String       @unique
-  angkatan   Angkatan     @relation(fields: [angkatanId], references: [id])
   angkatanId String       @map("angkatan_id")
-  isActive   Boolean?     @default(true)
   createdAt  DateTime     @default(now())
+  isActive   Boolean?     @default(true)
   updatedAt  DateTime     @updatedAt
   Alumni     Alumni[]
+  angkatan   Angkatan     @relation(fields: [angkatanId], references: [id])
   Struktural Struktural[]
+
+  @@index([angkatanId, name, nim, createdAt])
 }
 
 model Alumni {
   id        String   @id @unique @default(uuid())
-  anggota   Anggota  @relation(fields: [anggotaId], references: [id])
-  anggotaId String
   company   String?
   image     String
+  anggotaId String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  anggota   Anggota  @relation(fields: [anggotaId], references: [id])
 }
 
 model Department {
   id        String   @id @unique @default(uuid())
   name      String
-  isActive  Boolean  @default(true)
   createdAt DateTime @default(now())
+  isActive  Boolean  @default(true)
   updatedAt DateTime @updatedAt
 }
 
 model Struktural {
   id        String   @id @unique @default(uuid())
-  anggota   Anggota  @relation(fields: [anggotaId], references: [id])
-  anggotaId String
   jabatan   Jabatan
   instagram String?
   facebook  String?
   twitter   String?
   linkedin  String?
   image     String
-  isActive  Boolean  @default(true)
+  anggotaId String
   createdAt DateTime @default(now())
+  isActive  Boolean  @default(true)
   updatedAt DateTime @updatedAt
+  anggota   Anggota  @relation(fields: [anggotaId], references: [id])
+
+  @@index([anggotaId])
 }
 
 model Acara {
@@ -98,23 +102,28 @@ model Acara {
   name        String
   description String?
   image       String
-  startTime   DateTime  @default(now())
-  endTime     DateTime  @default(now())
   isOpen      Boolean   @default(true)
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
+  endTime     DateTime  @default(now())
+  startTime   DateTime  @default(now())
   Absensi     Absensi[]
+
+  @@index([name, startTime, endTime])
 }
 
 model Absensi {
-  id        Int      @id @unique @default(autoincrement())
-  userId    String
-  user      User     @relation(fields: [userId], references: [id])
-  image     String
-  acaraId   String
-  acara     Acara    @relation(fields: [acaraId], references: [id])
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id         Int      @id @unique @default(autoincrement())
+  image      String
+  acaraId    String
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  userId     String
+  acara      Acara    @relation(fields: [acaraId], references: [id])
+  user       User     @relation(fields: [userId], references: [id])
+  coordinate String
+
+  @@index([userId, acaraId, createdAt])
 }
 
 enum Jabatan {

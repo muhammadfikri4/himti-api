@@ -10,6 +10,7 @@ export const MESSAGES = {
         ANGGOTA: "Anggota created successfully",
         ALUMNI: "Alumni created successfully",
         ACARA: "Acara created successfully",
+        ABSENSI: "Absensi created successfully"
     },
     ERROR: {
         NOT_FOUND: {
@@ -27,7 +28,8 @@ export const MESSAGES = {
             ANGGOTA: "Anggota not found",
             ALUMNI: "Alumni not found",
             ACARA: "Acara not found",
-            USER_ID: "User ID not found"
+            USER_ID: "User ID not found",
+            ABSENSI: "Absensi not found"
         },
         ALREADY: {
             GLOBAL: {
@@ -56,6 +58,7 @@ export const MESSAGES = {
             ID: "ID is invalid",
             NIM: "NIM must be a number",
             AUTH: "Invalid credentials token",
+            ANGGOTA: "You're not anggota"
         },
         UNAUTHORIZED: {
             AUTH: "If you are not logged in, please log in first",
@@ -76,6 +79,8 @@ export const MESSAGES = {
             COMPANY: "Company is required",
             START_DATE: "First Date is required when acara is open",
             END_DATE: "End Date is required when acara is open",
+            ACARA: "Acara must be select",
+            COORDINATE: "Coordinate is required"
         },
         RELATION: {
             ANGKATAN: "Angkatan cannot be deleted because it has a relationship"
@@ -115,6 +120,11 @@ export const MESSAGES = {
         },
         PROFILE: {
             GET: "Success to fetch profile"
+        },
+        ABSENSI: {
+            GET: "Success to fetch Absensi",
+            DELETE: "Success to delete Absensi",
+            UPDATE: "Success to update Absensi"
         }
     }
 }

@@ -15,7 +15,7 @@ export const getAngkatan = async ({ page, perPage, search }: IFilterAngkatan) =>
     return await prisma.angkatan.findMany({
         where: {
             year: {
-                contains: search
+                contains: search, mode: 'insensitive'
             },
         },
         orderBy: {
