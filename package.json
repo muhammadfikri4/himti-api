@@ -40,7 +40,7 @@
     "discord.js": "^14.15.3",
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
-    "firebase": "^10.12.2",
+    "firebase": "^10.12.4",
     "global": "^4.4.0",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.4.1",
@@ -51,7 +51,7 @@
     "vercel": "^34.2.6"
   },
   "scripts": {
-  "start": "npx tsc -w ",
+    "start": "npx tsc -w ",
     "dev": "npx nodemon",
     "build": "prisma generate && tsc",
     "lint": "npx eslint ./src --ext .ts",
