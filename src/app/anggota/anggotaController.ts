@@ -2,7 +2,7 @@ import { NextFunction, type Request, type Response } from "express";
 import { Result } from "../../utils/ApiResponse";
 import { MESSAGE_CODE } from "../../utils/ErrorCode";
 import { HandleResponse } from "../../utils/HandleResponse";
-import { HttpError } from "../../utils/HttpError";
+import { ErrorApp, HttpError } from "../../utils/HttpError";
 import { MESSAGES } from "../../utils/Messages";
 import { createAnggotaService, deleteAnggotaService, getAnggotaService, updateAnggotaService } from "./anggotaService";
 import { AnggotaModelTypes } from "./anggotaTypes";
@@ -23,14 +23,21 @@ export const createAnggotaController = async (req: Request, res: Response, next:
 
 export const getAnggotaController = async (req: Request, res: Response) => {
 
-    const { name, page, perPage, nim, email } = req.query
+    const { page, perPage, search, year } = req.query
 
-    const anggota = await getAnggotaService({ name: name as string, page: page ? Number(page) : undefined, perPage: perPage ? Number(perPage) : undefined, email: email as string, nim: nim ? Number(nim) : undefined }) as Result<AnggotaModelTypes[]>
+    const anggota = await getAnggotaService({
 
-    if (!anggota.data.length) {
-        return HandleResponse(res, 404, MESSAGE_CODE.NOT_FOUND, MESSAGES.ERROR.NOT_FOUND.ANGGOTA, (anggota as unknown as Result<AnggotaModelTypes[]>)?.data, (anggota as Result)?.meta)
+        page: page ? Number(page) : undefined,
+        perPage: perPage ? Number(perPage) : undefined,
+        search: search as string,
+        year: year as string
+    })
+
+    if (anggota instanceof ErrorApp) {
+        return HandleResponse(res, anggota.statusCode, anggota.code, anggota.message)
     }
-    HandleResponse<AnggotaModelTypes[]>(res, 200, MESSAGE_CODE.SUCCESS, MESSAGES.SUCCESS.ANGGOTA.GET, (anggota as unknown as Result<AnggotaModelTypes[]>)?.data, (anggota as unknown as Result)?.meta)
+
+    return HandleResponse<AnggotaModelTypes[]>(res, 200, MESSAGE_CODE.SUCCESS, MESSAGES.SUCCESS.ANGGOTA.GET, (anggota as unknown as Result<AnggotaModelTypes[]>)?.data, (anggota as unknown as Result)?.meta)
 
 }
 

@@ -1,3 +1,4 @@
+import { Prisma } from "@prisma/client"
 import { prisma } from "../../config"
 import { AnggotaBodyDTO } from "./anggotaDTO"
 import { IFilterAnggota } from "./anggotaTypes"
@@ -10,22 +11,43 @@ export const getAnggotaByAngkatanId = async (angkatanId: string) => {
     })
 }
 
-export const getAnggota = async ({ page, perPage, email, name, nim }: IFilterAnggota) => {
+export const getAnggota = async ({ page, perPage, search, year }: IFilterAnggota) => {
+    const filter = {} as { OR: Prisma.AnggotaWhereInput[], angkatan: Prisma.AngkatanWhereInput }
+
+    if (search) {
+        filter.OR = [
+            {
+                name: {
+                    contains: search,
+                    mode: 'insensitive'
+                },
+            },
+            {
+                email: {
+                    contains: search,
+                    mode: 'insensitive'
+                },
+            },
+            {
+                nim: {
+                    contains: search,
+                    mode: 'insensitive'
+                },
+            },
+
+
+
+        ]
+    }
+
+    if (year) {
+        filter.angkatan = {
+            year
+        }
+    }
+
     return await prisma.anggota.findMany({
-        where: {
-            email: {
-                contains: email,
-                mode: 'insensitive'
-            },
-            name: {
-                contains: name,
-                mode: 'insensitive'
-            },
-            nim: {
-                contains: nim?.toString(),
-                mode: 'insensitive'
-            }
-        },
+        where: filter,
         include: {
             angkatan: {
                 select: {
@@ -43,22 +65,42 @@ export const getAnggota = async ({ page, perPage, email, name, nim }: IFilterAng
     })
 }
 
-export const getAnggotaCount = async ({ email, name, nim }: IFilterAnggota) => {
+export const getAnggotaCount = async ({ search, year }: IFilterAnggota) => {
+    const filter = {} as { OR: Prisma.AnggotaWhereInput[], angkatan: Prisma.AngkatanWhereInput }
+
+    if (search) {
+        filter.OR = [
+            {
+                name: {
+                    contains: search,
+                    mode: 'insensitive'
+                },
+            },
+            {
+                email: {
+                    contains: search,
+                    mode: 'insensitive'
+                },
+            },
+            {
+                nim: {
+                    contains: search,
+                    mode: 'insensitive'
+                },
+            },
+
+
+
+        ]
+    }
+
+    if (year) {
+        filter.angkatan = {
+            year
+        }
+    }
     return await prisma.anggota.count({
-        where: {
-            email: {
-                contains: email,
-                mode: 'insensitive'
-            },
-            name: {
-                contains: name,
-                mode: 'insensitive'
-            },
-            nim: {
-                contains: nim?.toString(),
-                mode: 'insensitive'
-            }
-        },
+        where: filter
     })
 }
 

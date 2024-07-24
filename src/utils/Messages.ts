@@ -56,9 +56,13 @@ export const MESSAGES = {
             },
             ANGKATAN: "Angkatan must be a number",
             ID: "ID is invalid",
-            NIM: "NIM must be a number",
+            NIM: {
+                FORMAT: "NIM must be a number",
+                LENGTH: "NIM cannot be more than 14 characters"
+            },
             AUTH: "Invalid credentials token",
-            ANGGOTA: "You're not anggota"
+            ANGGOTA: "You're not anggota",
+            STATUS: "Status must be boolean type"
         },
         UNAUTHORIZED: {
             AUTH: "If you are not logged in, please log in first",

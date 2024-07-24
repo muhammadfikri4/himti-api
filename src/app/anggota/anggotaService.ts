@@ -1,14 +1,13 @@
 import dotenv from 'dotenv'
 import { type Request } from 'express'
 import mongoose from 'mongoose'
-import { Result } from '../../utils/ApiResponse'
 import { MESSAGE_CODE } from '../../utils/ErrorCode'
-import { AppError, HttpError } from '../../utils/HttpError'
+import { AppError, ErrorApp } from '../../utils/HttpError'
 import { MESSAGES } from '../../utils/Messages'
 import { Meta } from '../../utils/Meta'
 import { AnggotaBodyDTO } from './anggotaDTO'
+import { anggotaMapper } from './anggotaMapper'
 import { createAnggota, deleteAnggota, getAnggota, getAnggotaById, getAnggotaCount, updateAnggota } from './anggotaRepository'
-import { anggotaMapper } from './anggotaResponse'
 import { AnggotaModelTypes, IFilterAnggota } from './anggotaTypes'
 import { anggotaValidate } from './anggotaValidate'
 
@@ -17,24 +16,29 @@ dotenv.config();
 export const createAnggotaService = async ({ name, nim, email, angkatanId, isActive }: AnggotaBodyDTO, req: Request) => {
 
     const validate = await anggotaValidate({ name: name as string, email: email as string, nim, angkatanId })
-    if ((validate as HttpError)?.message) {
-        return AppError((validate as HttpError).message, (validate as HttpError).statusCode, (validate as HttpError).code)
+    if (validate instanceof ErrorApp) {
+        return new ErrorApp(validate.message, validate.statusCode, validate.code)
     }
 
     const anggota = await createAnggota({ email, angkatanId, isActive, name, nim })
     return anggota
 }
 
-export const getAnggotaService = async ({ name, email, nim, page = 1, perPage = 10 }: IFilterAnggota): Promise<Result> => {
+export const getAnggotaService = async ({ search, page = 1, perPage = 10, year }: IFilterAnggota) => {
 
-
-
-    const [anggota, totalData] = await Promise.all([getAnggota({ email, name, nim, page, perPage }), getAnggotaCount({ email, name, nim })])
+    const [anggota, totalData] = await Promise.all([getAnggota({ search, page, perPage, year }), getAnggotaCount({ search, year })])
 
     const data = await anggotaMapper(anggota as unknown as AnggotaModelTypes[])
 
-    const response = { data, meta: Meta(page, perPage, totalData) }
-    return response
+    if (!data.length) {
+        return new ErrorApp(MESSAGES.ERROR.NOT_FOUND.ANGGOTA, 404, MESSAGE_CODE.NOT_FOUND)
+    }
+
+    return {
+        data,
+        meta: Meta(page, perPage, totalData)
+    }
+
 }
 
 export const deleteAnggotaService = async ({ id }: AnggotaBodyDTO) => {

@@ -16,13 +16,10 @@ export interface AnggotaModelTypes {
 }
 
 export interface IFilterAnggota {
-    name?: string,
-    email?: string,
-    nim?: number,
+    year?: string
+    search?: string
     page?: number,
     perPage?: number
-    totalData?: number,
-    totalPage?: number
 }
 
 export interface AnggotaResponseTypes {
