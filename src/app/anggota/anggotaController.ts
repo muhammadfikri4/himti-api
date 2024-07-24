@@ -23,14 +23,14 @@ export const createAnggotaController = async (req: Request, res: Response, next:
 
 export const getAnggotaController = async (req: Request, res: Response) => {
 
-    const { page, perPage, search, year } = req.query
+    const { page, perPage, search, angkatan } = req.query
 
     const anggota = await getAnggotaService({
 
         page: page ? Number(page) : undefined,
         perPage: perPage ? Number(perPage) : undefined,
         search: search as string,
-        year: year as string
+        year: angkatan as string
     })
 
     if (anggota instanceof ErrorApp) {
