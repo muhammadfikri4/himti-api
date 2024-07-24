@@ -29,14 +29,15 @@ export const getAnggotaService = async ({ search, page = 1, perPage = 10, year }
     const [anggota, totalData] = await Promise.all([getAnggota({ search, page, perPage, year }), getAnggotaCount({ search, year })])
 
     const data = await anggotaMapper(anggota as unknown as AnggotaModelTypes[])
+    const meta = Meta(page, perPage, totalData)
 
-    if (!data.length) {
+    if (!data.length && !meta.totalPages && !meta.totalData) {
         return new ErrorApp(MESSAGES.ERROR.NOT_FOUND.ANGGOTA, 404, MESSAGE_CODE.NOT_FOUND)
     }
 
     return {
         data,
-        meta: Meta(page, perPage, totalData)
+        meta
     }
 
 }
