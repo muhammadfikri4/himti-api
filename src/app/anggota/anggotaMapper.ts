@@ -10,7 +10,7 @@ export const anggotaMapper = async (anggotas: AnggotaModelTypes[]) => {
             name: name,
             email: email,
             angkatan: {
-                ...anggota.angkatan,
+                id: anggota.angkatan.id,
                 year: Number(anggota.angkatan.year)
             },
             isActive: isActive,
