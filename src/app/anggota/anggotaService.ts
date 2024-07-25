@@ -1,8 +1,7 @@
 import dotenv from 'dotenv'
 import { type Request } from 'express'
-import mongoose from 'mongoose'
 import { MESSAGE_CODE } from '../../utils/ErrorCode'
-import { AppError, ErrorApp } from '../../utils/HttpError'
+import { ErrorApp } from '../../utils/HttpError'
 import { MESSAGES } from '../../utils/Messages'
 import { Meta } from '../../utils/Meta'
 import { AnggotaBodyDTO } from './anggotaDTO'
@@ -44,13 +43,10 @@ export const getAnggotaService = async ({ search, page = 1, perPage = 10, year }
 
 export const deleteAnggotaService = async ({ id }: AnggotaBodyDTO) => {
 
-    if (!mongoose.Types.ObjectId.isValid(id as string)) {
-        return AppError(MESSAGES.ERROR.INVALID.ID, 400, MESSAGE_CODE.BAD_REQUEST);
-    }
     const findAnggota = await getAnggotaById(id as string)
 
     if (!findAnggota) {
-        return AppError(MESSAGES.ERROR.NOT_FOUND.ANGGOTA, 404, MESSAGE_CODE.NOT_FOUND)
+        return new ErrorApp(MESSAGES.ERROR.NOT_FOUND.ANGGOTA, 404, MESSAGE_CODE.NOT_FOUND)
     }
 
     const anggota = await deleteAnggota(id as string)
@@ -58,13 +54,10 @@ export const deleteAnggotaService = async ({ id }: AnggotaBodyDTO) => {
 }
 export const updateAnggotaService = async ({ id, name, isActive, email, angkatanId, nim }: AnggotaBodyDTO) => {
 
-    if (!mongoose.Types.ObjectId.isValid(id as string)) {
-        return AppError(MESSAGES.ERROR.INVALID.ID, 400, MESSAGE_CODE.BAD_REQUEST);
-    }
     const matchAnggota = await getAnggotaById(id as string)
 
     if (!matchAnggota) {
-        return AppError(MESSAGES.ERROR.NOT_FOUND.ANGGOTA, 404, MESSAGE_CODE.NOT_FOUND)
+        return new ErrorApp(MESSAGES.ERROR.NOT_FOUND.ANGGOTA, 404, MESSAGE_CODE.NOT_FOUND)
     }
     const updateFields: Partial<AnggotaBodyDTO> = {};
 
@@ -74,7 +67,7 @@ export const updateAnggotaService = async ({ id, name, isActive, email, angkatan
     if (angkatanId !== undefined) updateFields.angkatanId = angkatanId;
     if (nim !== undefined) updateFields.nim = nim.toString();
 
-    const updateStruktural = await updateAnggota(updateFields)
+    const anggota = await updateAnggota(updateFields)
 
-    return updateStruktural;
+    return anggota;
 }
