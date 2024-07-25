@@ -1,4 +1,4 @@
-import { NextFunction, type Request, type Response } from "express";
+import { type Request, type Response } from "express";
 import { Result } from '../../utils/ApiResponse';
 import { MESSAGE_CODE } from "../../utils/ErrorCode";
 import { HandleResponse } from "../../utils/HandleResponse";
@@ -10,7 +10,7 @@ import { AcaraModelTypes } from "./acaraTypes";
 
 
 
-export const createAcaraController = async (req: Request, res: Response, next: NextFunction) => {
+export const createAcaraController = async (req: Request, res: Response) => {
 
     const { name, description, endTime, isOpen, startTime, } = req.body as AcaraBodyDTO
 

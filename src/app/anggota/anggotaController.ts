@@ -1,4 +1,4 @@
-import { NextFunction, type Request, type Response } from "express";
+import { type Request, type Response } from "express";
 import { Result } from "../../utils/ApiResponse";
 import { MESSAGE_CODE } from "../../utils/ErrorCode";
 import { HandleResponse } from "../../utils/HandleResponse";
@@ -9,7 +9,7 @@ import { AnggotaModelTypes } from "./anggotaTypes";
 
 
 
-export const createAnggotaController = async (req: Request, res: Response, next: NextFunction) => {
+export const createAnggotaController = async (req: Request, res: Response) => {
 
     const { name, nim, email, angkatanId, isActive } = req.body
 

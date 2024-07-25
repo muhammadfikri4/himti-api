@@ -13,7 +13,7 @@ import { anggotaValidate } from './anggotaValidate'
 dotenv.config();
 
 export const createAnggotaService = async ({ name, nim, email, angkatanId, isActive }: AnggotaBodyDTO, req: Request) => {
-
+    console.log(req)
     const validate = await anggotaValidate({ name: name as string, email: email as string, nim, angkatanId })
     if (validate instanceof ErrorApp) {
         return new ErrorApp(validate.message, validate.statusCode, validate.code)
