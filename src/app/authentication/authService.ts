@@ -21,12 +21,14 @@ export const registerService = async ({ email, name, password, nim }: RegisterAu
 
     const hashPassword = await bcrypt.hash(password, 10)
     let role: Role = "USER"
+    let anggotaId = null
 
     const isAnggota = await getAnggotaByNIM(nim)
     if (isAnggota) {
         role = "ANGGOTA"
+        anggotaId = isAnggota.id
     }
-    const response = await createUser({ email, name, password: hashPassword, role, nim })
+    const response = await createUser({ email, name, password: hashPassword, role, nim, anggotaId: anggotaId as string })
     return response
 
 }

@@ -62,7 +62,8 @@ export const MESSAGES = {
             },
             AUTH: "Invalid credentials token",
             ANGGOTA: "You're not anggota",
-            STATUS: "Status must be boolean type"
+            STATUS: "Status must be boolean type",
+            NAME: "Name must be a string",
         },
         UNAUTHORIZED: {
             AUTH: "If you are not logged in, please log in first",
@@ -128,7 +129,8 @@ export const MESSAGES = {
             UPDATE: "Success to update Acara"
         },
         PROFILE: {
-            GET: "Success to fetch profile"
+            GET: "Success to fetch profile",
+            UPDATE: "Success to update profile"
         },
         ABSENSI: {
             GET: "Success to fetch Absensi",

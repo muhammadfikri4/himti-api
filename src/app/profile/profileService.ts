@@ -1,9 +1,13 @@
 import { decode } from "jsonwebtoken"
+import { TokenDecodeInterface } from "../../interface"
 import { MESSAGE_CODE } from "../../utils/ErrorCode"
 import { ErrorApp } from "../../utils/HttpError"
 import { MESSAGES } from "../../utils/Messages"
+import { AnggotaSosmedDTO } from "../anggota/anggotaDTO"
+import { updateSosmedAnggota } from "../anggota/anggotaRepository"
+import { getUserById } from "../authentication/authRepository"
 import { ProfileDTO } from "./profileDTO"
-import { getProfile } from "./profileRepository"
+import { getProfile, updateProfile } from "./profileRepository"
 
 export const getProfileService = async (token: string) => {
     const decodeToken = decode(token)
@@ -28,14 +32,34 @@ export const getProfileService = async (token: string) => {
     return response
 }
 
-// export const updateProfileService = (token: string) => {
-//     const updateFields: Partial<AnggotaBodyDTO> = {};
+export const updateProfileService = async (token: string, { email, name, nim, facebook, instagram, twitter, linkedin }: ProfileDTO) => {
 
-//     if (name !== undefined) updateFields.name = name;
-//     if (isActive !== undefined) updateFields.isActive = isActive;
-//     if (email !== undefined) updateFields.email = email;
-//     if (angkatanId !== undefined) updateFields.angkatanId = angkatanId;
-//     if (nim !== undefined) updateFields.nim = nim.toString();
+    const decodeToken = decode(token) as TokenDecodeInterface
+    const id = decodeToken.id
+    const sosmed = facebook || instagram || twitter || linkedin
 
-//     const anggota = await updateAnggota(updateFields)
-// }
+    const user = await getUserById(id)
+
+    if (!user) {
+        return new ErrorApp(MESSAGES.ERROR.NOT_FOUND.USER.ACCOUNT, 404, MESSAGE_CODE.NOT_FOUND)
+    }
+
+    if (!user?.anggotaId && sosmed) {
+        return new ErrorApp(MESSAGES.ERROR.INVALID.ANGGOTA, 400, MESSAGE_CODE.BAD_REQUEST)
+    }
+
+    const profileField: Partial<ProfileDTO> = { id };
+
+    if (name !== undefined) profileField.name = name;
+    if (email !== undefined) profileField.email = email;
+    if (nim !== undefined) profileField.nim = nim.toString();
+
+    const sosmedField: Partial<AnggotaSosmedDTO> = { id: user.anggotaId as string }
+    if (instagram !== undefined) sosmedField.instagram = instagram;
+    if (twitter !== undefined) sosmedField.twitter = twitter;
+    if (linkedin !== undefined) sosmedField.linkedin = linkedin;
+    if (facebook !== undefined) sosmedField.facebook = facebook;
+
+    const response = await Promise.all([updateProfile(profileField as ProfileDTO), updateSosmedAnggota(sosmedField as AnggotaSosmedDTO)])
+    return response
+}

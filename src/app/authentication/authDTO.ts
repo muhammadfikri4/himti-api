@@ -6,6 +6,7 @@ export interface RegisterAuthBodyDTO {
     name: string
     nim: string,
     role?: Role
+    anggotaId?: string
 }
 
 export interface LoginAuthBodyDTO {

@@ -10,6 +10,10 @@ export interface AnggotaModelTypes {
         year: number
         isActive: boolean
     }
+    instagram?: string,
+    facebook?: string,
+    twitter?: string,
+    linkedin?: string,
     isActive: boolean,
     createdAt: Date
     updatedAt: Date

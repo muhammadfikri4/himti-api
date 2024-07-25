@@ -7,6 +7,7 @@ export const CatchWrapper = (fn: (req: Request, res: Response, next: NextFunctio
     return (req: Request, res: Response, next: NextFunction) => {
         fn(req, res, next).catch((error) => {
             if (error) {
+                console.log(error)
                 HandleResponse(res, 500, MESSAGE_CODE.INTERNAL_SERVER_ERROR, MESSAGES.ERROR.SERVER_ERROR.INTERNAL_SERVER_ERROR)
             }
             next()

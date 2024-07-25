@@ -1,6 +1,6 @@
 import { Prisma } from "@prisma/client"
 import { prisma } from "../../config"
-import { AnggotaBodyDTO } from "./anggotaDTO"
+import { AnggotaBodyDTO, AnggotaSosmedDTO } from "./anggotaDTO"
 import { IFilterAnggota } from "./anggotaTypes"
 
 export const getAnggotaByAngkatanId = async (angkatanId: string) => {
@@ -159,5 +159,14 @@ export const updateAnggota = async (data: AnggotaBodyDTO) => {
         } : {
             ...data
         }
+    })
+}
+
+export const updateSosmedAnggota = async (data: AnggotaSosmedDTO) => {
+    return await prisma.anggota.update({
+        where: {
+            id: data.id
+        },
+        data
     })
 }
