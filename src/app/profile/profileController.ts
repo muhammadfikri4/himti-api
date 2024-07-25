@@ -27,5 +27,5 @@ export const updateProfileController = async (req: Request, res: Response) => {
         return HandleResponse(res, profile.statusCode, profile.code, profile.message)
     }
 
-    return HandleResponse(res, 200, MESSAGE_CODE.SUCCESS, MESSAGES.SUCCESS.USER, null)
+    return HandleResponse(res, 200, MESSAGE_CODE.SUCCESS, MESSAGES.SUCCESS.PROFILE.UPDATE, null)
 }
