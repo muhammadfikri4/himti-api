@@ -18,7 +18,7 @@ model User {
   nim       String
   Absensi   Absensi[]
 
-  @@index([name, nim])
+  @@index([email])
 }
 
 model Dosen {
@@ -81,18 +81,19 @@ model Department {
 }
 
 model Struktural {
-  id        String   @id @unique @default(uuid())
-  jabatan   Jabatan
-  instagram String?
-  facebook  String?
-  twitter   String?
-  linkedin  String?
-  image     String
-  anggotaId String
-  createdAt DateTime @default(now())
-  isActive  Boolean  @default(true)
-  updatedAt DateTime @updatedAt
-  anggota   Anggota  @relation(fields: [anggotaId], references: [id])
+  id           String   @id @unique @default(uuid())
+  jabatan      Jabatan
+  instagram    String?
+  facebook     String?
+  twitter      String?
+  linkedin     String?
+  image        String
+  anggotaId    String
+  createdAt    DateTime @default(now())
+  isActive     Boolean  @default(true)
+  updatedAt    DateTime @updatedAt
+  departmentId String?
+  anggota      Anggota  @relation(fields: [anggotaId], references: [id])
 
   @@index([anggotaId])
 }

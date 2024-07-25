@@ -67,7 +67,8 @@ export const MESSAGES = {
         UNAUTHORIZED: {
             AUTH: "If you are not logged in, please log in first",
             FORBIDDEN: "You are not Authorized",
-            EXPIRED: "Token Expired, please log in again"
+            EXPIRED: "Token Expired, please log in again",
+            RECOGNIZED: "Token not recognized"
         },
         REQUIRED: {
             EMAIL: "Email is required",
@@ -89,6 +90,9 @@ export const MESSAGES = {
         },
         RELATION: {
             ANGKATAN: "Angkatan cannot be deleted because it has a relationship"
+        },
+        SERVER_ERROR: {
+            INTERNAL_SERVER_ERROR: "Internal server error"
         }
     },
     SUCCESS: {

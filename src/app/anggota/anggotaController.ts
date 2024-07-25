@@ -47,7 +47,7 @@ export const deleteAnggotaController = async (req: Request, res: Response) => {
     if (anggota instanceof ErrorApp) {
         return HandleResponse(res, anggota.statusCode, anggota.code, anggota.message)
     }
-    HandleResponse(res, 200, MESSAGE_CODE.SUCCESS, MESSAGES.SUCCESS.ANGGOTA.DELETE)
+    return HandleResponse(res, 200, MESSAGE_CODE.SUCCESS, MESSAGES.SUCCESS.ANGGOTA.DELETE)
 }
 
 export const updateAnggotaController = async (req: Request, res: Response) => {
@@ -58,6 +58,6 @@ export const updateAnggotaController = async (req: Request, res: Response) => {
     if (anggota instanceof ErrorApp) {
         return HandleResponse(res, anggota.statusCode, anggota.code, anggota.message)
     }
-    HandleResponse(res, 200, MESSAGE_CODE.SUCCESS, MESSAGES.SUCCESS.ANGGOTA.UPDATE)
+    return HandleResponse(res, 200, MESSAGE_CODE.SUCCESS, MESSAGES.SUCCESS.ANGGOTA.UPDATE)
 }
 
