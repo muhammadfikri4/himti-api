@@ -64,6 +64,7 @@ export const MESSAGES = {
             ANGGOTA: "You're not anggota",
             STATUS: "Status must be boolean type",
             NAME: "Name must be a string",
+            JABATAN: "Jabatan is invalid"
         },
         UNAUTHORIZED: {
             AUTH: "If you are not logged in, please log in first",

@@ -1,4 +1,4 @@
-import { NextFunction, type Request, type Response } from "express";
+import { type Request, type Response } from "express";
 import { MESSAGE_CODE } from "../../utils/ErrorCode";
 import { HandleResponse } from "../../utils/HandleResponse";
 import { ErrorApp } from "../../utils/HttpError";
@@ -7,15 +7,14 @@ import { StrukturalBodyDTO } from "./strukturalDTO";
 import { createStrukturalService, deleteStrukturalService, getStrukturalService, updateStrukturalService } from "./strukturalService";
 
 
-export const createStrukturalController = async (req: Request, res: Response, next: NextFunction) => {
+export const createStrukturalController = async (req: Request, res: Response) => {
 
     const { anggotaId, jabatan, isActive } = req.body
 
+    const struktural = await createStrukturalService({ isActive, jabatan, anggotaId, }, req as Request);
+    if (struktural instanceof ErrorApp) {
 
-    const strtuktural = await createStrukturalService({ isActive, jabatan, anggotaId, }, req as Request);
-    if (strtuktural instanceof ErrorApp) {
-
-        return HandleResponse(res, strtuktural.statusCode, strtuktural.code, strtuktural.message)
+        return HandleResponse(res, struktural.statusCode, struktural.code, struktural.message)
     }
     return HandleResponse(res, 201, MESSAGE_CODE.SUCCESS, MESSAGES.CREATED.STRUKTURAL)
 }

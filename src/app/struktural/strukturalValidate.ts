@@ -6,6 +6,8 @@ import { StrukturalBodyDTO } from './strukturalDTO'
 
 export const strukturalValidate = async ({ anggotaId, image, jabatan }: StrukturalBodyDTO) => {
 
+    const jabatanIsValid = (jabatan !== 'KETUA_HIMPUNAN') && (jabatan !== 'WAKIL_KETUA_HIMPUNAN') && jabatan !== 'SEKRETARIS' && jabatan !== 'BENDAHARA' && jabatan !== 'KETUA_DEPARTMENT'
+    console.log({ jabatan })
     if (!anggotaId) {
 
         return new ErrorApp(MESSAGES.ERROR.REQUIRED.ANGGOTA_ID, 400, MESSAGE_CODE.BAD_REQUEST)
@@ -13,6 +15,10 @@ export const strukturalValidate = async ({ anggotaId, image, jabatan }: Struktur
     if (!jabatan) {
 
         return new ErrorApp(MESSAGES.ERROR.REQUIRED.JABATAN, 400, MESSAGE_CODE.BAD_REQUEST)
+    }
+
+    if (jabatan && jabatanIsValid) {
+        return new ErrorApp(MESSAGES.ERROR.INVALID.JABATAN, 400, MESSAGE_CODE.BAD_REQUEST)
     }
 
     const matchAnggota = await getAnggotaById(anggotaId)

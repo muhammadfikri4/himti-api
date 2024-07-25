@@ -1,5 +1,5 @@
 import { Jabatan } from "@prisma/client"
-import { prisma } from "config"
+import { prisma } from "../../config"
 import { StrukturalBodyDTO } from "./strukturalDTO"
 import { IFilterStruktural } from "./strukturalTypes"
 
