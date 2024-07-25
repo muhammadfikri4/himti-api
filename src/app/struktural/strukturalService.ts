@@ -1,99 +1,74 @@
-// import dotenv from 'dotenv'
-// import { type Request } from 'express'
-// import mongoose from 'mongoose'
-// import { Result } from '../../utils/ApiResponse'
-// import { MESSAGE_CODE } from '../../utils/ErrorCode'
-// import { AppError, HttpError } from '../../utils/HttpError'
-// import { MESSAGES } from '../../utils/Messages'
-// import { Meta } from '../../utils/Meta'
-// import { StrukturalBodyDTO } from './strukturalDTO'
+import dotenv from 'dotenv'
+import { type Request } from 'express'
+import mongoose from 'mongoose'
+import { MESSAGE_CODE } from '../../utils/ErrorCode'
+import { ErrorApp } from '../../utils/HttpError'
+import { MESSAGES } from '../../utils/Messages'
+import { Meta } from '../../utils/Meta'
+import { StrukturalBodyDTO } from './strukturalDTO'
+import { createStruktural, deleteStruktural, getStruktural, getStrukturalById, getStrukturalCount, updateStruktural } from './strukturalRepository'
 // import { strukturalMapper } from './strukturalResponse'
-// import { IStrukturalResponse, SearchStrukturalTypes, StrukturalModelTypes } from './strukturalTypes'
-// import { strukturalValidate } from './strukturalValidate'
+import { IFilterStruktural } from './strukturalTypes'
+import { strukturalValidate } from './strukturalValidate'
 
-// dotenv.config();
+dotenv.config();
 
-// export const createStrukturalService = async ({ anggotaId, jabatan, isActive, facebook, instagram, linkedin, twitter }: StrukturalBodyDTO, req: Request) => {
+export const createStrukturalService = async ({ anggotaId, jabatan, isActive }: StrukturalBodyDTO, req: Request) => {
 
-//     const validate = await strukturalValidate({ anggotaId, image: req.file?.path, jabatan })
-//     if ((validate as HttpError)?.message) {
-//         return AppError((validate as HttpError).message, (validate as HttpError).statusCode, (validate as HttpError).code)
-//     }
+    const validate = await strukturalValidate({ anggotaId, image: req.file?.path, jabatan })
+    if (validate instanceof ErrorApp) {
+        return new ErrorApp(validate.message, validate.statusCode, validate.code)
+    }
 
-//     const { path } = req.file as Express.Multer.File
+    const { path } = req.file as Express.Multer.File
 
-//     const newStruktural = await StrukturalModel.create({ isActive, anggotaId, facebook: facebook || null, instagram, jabatan, linkedin: linkedin || null, twitter: twitter || null, image: path })
-//     return newStruktural
-// }
+    const response = await createStruktural({ isActive, anggotaId, image: path, jabatan })
+    return response
+}
 
-// export const getStrukturalService = async ({ name, page = 1, perPage = 10 }: SearchStrukturalTypes): Promise<Result<IStrukturalResponse[]>> => {
+export const getStrukturalService = async ({ search, page = 1, perPage = 10 }: IFilterStruktural) => {
 
-//     if (name) {
+    const [struktural, totalData] = await Promise.all([getStruktural({ search, page, perPage }), getStrukturalCount({ search })])
 
-//         const strukturals = await StrukturalModel.find({ name: new RegExp(name, 'i') }).limit(perPage)
-//             .skip((page - 1) * perPage) as unknown as StrukturalModelTypes[]
-//         const totalData = strukturals.length
+    const meta = Meta(page, perPage, totalData)
 
-//         const data = await strukturalMapper(strukturals)
+    if (!struktural.length && !meta.totalPages && !meta.totalData) {
+        return new ErrorApp(MESSAGES.ERROR.NOT_FOUND.STRUKTURAL, 404, MESSAGE_CODE.NOT_FOUND)
+    }
 
-//         return { data, meta: Meta(page, perPage, totalData) }
+    return { data: struktural, meta }
+}
 
-//     }
-//     const dosen = await StrukturalModel.find<StrukturalModelTypes>()
+export const deleteStrukturalService = async ({ id }: StrukturalBodyDTO) => {
 
-//     const totalData = dosen.length
 
-//     // Batasi jumlah dokumen yang diambil pada satu halaman
-//     const res = await StrukturalModel.find<StrukturalModelTypes>()
-//         .limit(perPage)
-//         .skip((page - 1) * perPage);
-//     const data = await strukturalMapper(res)
+    const Struktural = await getStrukturalById(id as string)
 
-//     const response = { data, meta: Meta(page, perPage, totalData) }
-//     return response
-// }
+    if (!Struktural) {
+        return new ErrorApp(MESSAGES.ERROR.NOT_FOUND.ANGKATAN.NAME, 404, MESSAGE_CODE.NOT_FOUND)
+    }
 
-// export const deleteStrukturalService = async ({ id }: StrukturalBodyDTO) => {
+    const response = await deleteStruktural(id as string)
+    return response;
+}
+export const updateStrukturalService = async ({ id, isActive, jabatan, image, anggotaId }: StrukturalBodyDTO) => {
 
-//     if (!mongoose.Types.ObjectId.isValid(id as string)) {
-//         return AppError(MESSAGES.ERROR.INVALID.ID, 400, MESSAGE_CODE.BAD_REQUEST);
-//     }
-//     const Struktural = await StrukturalModel.findOne({ _id: id })
+    if (!mongoose.Types.ObjectId.isValid(id as string)) {
+        return new ErrorApp(MESSAGES.ERROR.INVALID.ID, 400, MESSAGE_CODE.BAD_REQUEST);
+    }
+    const matchStruktural = await getStrukturalById(id as string)
 
-//     if (!Struktural) {
-//         return AppError(MESSAGES.ERROR.NOT_FOUND.ANGKATAN.NAME, 404, MESSAGE_CODE.NOT_FOUND)
-//     }
+    if (!matchStruktural) {
+        return new ErrorApp(MESSAGES.ERROR.NOT_FOUND.STRUKTURAL, 404, MESSAGE_CODE.NOT_FOUND)
+    }
+    const updateFields: Partial<StrukturalBodyDTO> = { id };
 
-//     const deleteAngkatan = await StrukturalModel.deleteOne({ _id: id })
-//     return deleteAngkatan;
-// }
-// export const updateStrukturalService = async ({ id, isActive, facebook, instagram, jabatan, linkedin, twitter, image, anggotaId }: StrukturalBodyDTO) => {
+    if (isActive !== undefined) updateFields.isActive = isActive;
+    if (anggotaId !== undefined) updateFields.anggotaId = anggotaId;
+    if (jabatan !== undefined) updateFields.jabatan = jabatan;
+    if (image !== undefined) updateFields.image = image;
 
-//     if (!mongoose.Types.ObjectId.isValid(id as string)) {
-//         return AppError(MESSAGES.ERROR.INVALID.ID, 400, MESSAGE_CODE.BAD_REQUEST);
-//     }
-//     const matchStruktural = await StrukturalModel.findOne({ _id: id })
+    const response = await updateStruktural(updateFields)
 
-//     if (!matchStruktural) {
-//         return AppError(MESSAGES.ERROR.NOT_FOUND.STRUKTURAL, 404, MESSAGE_CODE.NOT_FOUND)
-//     }
-//     const updateFields: Partial<StrukturalBodyDTO> = {};
-
-//     if (isActive !== undefined) updateFields.isActive = isActive;
-//     if (anggotaId !== undefined) updateFields.anggotaId = anggotaId;
-//     if (facebook !== undefined) updateFields.facebook = facebook;
-//     if (instagram !== undefined) updateFields.instagram = instagram;
-//     if (jabatan !== undefined) updateFields.jabatan = jabatan;
-//     if (linkedin !== undefined) updateFields.linkedin = linkedin;
-//     if (twitter !== undefined) updateFields.twitter = twitter;
-//     if (image !== undefined) updateFields.image = image;
-
-//     const updateStruktural = await StrukturalModel.updateOne(
-//         { _id: id },
-//         {
-//             $set: updateFields
-
-//         })
-
-//     return updateStruktural;
-// }
+    return response
+}

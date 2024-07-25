@@ -13,7 +13,7 @@ export const createAnggotaController = async (req: Request, res: Response) => {
 
     const { name, nim, email, angkatanId, isActive } = req.body
 
-    const anggota = await createAnggotaService({ email, isActive, angkatanId, name, nim }, req as Request);
+    const anggota = await createAnggotaService({ email, isActive, angkatanId, name, nim });
     if (anggota instanceof ErrorApp) {
         return HandleResponse(res, anggota.statusCode, anggota.code, anggota.message)
     }

@@ -1,5 +1,4 @@
 import dotenv from 'dotenv'
-import { type Request } from 'express'
 import { MESSAGE_CODE } from '../../utils/ErrorCode'
 import { ErrorApp } from '../../utils/HttpError'
 import { MESSAGES } from '../../utils/Messages'
@@ -12,8 +11,8 @@ import { anggotaValidate } from './anggotaValidate'
 
 dotenv.config();
 
-export const createAnggotaService = async ({ name, nim, email, angkatanId, isActive }: AnggotaBodyDTO, req: Request) => {
-    console.log(req)
+export const createAnggotaService = async ({ name, nim, email, angkatanId, isActive }: AnggotaBodyDTO) => {
+
     const validate = await anggotaValidate({ name: name as string, email: email as string, nim, angkatanId })
     if (validate instanceof ErrorApp) {
         return new ErrorApp(validate.message, validate.statusCode, validate.code)

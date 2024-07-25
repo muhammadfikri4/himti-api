@@ -1,13 +1,9 @@
-import { ObjectId } from "mongoose"
+import { Jabatan } from "@prisma/client";
 
 export interface StrukturalBodyDTO {
     id?: string,
-    anggotaId?: ObjectId,
-    jabatan?: string,
+    anggotaId?: string,
+    jabatan?: Jabatan,
     image?: string,
-    instagram?: string,
-    facebook?: string,
-    twitter?: string,
-    linkedin?: string,
     isActive?: boolean
 }

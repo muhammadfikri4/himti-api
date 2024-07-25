@@ -1,16 +1,14 @@
-// import { Router } from "express";
-// import { upload } from "./strukturalConfig";
-// import { createStrukturalController, deleteStrukturalController, getStrukturalController, updateStrukturalController } from "./strukturalController";
+import { Router } from "express";
+import { VerifyToken } from "../../middleware/verifyToken";
+import { upload } from "./strukturalConfig";
+import { createStrukturalController, deleteStrukturalController, getStrukturalController, updateStrukturalController } from "./strukturalController";
 
-// // const upload = multer({ storage: multer.memoryStorage() });
-// // const upload = multer({ dest: "./src/assets/images" });
 
-// const route = Router()
+const route = Router()
 
-// route.post("/", upload.single("image"), createStrukturalController)
-// // route.post("/", createStrukturalController)
-// route.get("/", getStrukturalController)
-// route.delete("/:id", deleteStrukturalController)
-// route.put("/:id", upload.single("image"), updateStrukturalController)
+route.post("/", VerifyToken, upload.single("image"), createStrukturalController)
+route.get("/", VerifyToken, getStrukturalController)
+route.delete("/:id", VerifyToken, deleteStrukturalController)
+route.put("/:id", VerifyToken, upload.single("image"), updateStrukturalController)
 
-// export default route
+export default route

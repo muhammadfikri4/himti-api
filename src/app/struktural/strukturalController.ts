@@ -1,58 +1,58 @@
-// import { NextFunction, type Request, type Response } from "express";
-// import { Result } from '../../utils/ApiResponse';
-// import { MESSAGE_CODE } from "../../utils/ErrorCode";
-// import { HandleResponse } from "../../utils/HandleResponse";
-// import { HttpError } from "../../utils/HttpError";
-// import { MESSAGES } from "../../utils/Messages";
-// import { StrukturalBodyDTO } from "./strukturalDTO";
-// import { createStrukturalService, deleteStrukturalService, getStrukturalService, updateStrukturalService } from "./strukturalService";
-// import { StrukturalModelTypes } from "./strukturalTypes";
+import { NextFunction, type Request, type Response } from "express";
+import { MESSAGE_CODE } from "../../utils/ErrorCode";
+import { HandleResponse } from "../../utils/HandleResponse";
+import { ErrorApp } from "../../utils/HttpError";
+import { MESSAGES } from "../../utils/Messages";
+import { StrukturalBodyDTO } from "./strukturalDTO";
+import { createStrukturalService, deleteStrukturalService, getStrukturalService, updateStrukturalService } from "./strukturalService";
 
 
-// export const createStrukturalController = async (req: Request, res: Response, next: NextFunction) => {
+export const createStrukturalController = async (req: Request, res: Response, next: NextFunction) => {
 
-//     const { anggotaId, jabatan, instagram, twitter, facebook, linkedin, isActive } = req.body
+    const { anggotaId, jabatan, isActive } = req.body
 
 
-//     const strukturalCreation = await createStrukturalService({ isActive, jabatan, anggotaId, facebook, instagram, linkedin, twitter }, req as Request);
-//     if ((strukturalCreation as HttpError)?.message) {
+    const strtuktural = await createStrukturalService({ isActive, jabatan, anggotaId, }, req as Request);
+    if (strtuktural instanceof ErrorApp) {
 
-//         return HandleResponse(res, (strukturalCreation as HttpError).statusCode, (strukturalCreation as HttpError).code, (strukturalCreation as HttpError).message)
-//     }
-//     return HandleResponse(res, 201, MESSAGE_CODE.SUCCESS, MESSAGES.CREATED.STRUKTURAL)
-// }
+        return HandleResponse(res, strtuktural.statusCode, strtuktural.code, strtuktural.message)
+    }
+    return HandleResponse(res, 201, MESSAGE_CODE.SUCCESS, MESSAGES.CREATED.STRUKTURAL)
+}
 
-// export const getStrukturalController = async (req: Request, res: Response) => {
+export const getStrukturalController = async (req: Request, res: Response) => {
 
-//     const { name, page, perPage } = req.query
+    const { search, page, perPage } = req.query
 
-//     const struktural = await getStrukturalService({ name: name as string, page: page ? Number(page) : undefined, perPage: perPage ? Number(perPage) : undefined });
+    const struktural = await getStrukturalService({ search: search as string, page: page ? Number(page) : undefined, perPage: perPage ? Number(perPage) : undefined });
 
-//     if (!struktural.data) {
-//         return HandleResponse(res, 404, MESSAGE_CODE.NOT_FOUND, MESSAGES.ERROR.NOT_FOUND.STRUKTURAL, struktural)
-//     }
-//     HandleResponse<StrukturalModelTypes[]>(res, 200, MESSAGE_CODE.SUCCESS, MESSAGES.SUCCESS.STRUKTURAL.GET, (struktural as unknown as Result<StrukturalModelTypes[]>)?.data, (struktural as unknown as Result)?.meta)
+    if (struktural instanceof ErrorApp) {
 
-// }
+        return HandleResponse(res, struktural.statusCode, struktural.code, struktural.message)
+    }
 
-// export const deleteStrukturalController = async (req: Request, res: Response) => {
-//     const { id } = req.params;
+    return HandleResponse(res, 200, MESSAGE_CODE.SUCCESS, MESSAGES.SUCCESS.STRUKTURAL.GET, struktural?.data, struktural?.meta)
 
-//     const deleteStruktural = await deleteStrukturalService({ id });
-//     if ((deleteStruktural as HttpError)?.message) {
-//         return HandleResponse(res, (deleteStruktural as HttpError).statusCode, (deleteStruktural as HttpError).code, (deleteStruktural as HttpError).message)
-//     }
-//     HandleResponse(res, 200, MESSAGE_CODE.SUCCESS, MESSAGES.SUCCESS.STRUKTURAL.DELETE)
-// }
+}
 
-// export const updateStrukturalController = async (req: Request, res: Response) => {
-//     const { id } = req.params;
-//     const { isActive, jabatan, anggotaId, facebook, instagram, linkedin, twitter } = req.body as StrukturalBodyDTO
+export const deleteStrukturalController = async (req: Request, res: Response) => {
+    const { id } = req.params;
 
-//     const updateStruktural = await updateStrukturalService({ id, isActive, anggotaId, facebook, instagram, linkedin, jabatan, twitter, image: req.file?.path });
-//     if ((updateStruktural as HttpError)?.message) {
-//         return HandleResponse(res, (updateStruktural as HttpError).statusCode, (updateStruktural as HttpError).code, (updateStruktural as HttpError).message)
-//     }
-//     HandleResponse(res, 200, MESSAGE_CODE.SUCCESS, MESSAGES.SUCCESS.STRUKTURAL.UPDATE)
-// }
+    const struktural = await deleteStrukturalService({ id });
+    if (struktural instanceof ErrorApp) {
+        return HandleResponse(res, struktural.statusCode, struktural.code, struktural.message)
+    }
+    HandleResponse(res, 200, MESSAGE_CODE.SUCCESS, MESSAGES.SUCCESS.STRUKTURAL.DELETE)
+}
+
+export const updateStrukturalController = async (req: Request, res: Response) => {
+    const { id } = req.params;
+    const { isActive, jabatan, anggotaId } = req.body as StrukturalBodyDTO
+
+    const struktural = await updateStrukturalService({ id, isActive, anggotaId, jabatan, image: req.file?.path });
+    if (struktural instanceof ErrorApp) {
+        return HandleResponse(res, struktural.statusCode, struktural.code, struktural.message)
+    }
+    HandleResponse(res, 200, MESSAGE_CODE.SUCCESS, MESSAGES.SUCCESS.STRUKTURAL.UPDATE)
+}
 
