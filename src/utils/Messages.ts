@@ -66,7 +66,8 @@ export const MESSAGES = {
         },
         UNAUTHORIZED: {
             AUTH: "If you are not logged in, please log in first",
-            FORBIDDEN: "You are not Authorized"
+            FORBIDDEN: "You are not Authorized",
+            EXPIRED: "Token Expired, please log in again"
         },
         REQUIRED: {
             EMAIL: "Email is required",
