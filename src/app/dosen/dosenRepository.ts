@@ -16,21 +16,29 @@ export const createDosen = async ({ email, isActive, lesson, name, nidn, numberP
 
 }
 
-export const getDosen = async ({ page, perPage, email, name, nidn }: IFilterDosen) => {
+export const getDosen = async ({ page, perPage, search }: IFilterDosen) => {
     return await prisma.dosen.findMany({
         where: {
-            email: {
-                contains: email,
-                mode: 'insensitive'
-            },
-            name: {
-                contains: name,
-                mode: 'insensitive'
-            },
-            nidn: {
-                contains: nidn,
-                mode: 'insensitive'
-            }
+            OR: [
+                {
+                    email: {
+                        contains: search,
+                        mode: 'insensitive'
+                    }
+                },
+                {
+                    name: {
+                        contains: search,
+                        mode: 'insensitive'
+                    }
+                },
+                {
+                    nidn: {
+                        contains: search,
+                        mode: 'insensitive'
+                    }
+                }
+            ]
         },
         orderBy: {
             createdAt: 'desc'
@@ -40,21 +48,29 @@ export const getDosen = async ({ page, perPage, email, name, nidn }: IFilterDose
     })
 }
 
-export const getDosenCount = async ({ email, name, nidn }: IFilterDosen) => {
+export const getDosenCount = async ({ search }: IFilterDosen) => {
     return await prisma.dosen.count({
         where: {
-            email: {
-                contains: email,
-                mode: 'insensitive'
-            },
-            name: {
-                contains: name,
-                mode: 'insensitive'
-            },
-            nidn: {
-                contains: nidn?.toString(),
-                mode: 'insensitive'
-            }
+            OR: [
+                {
+                    email: {
+                        contains: search,
+                        mode: 'insensitive'
+                    }
+                },
+                {
+                    name: {
+                        contains: search,
+                        mode: 'insensitive'
+                    }
+                },
+                {
+                    nidn: {
+                        contains: search,
+                        mode: 'insensitive'
+                    }
+                }
+            ]
         },
     })
 }

@@ -1,13 +1,11 @@
 import { type Request, type Response } from "express";
-import { MetaResponse } from "../../interface/ResponseInterface";
-import { Result } from "../../utils/ApiResponse";
 import { MESSAGE_CODE } from "../../utils/ErrorCode";
 import { HandleResponse } from "../../utils/HandleResponse";
-import { HttpError } from "../../utils/HttpError";
+import { ErrorApp, HttpError } from "../../utils/HttpError";
 import { MESSAGES } from "../../utils/Messages";
 import { DosenBodyDTO } from "./dosenDTO";
 import { createDosenService, deleteDosenService, getDosenService, updateDosenService } from "./dosenService";
-import { DosenModelTypes, IFilterDosen } from "./dosenTypes";
+import { IFilterDosen } from "./dosenTypes";
 
 
 export const createDosenController = async (req: Request, res: Response) => {
@@ -24,13 +22,13 @@ export const createDosenController = async (req: Request, res: Response) => {
 
 export const getDosenController = async (req: Request, res: Response) => {
 
-    const { name, email, nidn, page, perPage } = req.query as IFilterDosen
+    const { search, page, perPage } = req.query as IFilterDosen
 
-    const dosen = await getDosenService({ name: name as string, page: page ? Number(page) : undefined, perPage: perPage ? Number(perPage) : undefined, email, nidn });
-    if (!dosen.data.length) {
-        return HandleResponse(res, 404, MESSAGE_CODE.NOT_FOUND, MESSAGES.ERROR.NOT_FOUND.DOSEN, (dosen as unknown as Result<DosenModelTypes>)?.data, (dosen as unknown as Result<DosenModelTypes>)?.meta as MetaResponse)
+    const dosen = await getDosenService({ search, page: page ? Number(page) : undefined, perPage: perPage ? Number(perPage) : undefined });
+    if (dosen instanceof ErrorApp) {
+        return HandleResponse(res, dosen.statusCode, dosen.code, dosen.message)
     }
-    return HandleResponse<DosenModelTypes[]>(res, 200, MESSAGE_CODE.SUCCESS, MESSAGES.SUCCESS.DOSEN.GET, (dosen as unknown as Result<DosenModelTypes[]>)?.data, (dosen as unknown as Result<DosenModelTypes[]>)?.meta as MetaResponse)
+    return HandleResponse(res, 200, MESSAGE_CODE.SUCCESS, MESSAGES.SUCCESS.DOSEN.GET, dosen?.data, dosen?.meta)
 
 }
 

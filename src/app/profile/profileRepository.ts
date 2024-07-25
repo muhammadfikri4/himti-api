@@ -7,3 +7,7 @@ export const getProfile = async (id: string) => {
         }
     })
 }
+
+// export const updateProfile = async(id:string) => {
+
+// }

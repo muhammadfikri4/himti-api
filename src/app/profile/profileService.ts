@@ -27,3 +27,15 @@ export const getProfileService = async (token: string) => {
 
     return response
 }
+
+// export const updateProfileService = (token: string) => {
+//     const updateFields: Partial<AnggotaBodyDTO> = {};
+
+//     if (name !== undefined) updateFields.name = name;
+//     if (isActive !== undefined) updateFields.isActive = isActive;
+//     if (email !== undefined) updateFields.email = email;
+//     if (angkatanId !== undefined) updateFields.angkatanId = angkatanId;
+//     if (nim !== undefined) updateFields.nim = nim.toString();
+
+//     const anggota = await updateAnggota(updateFields)
+// }

@@ -1,6 +1,6 @@
 import dotenv from 'dotenv'
 import { MESSAGE_CODE } from '../../utils/ErrorCode'
-import { AppError, HttpError } from '../../utils/HttpError'
+import { AppError, ErrorApp, HttpError } from '../../utils/HttpError'
 import { MESSAGES } from '../../utils/Messages'
 import { Meta } from '../../utils/Meta'
 import { DosenBodyDTO } from './dosenDTO'
@@ -23,14 +23,18 @@ export const createDosenService = async ({ email, isActive, lesson, name, nidn, 
 
 }
 
-export const getDosenService = async ({ name, email, nidn, page = 1, perPage = 10 }: IFilterDosen) => {
+export const getDosenService = async ({ search, page = 1, perPage = 10 }: IFilterDosen) => {
 
     const [dosens, totalData] = await Promise.all([
-        getDosen({ email, name, nidn, page, perPage }),
-        getDosenCount({ email, name, nidn })])
+        getDosen({ search, page, perPage }),
+        getDosenCount({ search })])
 
     const data = dosenMapper(dosens as unknown as DosenModelTypes[])
-    const response = { data, meta: Meta(page, perPage, totalData) }
+    const meta = Meta(page, perPage, totalData)
+    if (!data.length && !meta.totalPages && !meta.totalData) {
+        return new ErrorApp(MESSAGES.ERROR.NOT_FOUND.DOSEN, 404, MESSAGE_CODE.NOT_FOUND)
+    }
+    const response = { data, meta }
     return response
 }
 
