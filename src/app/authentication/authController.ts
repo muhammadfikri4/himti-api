@@ -27,5 +27,5 @@ export const loginController = async (req: Request, res: Response) => {
         return HandleResponse(res, login.statusCode, login.code, login.message)
     }
     res.cookie("access_token", login, { httpOnly: true })
-    HandleResponse<LoginAuthResponse>(res, 200, MESSAGE_CODE.SUCCESS, MESSAGES.SUCCESS.USER, login as LoginAuthResponse)
+    return HandleResponse<LoginAuthResponse>(res, 200, MESSAGE_CODE.SUCCESS, MESSAGES.SUCCESS.USER, login as LoginAuthResponse)
 }

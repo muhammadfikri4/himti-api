@@ -4,7 +4,7 @@ import { MESSAGE_CODE } from "../../utils/ErrorCode"
 import { ErrorApp } from "../../utils/HttpError"
 import { MESSAGES } from "../../utils/Messages"
 import { AnggotaSosmedDTO } from "../anggota/anggotaDTO"
-import { updateSosmedAnggota } from "../anggota/anggotaRepository"
+import { getAnggotaById, updateSosmedAnggota } from "../anggota/anggotaRepository"
 import { getUserById } from "../authentication/authRepository"
 import { ProfileDTO } from "./profileDTO"
 import { getProfile, updateProfile } from "./profileRepository"
@@ -18,6 +18,20 @@ export const getProfileService = async (token: string) => {
     if (!profile) {
         return new ErrorApp(MESSAGES.ERROR.NOT_FOUND.USER.ACCOUNT, 404, MESSAGE_CODE.NOT_FOUND)
     }
+
+    let anggota
+    if (profile.anggotaId) {
+        anggota = await getAnggotaById(profile.anggotaId)
+
+    }
+
+    const sosmed = {
+        instagram: anggota?.instagram,
+        linkedin: anggota?.linkedin,
+        twitter: anggota?.twitter,
+        facebook: anggota?.facebook,
+    }
+
     const { email, id, name, nim, role, updatedAt, createdAt } = profile
     const response = {
         id,
@@ -25,6 +39,7 @@ export const getProfileService = async (token: string) => {
         name,
         nim,
         role,
+        ...sosmed,
         createdAt,
         updatedAt
     }

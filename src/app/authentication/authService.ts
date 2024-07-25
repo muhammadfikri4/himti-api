@@ -4,7 +4,7 @@ import dotenv from 'dotenv'
 import jwt from 'jsonwebtoken'
 import { ENV } from '../../libs'
 import { MESSAGE_CODE } from '../../utils/ErrorCode'
-import { AppError, ErrorApp } from '../../utils/HttpError'
+import { ErrorApp } from '../../utils/HttpError'
 import { MESSAGES } from '../../utils/Messages'
 import { getAnggotaByNIM } from '../anggota/anggotaRepository'
 import { LoginAuthBodyDTO, RegisterAuthBodyDTO } from './authDTO'
@@ -39,12 +39,12 @@ export const loginService = async (
 
     const user = await findUser(email)
     if (!user) {
-        return AppError(MESSAGES.ERROR.NOT_FOUND.USER.ACCOUNT, 404, MESSAGE_CODE.NOT_FOUND)
+        return new ErrorApp(MESSAGES.ERROR.NOT_FOUND.USER.ACCOUNT, 404, MESSAGE_CODE.NOT_FOUND)
     }
 
     const match = await bcrypt.compare(password, user.password)
     if (!match) {
-        return AppError(MESSAGES.ERROR.INVALID.USER.PASSWORD, 401, MESSAGE_CODE.UNAUTHORIZED)
+        return new ErrorApp(MESSAGES.ERROR.INVALID.USER.PASSWORD, 401, MESSAGE_CODE.UNAUTHORIZED)
     }
 
     const token = jwt.sign({
