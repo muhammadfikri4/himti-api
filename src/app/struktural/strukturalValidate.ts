@@ -3,10 +3,9 @@ import { ErrorApp } from '../../utils/HttpError'
 import { MESSAGES } from '../../utils/Messages'
 import { getAnggotaById } from '../anggota/anggotaRepository'
 import { StrukturalBodyDTO } from './strukturalDTO'
+import { jabatanChecker } from './strukturalService'
 
 export const strukturalValidate = async ({ anggotaId, image, jabatan }: StrukturalBodyDTO) => {
-
-
 
     if (!anggotaId) {
 
@@ -16,7 +15,7 @@ export const strukturalValidate = async ({ anggotaId, image, jabatan }: Struktur
 
         return new ErrorApp(MESSAGES.ERROR.REQUIRED.JABATAN, 400, MESSAGE_CODE.BAD_REQUEST)
     }
-    const jabatanIsValid = (jabatan !== 'KETUA_HIMPUNAN') && (jabatan !== 'WAKIL_KETUA_HIMPUNAN') && jabatan !== 'SEKRETARIS' && jabatan !== 'BENDAHARA' && jabatan !== 'KETUA_DEPARTMENT'
+    const jabatanIsValid = jabatanChecker(jabatan as string)
 
     if (jabatan && jabatanIsValid) {
         return new ErrorApp(MESSAGES.ERROR.INVALID.JABATAN, 400, MESSAGE_CODE.BAD_REQUEST)
