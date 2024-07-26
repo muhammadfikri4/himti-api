@@ -1,6 +1,5 @@
 import dotenv from 'dotenv'
 import { type Request } from 'express'
-import mongoose from 'mongoose'
 import { MESSAGE_CODE } from '../../utils/ErrorCode'
 import { ErrorApp } from '../../utils/HttpError'
 import { MESSAGES } from '../../utils/Messages'
@@ -54,9 +53,7 @@ export const deleteStrukturalService = async ({ id }: StrukturalBodyDTO) => {
 }
 export const updateStrukturalService = async ({ id, isActive, jabatan, image, anggotaId }: StrukturalBodyDTO) => {
 
-    if (!mongoose.Types.ObjectId.isValid(id as string)) {
-        return new ErrorApp(MESSAGES.ERROR.INVALID.ID, 400, MESSAGE_CODE.BAD_REQUEST);
-    }
+
     const matchStruktural = await getStrukturalById(id as string)
 
     if (!matchStruktural) {
