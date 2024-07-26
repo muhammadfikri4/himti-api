@@ -49,7 +49,7 @@ export const loginService = async (
 
     const token = jwt.sign({
         id: user.id,
-    }, ENV.JWT_SECRET as string)
+    }, ENV.JWT_SECRET as string, { expiresIn: '3d' })
 
     const userInfo = {
         name: user.name,
