@@ -8,21 +8,22 @@ import { Meta } from '../../utils/Meta'
 import { StrukturalBodyDTO } from './strukturalDTO'
 import { createStruktural, deleteStruktural, getStruktural, getStrukturalById, getStrukturalCount, updateStruktural } from './strukturalRepository'
 // import { strukturalMapper } from './strukturalResponse'
+import { Jabatan } from '@prisma/client'
 import { IFilterStruktural } from './strukturalTypes'
 import { strukturalValidate } from './strukturalValidate'
 
 dotenv.config();
 
 export const createStrukturalService = async ({ anggotaId, jabatan, isActive }: StrukturalBodyDTO, req: Request) => {
-
-    const validate = await strukturalValidate({ anggotaId, image: req.file?.path, jabatan })
+    const replaceJabatan = jabatan?.toUpperCase().replace(' ', '_')
+    const validate = await strukturalValidate({ anggotaId, image: req.file?.path, jabatan: replaceJabatan as Jabatan })
     if (validate instanceof ErrorApp) {
         return new ErrorApp(validate.message, validate.statusCode, validate.code)
     }
 
     const { path } = req.file as Express.Multer.File
 
-    const response = await createStruktural({ isActive, anggotaId, image: path, jabatan })
+    const response = await createStruktural({ isActive, anggotaId, image: path, jabatan: replaceJabatan as Jabatan })
     return response
 }
 
