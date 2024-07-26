@@ -46,11 +46,12 @@ export const getAngkatanByYear = async (id: string) => {
 }
 
 
-export const getProductsCount = async ({ search }: IFilterAngkatan) => {
+export const getAngkatanCount = async ({ search }: IFilterAngkatan) => {
     return await prisma.angkatan.count({
         where: {
             year: {
-                contains: search
+                contains: search,
+                mode: 'insensitive'
             }
         }
     })
@@ -70,6 +71,15 @@ export const deleteAngkatanRepository = async (id: string) => {
     return await prisma.angkatan.delete({
         where: {
             id
+        }
+    })
+}
+
+export const getMatchAngkatanExceptSameId = async (year: string) => {
+    return await prisma.angkatan.findFirst({
+        where: {
+
+            year
         }
     })
 }

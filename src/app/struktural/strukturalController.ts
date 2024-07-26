@@ -41,7 +41,7 @@ export const deleteStrukturalController = async (req: Request, res: Response) =>
     if (struktural instanceof ErrorApp) {
         return HandleResponse(res, struktural.statusCode, struktural.code, struktural.message)
     }
-    HandleResponse(res, 200, MESSAGE_CODE.SUCCESS, MESSAGES.SUCCESS.STRUKTURAL.DELETE)
+    return HandleResponse(res, 200, MESSAGE_CODE.SUCCESS, MESSAGES.SUCCESS.STRUKTURAL.DELETE)
 }
 
 export const updateStrukturalController = async (req: Request, res: Response) => {
@@ -52,6 +52,6 @@ export const updateStrukturalController = async (req: Request, res: Response) =>
     if (struktural instanceof ErrorApp) {
         return HandleResponse(res, struktural.statusCode, struktural.code, struktural.message)
     }
-    HandleResponse(res, 200, MESSAGE_CODE.SUCCESS, MESSAGES.SUCCESS.STRUKTURAL.UPDATE)
+    return HandleResponse(res, 200, MESSAGE_CODE.SUCCESS, MESSAGES.SUCCESS.STRUKTURAL.UPDATE)
 }
 
