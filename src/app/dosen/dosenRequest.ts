@@ -1,7 +1,5 @@
-// { nidn, name, email, numberPhone, lesson, isActive }
-
 import Joi from "joi";
-import { MESSAGES } from "utils/Messages";
+import { MESSAGES } from "../../utils/Messages";
 
 export const createDosenSchema = Joi.object({
     name: Joi.string().required().messages({
