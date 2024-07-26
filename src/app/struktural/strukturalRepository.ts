@@ -74,3 +74,19 @@ export const updateStruktural = async (data: StrukturalBodyDTO) => {
         data
     })
 }
+
+export const getStrukturalByAnggotaId = async (anggotaId: string) => {
+    return await prisma.struktural.findFirst({
+        where: {
+            anggotaId
+        }
+    })
+}
+
+export const getStrukturalByJabatan = async (jabatan: Jabatan) => {
+    return await prisma.struktural.findFirst({
+        where: {
+            jabatan
+        }
+    })
+}

@@ -1,6 +1,6 @@
 import dotenv from 'dotenv'
 import { MESSAGE_CODE } from '../../utils/ErrorCode'
-import { AppError, ErrorApp, HttpError } from '../../utils/HttpError'
+import { ErrorApp } from '../../utils/HttpError'
 import { MESSAGES } from '../../utils/Messages'
 import { Meta } from '../../utils/Meta'
 import { DosenBodyDTO } from './dosenDTO'
@@ -14,8 +14,8 @@ dotenv.config();
 export const createDosenService = async ({ email, isActive, lesson, name, nidn, numberPhone }: DosenBodyDTO) => {
 
     const validate = await dosenValidate({ email, name, nidn })
-    if ((validate as HttpError)?.message) {
-        return AppError((validate as HttpError).message, (validate as HttpError).statusCode, (validate as HttpError).code)
+    if (validate instanceof ErrorApp) {
+        return new ErrorApp(validate.message, validate.statusCode, validate.code)
     }
 
     const response = await createDosen({ email, isActive, lesson, name, nidn, numberPhone })
@@ -44,7 +44,7 @@ export const deleteDosenService = async ({ id }: DosenBodyDTO) => {
     const matchDosen = await getDosenById(id as string)
 
     if (!matchDosen) {
-        return AppError(MESSAGES.ERROR.NOT_FOUND.DOSEN, 404, MESSAGE_CODE.NOT_FOUND)
+        return new ErrorApp(MESSAGES.ERROR.NOT_FOUND.DOSEN, 404, MESSAGE_CODE.NOT_FOUND)
     }
 
     const response = await deleteDosen(id as string)
@@ -56,7 +56,7 @@ export const updateDosenService = async ({ id, name, isActive, email, lesson, ni
     const matchDosen = await getDosenById(id as string)
 
     if (!matchDosen) {
-        return AppError(MESSAGES.ERROR.NOT_FOUND.DOSEN, 404, MESSAGE_CODE.NOT_FOUND)
+        return new ErrorApp(MESSAGES.ERROR.NOT_FOUND.DOSEN, 404, MESSAGE_CODE.NOT_FOUND)
     }
 
     const updateFields: Partial<DosenBodyDTO> = { id };

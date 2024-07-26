@@ -5,7 +5,7 @@ import { ErrorApp } from '../../utils/HttpError'
 import { MESSAGES } from '../../utils/Messages'
 import { Meta } from '../../utils/Meta'
 import { StrukturalBodyDTO } from './strukturalDTO'
-import { createStruktural, deleteStruktural, getStruktural, getStrukturalById, getStrukturalCount, updateStruktural } from './strukturalRepository'
+import { createStruktural, deleteStruktural, getStruktural, getStrukturalByAnggotaId, getStrukturalById, getStrukturalByJabatan, getStrukturalCount, updateStruktural } from './strukturalRepository'
 // import { strukturalMapper } from './strukturalResponse'
 import { Jabatan } from '@prisma/client'
 import { IFilterStruktural } from './strukturalTypes'
@@ -14,7 +14,6 @@ import { strukturalValidate } from './strukturalValidate'
 dotenv.config();
 
 export const jabatanChecker = (jabatan: string) => {
-    console.log(jabatan)
     return (jabatan === 'KETUA_HIMPUNAN') || (jabatan === 'WAKIL_KETUA_HIMPUNAN') || jabatan === 'SEKRETARIS' || jabatan === 'BENDAHARA' || jabatan === 'KETUA_DEPARTMENT'
 }
 
@@ -69,6 +68,18 @@ export const updateStrukturalService = async ({ id, isActive, jabatan, image, an
     if (!matchStruktural) {
         return new ErrorApp(MESSAGES.ERROR.NOT_FOUND.STRUKTURAL, 404, MESSAGE_CODE.NOT_FOUND)
     }
+    if (anggotaId || jabatan) {
+        const anggotaIsStruktural = await getStrukturalByAnggotaId(anggotaId as string)
+        if (anggotaIsStruktural && anggotaIsStruktural.id !== id) {
+            return new ErrorApp(MESSAGES.ERROR.ALREADY.ANGGOTA_STRUKTURAL, 400, MESSAGE_CODE.BAD_REQUEST)
+        }
+        const jabatanIsAlready = await getStrukturalByJabatan(jabatan as Jabatan)
+        if (jabatanIsAlready && jabatanIsAlready.id !== id) {
+            return new ErrorApp(MESSAGES.ERROR.ALREADY.JABATAN, 400, MESSAGE_CODE.BAD_REQUEST)
+        }
+    }
+
+
     const updateFields: Partial<StrukturalBodyDTO> = { id };
 
     if (isActive !== undefined) updateFields.isActive = isActive;

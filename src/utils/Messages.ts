@@ -43,7 +43,9 @@ export const MESSAGES = {
             DOSEN: "Dosen is already exist",
             STRUKTURAL: "Struktural is already exist",
             ANGGOTA: "Anggota is already exist",
-            ALUMNI: "Alumni is already exist"
+            ALUMNI: "Alumni is already exist",
+            ANGGOTA_STRUKTURAL: "Anggota cannot join more than 1 struktural",
+            JABATAN: "Jabatan is already exists in the struktural"
         },
         INVALID: {
             GLOBAL: {
