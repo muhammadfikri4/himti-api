@@ -18,7 +18,7 @@ export const jabatanChecker = (jabatan: string) => {
 }
 
 export const createStrukturalService = async ({ anggotaId, jabatan, isActive }: StrukturalBodyDTO, req: Request) => {
-    const replaceJabatan = jabatan?.toUpperCase().replace(' ', '_')
+    const replaceJabatan = jabatan?.toUpperCase().replace(/ /g, '_')
     const validate = await strukturalValidate({ anggotaId, image: req.file?.path, jabatan: replaceJabatan as Jabatan })
     if (validate instanceof ErrorApp) {
         return new ErrorApp(validate.message, validate.statusCode, validate.code)
@@ -58,7 +58,7 @@ export const deleteStrukturalService = async ({ id }: StrukturalBodyDTO) => {
 export const updateStrukturalService = async ({ id, isActive, jabatan, image, anggotaId }: StrukturalBodyDTO) => {
 
     const matchStruktural = await getStrukturalById(id as string)
-    const replaceJabatan = jabatan?.toUpperCase().replace(' ', '_') as Jabatan
+    const replaceJabatan = jabatan?.toUpperCase().replace(/ /g, '_') as Jabatan
     const jabatanIsValid = jabatanChecker(replaceJabatan)
 
     if (!jabatanIsValid) {
