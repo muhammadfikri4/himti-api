@@ -1,7 +1,7 @@
-import { getAnggotaById } from 'app/anggota/anggotaRepository'
 import { MESSAGE_CODE } from '../../utils/ErrorCode'
 import { ErrorApp } from '../../utils/HttpError'
 import { MESSAGES } from '../../utils/Messages'
+import { getAnggotaById } from '../anggota/anggotaRepository'
 import { StrukturalBodyDTO } from './strukturalDTO'
 
 export const strukturalValidate = async ({ anggotaId, image, jabatan }: StrukturalBodyDTO) => {
