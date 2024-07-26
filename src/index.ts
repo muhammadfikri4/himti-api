@@ -6,6 +6,7 @@ import dotenv from 'dotenv'
 import express from 'express'
 import { ENV } from './libs'
 import routes from './routes'
+import { HandlingError } from './utils/HandlingError'
 
 const app = express()
 const port = ENV.PORT || 8000
@@ -22,6 +23,7 @@ app.use(cookieParser())
 app.use(bodyParser.json())
 app.use(express.json())
 app.use(routes);
+app.use(HandlingError)
 
 app.listen(port, () => {
     console.log(`Server running on port ${port}🚀`)

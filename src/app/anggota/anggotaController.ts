@@ -1,4 +1,4 @@
-import { type Request, type Response } from "express";
+import { NextFunction, type Request, type Response } from "express";
 import { Result } from "../../utils/ApiResponse";
 import { MESSAGE_CODE } from "../../utils/ErrorCode";
 import { HandleResponse } from "../../utils/HandleResponse";
@@ -9,19 +9,21 @@ import { AnggotaModelTypes } from "./anggotaTypes";
 
 
 
-export const createAnggotaController = async (req: Request, res: Response) => {
+export const createAnggotaController = async (req: Request, res: Response, next: NextFunction) => {
 
     const { name, nim, email, angkatanId, isActive } = req.body
 
     const anggota = await createAnggotaService({ email, isActive, angkatanId, name, nim });
     if (anggota instanceof ErrorApp) {
-        return HandleResponse(res, anggota.statusCode, anggota.code, anggota.message)
+        next(anggota)
+        return
+        // return HandleResponse(res, anggota.statusCode, anggota.code, anggota.message)
     }
 
-    return HandleResponse(res, 201, MESSAGE_CODE.CREATED, MESSAGES.CREATED.ANGGOTA)
+    HandleResponse(res, 201, MESSAGE_CODE.CREATED, MESSAGES.CREATED.ANGGOTA)
 }
 
-export const getAnggotaController = async (req: Request, res: Response) => {
+export const getAnggotaController = async (req: Request, res: Response, next: NextFunction) => {
 
     const { page, perPage, search, angkatan } = req.query
 
@@ -33,31 +35,37 @@ export const getAnggotaController = async (req: Request, res: Response) => {
     })
 
     if (anggota instanceof ErrorApp) {
-        return HandleResponse(res, anggota.statusCode, anggota.code, anggota.message)
+        next(anggota)
+        return
+        // return HandleResponse(res, anggota.statusCode, anggota.code, anggota.message)
     }
 
-    return HandleResponse<AnggotaModelTypes[]>(res, 200, MESSAGE_CODE.SUCCESS, MESSAGES.SUCCESS.ANGGOTA.GET, (anggota as unknown as Result<AnggotaModelTypes[]>)?.data, (anggota as unknown as Result)?.meta)
+    HandleResponse<AnggotaModelTypes[]>(res, 200, MESSAGE_CODE.SUCCESS, MESSAGES.SUCCESS.ANGGOTA.GET, (anggota as unknown as Result<AnggotaModelTypes[]>)?.data, (anggota as unknown as Result)?.meta)
 
 }
 
-export const deleteAnggotaController = async (req: Request, res: Response) => {
+export const deleteAnggotaController = async (req: Request, res: Response, next: NextFunction) => {
     const { id } = req.params;
 
     const anggota = await deleteAnggotaService({ id });
     if (anggota instanceof ErrorApp) {
-        return HandleResponse(res, anggota.statusCode, anggota.code, anggota.message)
+        next(anggota)
+        return
+        // return HandleResponse(res, anggota.statusCode, anggota.code, anggota.message)
     }
-    return HandleResponse(res, 200, MESSAGE_CODE.SUCCESS, MESSAGES.SUCCESS.ANGGOTA.DELETE)
+    HandleResponse(res, 200, MESSAGE_CODE.SUCCESS, MESSAGES.SUCCESS.ANGGOTA.DELETE)
 }
 
-export const updateAnggotaController = async (req: Request, res: Response) => {
+export const updateAnggotaController = async (req: Request, res: Response, next: NextFunction) => {
     const { id } = req.params;
     const { email, isActive, angkatanId, name, nim } = req.body
 
     const anggota = await updateAnggotaService({ id, email, isActive, name, nim, angkatanId });
     if (anggota instanceof ErrorApp) {
-        return HandleResponse(res, anggota.statusCode, anggota.code, anggota.message)
+        next(anggota)
+        return
+        // return HandleResponse(res, anggota.statusCode, anggota.code, anggota.message)
     }
-    return HandleResponse(res, 200, MESSAGE_CODE.SUCCESS, MESSAGES.SUCCESS.ANGGOTA.UPDATE)
+    HandleResponse(res, 200, MESSAGE_CODE.SUCCESS, MESSAGES.SUCCESS.ANGGOTA.UPDATE)
 }
 
