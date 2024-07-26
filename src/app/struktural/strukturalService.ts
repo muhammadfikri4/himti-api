@@ -14,7 +14,8 @@ import { strukturalValidate } from './strukturalValidate'
 dotenv.config();
 
 export const jabatanChecker = (jabatan: string) => {
-    return (jabatan !== 'KETUA_HIMPUNAN') && (jabatan !== 'WAKIL_KETUA_HIMPUNAN') && jabatan !== 'SEKRETARIS' && jabatan !== 'BENDAHARA' && jabatan !== 'KETUA_DEPARTMENT'
+    console.log(jabatan)
+    return (jabatan === 'KETUA_HIMPUNAN') || (jabatan === 'WAKIL_KETUA_HIMPUNAN') || jabatan === 'SEKRETARIS' || jabatan === 'BENDAHARA' || jabatan === 'KETUA_DEPARTMENT'
 }
 
 export const createStrukturalService = async ({ anggotaId, jabatan, isActive }: StrukturalBodyDTO, req: Request) => {
@@ -61,7 +62,7 @@ export const updateStrukturalService = async ({ id, isActive, jabatan, image, an
     const replaceJabatan = jabatan?.toUpperCase().replace(/ /g, '_') as Jabatan
     const jabatanIsValid = jabatanChecker(replaceJabatan)
 
-    if (!jabatanIsValid) {
+    if (jabatan && !jabatanIsValid) {
         return new ErrorApp(MESSAGES.ERROR.INVALID.JABATAN, 400, MESSAGE_CODE.BAD_REQUEST)
     }
 

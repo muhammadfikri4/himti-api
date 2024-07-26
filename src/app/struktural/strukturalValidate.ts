@@ -17,7 +17,7 @@ export const strukturalValidate = async ({ anggotaId, image, jabatan }: Struktur
     }
     const jabatanIsValid = jabatanChecker(jabatan as string)
 
-    if (jabatan && jabatanIsValid) {
+    if (jabatan && !jabatanIsValid) {
         return new ErrorApp(MESSAGES.ERROR.INVALID.JABATAN, 400, MESSAGE_CODE.BAD_REQUEST)
     }
 
