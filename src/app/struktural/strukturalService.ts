@@ -53,7 +53,7 @@ export const deleteStrukturalService = async ({ id }: StrukturalBodyDTO) => {
 }
 export const updateStrukturalService = async ({ id, isActive, jabatan, image, anggotaId }: StrukturalBodyDTO) => {
 
-
+    const replaceJabatan = jabatan?.toUpperCase().replace(' ', '_') as Jabatan
     const matchStruktural = await getStrukturalById(id as string)
 
     if (!matchStruktural) {
@@ -63,7 +63,7 @@ export const updateStrukturalService = async ({ id, isActive, jabatan, image, an
 
     if (isActive !== undefined) updateFields.isActive = isActive;
     if (anggotaId !== undefined) updateFields.anggotaId = anggotaId;
-    if (jabatan !== undefined) updateFields.jabatan = jabatan;
+    if (jabatan !== undefined) updateFields.jabatan = replaceJabatan;
     if (image !== undefined) updateFields.image = image;
 
     const response = await updateStruktural(updateFields)
