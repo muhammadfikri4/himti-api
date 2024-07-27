@@ -4,7 +4,6 @@ import { TokenDecodeInterface } from "../../interface"
 import { MESSAGE_CODE } from "../../utils/ErrorCode"
 import { ErrorApp } from "../../utils/HttpError"
 import { MESSAGES } from "../../utils/Messages"
-import { REGEX } from '../../utils/Regex'
 import { AnggotaSosmedDTO } from "../anggota/anggotaDTO"
 import { getAnggotaById, updateSosmedAnggota } from "../anggota/anggotaRepository"
 import { getUserById, getUserByNIM } from "../authentication/authRepository"
@@ -68,11 +67,7 @@ export const updateProfileService = async (token: string, { email, name, nim, fa
     const getNIM = await getUserByNIM(nim.toString())
 
     if (getNIM && getNIM.id !== id) {
-        return new ErrorApp(MESSAGES.ERROR.INVALID.GLOBAL.EMAIL, 400, MESSAGE_CODE.BAD_REQUEST)
-    }
-
-    if (email && !REGEX.email.test(email)) {
-        return new ErrorApp(MESSAGES.ERROR.INVALID.GLOBAL.EMAIL, 400, MESSAGE_CODE.BAD_REQUEST)
+        return new ErrorApp(MESSAGES.ERROR.ALREADY.GLOBAL.NIM, 400, MESSAGE_CODE.BAD_REQUEST)
     }
 
     const profileField: Partial<ProfileDTO> = { id };

@@ -9,7 +9,9 @@ export const updateProfileSchema = Joi.object({
         "any.number": MESSAGES.ERROR.INVALID.NIM.FORMAT,
         "number.max": MESSAGES.ERROR.INVALID.NIM.LENGTH
     }),
-    email: Joi.optional(),
+    email: Joi.string().optional().messages({
+        "string.email": MESSAGES.ERROR.INVALID.GLOBAL.EMAIL
+    }),
     instagram: Joi.optional(),
     facebook: Joi.optional(),
     twitter: Joi.optional(),
