@@ -28,13 +28,6 @@ export const updateProfileController = async (req: Request, res: Response, next:
         next(profile)
         return
     }
-    const [data, anggota] = profile
-    const { password, ...rest } = data
-    const sosmed = anggota ? {
-        instagram: anggota?.instagram,
-        linkedin: anggota?.linkedin,
-        twitter: anggota?.twitter,
-        facebook: anggota?.facebook,
-    } : null
-    HandleResponse(res, 200, MESSAGE_CODE.SUCCESS, MESSAGES.SUCCESS.PROFILE.UPDATE, { ...rest, ...sosmed })
+
+    HandleResponse(res, 200, MESSAGE_CODE.SUCCESS, MESSAGES.SUCCESS.PROFILE.UPDATE, profile)
 }

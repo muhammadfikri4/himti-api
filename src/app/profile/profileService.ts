@@ -54,7 +54,7 @@ export const updateProfileService = async (token: string, { email, name, nim, fa
     const sosmed = facebook || instagram || twitter || linkedin
 
     const user = await getUserById(id)
-    console.log(id, "console id")
+
     if (!user) {
         return new ErrorApp(MESSAGES.ERROR.NOT_FOUND.USER.ACCOUNT, 404, MESSAGE_CODE.NOT_FOUND)
     }
@@ -75,8 +75,21 @@ export const updateProfileService = async (token: string, { email, name, nim, fa
     if (linkedin !== undefined) sosmedField.linkedin = linkedin;
     if (facebook !== undefined) sosmedField.facebook = facebook;
 
-    const response = await Promise.all([updateProfile(profileField as ProfileDTO), updateSosmedAnggota(sosmedField as AnggotaSosmedDTO)])
-    return response
+    if (!user.anggotaId) {
+
+        const response = await updateProfile(profileField as ProfileDTO)
+        return response
+    }
+    const [profile, anggota] = await Promise.all([updateProfile(profileField as ProfileDTO), updateSosmedAnggota(sosmedField as AnggotaSosmedDTO)])
+    const { password, ...rest } = profile
+    const sosmedAnggota = {
+        instagram: anggota?.instagram,
+        linkedin: anggota?.linkedin,
+        twitter: anggota?.twitter,
+        facebook: anggota?.facebook,
+    }
+    return { ...rest, ...sosmedAnggota }
+
 }
 
 export const changePasswordService = async (token: string, { newPassword }: ChangePasswordDTO) => {
