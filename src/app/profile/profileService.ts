@@ -78,7 +78,7 @@ export const updateProfileService = async (token: string, { email, name, nim, fa
         }
     }
 
-    const getNIM = await getUserByNIM(nim.toString())
+    const getNIM = await getUserByNIM(nim)
     if (getNIM && getNIM.id !== user.id && !user.anggotaId && user.role === 'USER') {
         return new ErrorApp(MESSAGES.ERROR.ALREADY.GLOBAL.NIM, 400, MESSAGE_CODE.BAD_REQUEST)
     }
@@ -90,15 +90,15 @@ export const updateProfileService = async (token: string, { email, name, nim, fa
 
     const profileField: Partial<ProfileDTO> = { id };
 
-    if (name !== undefined) profileField.name = name;
-    if (email !== undefined) profileField.email = email;
-    if (nim !== undefined) profileField.nim = nim.toString();
+    if (name) profileField.name = name;
+    if (email) profileField.email = email;
+    if (nim) profileField.nim = nim
 
     const sosmedField: Partial<AnggotaSosmedDTO> = { id: user.anggotaId as string }
-    if (instagram !== undefined) sosmedField.instagram = instagram;
-    if (twitter !== undefined) sosmedField.twitter = twitter;
-    if (linkedin !== undefined) sosmedField.linkedin = linkedin;
-    if (facebook !== undefined) sosmedField.facebook = facebook;
+    if (instagram) sosmedField.instagram = instagram;
+    if (twitter) sosmedField.twitter = twitter;
+    if (linkedin) sosmedField.linkedin = linkedin;
+    if (facebook) sosmedField.facebook = facebook;
 
     if (!user.anggotaId) {
 
