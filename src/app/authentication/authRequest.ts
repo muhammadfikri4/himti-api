@@ -16,7 +16,8 @@ export const registerSchema = Joi.object({
     nim: Joi.string().required().max(14).messages({
         "any.required": MESSAGES.ERROR.REQUIRED.NIM,
         "string.max": MESSAGES.ERROR.INVALID.NIM.LENGTH
-    })
+    }),
+    code: Joi.optional()
 })
 export const loginSchema = Joi.object({
 
