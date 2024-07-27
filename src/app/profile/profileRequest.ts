@@ -12,9 +12,9 @@ export const updateProfileSchema = Joi.object({
     email: Joi.string().optional().email().messages({
         "string.email": MESSAGES.ERROR.INVALID.GLOBAL.EMAIL
     }),
-    instagram: Joi.string().optional(),
-    facebook: Joi.string().optional(),
-    twitter: Joi.string().optional(),
-    linkedin: Joi.string().optional(),
+    instagram: Joi.optional(),
+    facebook: Joi.optional(),
+    twitter: Joi.optional(),
+    linkedin: Joi.optional(),
 
 })

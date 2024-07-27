@@ -7,7 +7,7 @@ import { updateProfileSchema } from "./profileRequest"
 
 const route = Router()
 
-route.get("/", VerifyToken, getProfileController)
+route.get("/", VerifyToken, CatchWrapper(getProfileController))
 route.put('/', VerifyToken, validateRequest(updateProfileSchema), CatchWrapper(updateProfileController))
 
 export default route
