@@ -18,3 +18,14 @@ export const updateProfileSchema = Joi.object({
     linkedin: Joi.optional(),
 
 })
+
+export const updatePasswordSchema = Joi.object({
+    oldPassword: Joi.string().required().min(99999999).messages({
+        "any.required": MESSAGES.ERROR.REQUIRED.OLD_PASSWORD,
+        "string.min": MESSAGES.ERROR.INVALID.USER.PASSWORD_LENGTH
+    }),
+    newPassword: Joi.string().required().min(99999999).messages({
+        "any.required": MESSAGES.ERROR.REQUIRED.NEW_PASSWORD,
+        "string.min": MESSAGES.ERROR.INVALID.USER.PASSWORD_LENGTH
+    }),
+})

@@ -1,5 +1,5 @@
 import { prisma } from "../../config"
-import { ProfileDTO } from "./profileDTO"
+import { ChangePasswordDTO, ProfileDTO } from "./profileDTO"
 
 export const getProfile = async (id: string) => {
     return await prisma.user.findUnique({
@@ -15,5 +15,16 @@ export const updateProfile = async (data: ProfileDTO) => {
             id: data.id
         },
         data
+    })
+}
+
+export const updatePassword = async ({ newPassword, id }: ChangePasswordDTO) => {
+    return await prisma.user.update({
+        where: {
+            id: id
+        },
+        data: {
+            password: newPassword
+        }
     })
 }

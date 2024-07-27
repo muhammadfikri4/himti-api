@@ -1,3 +1,4 @@
+import bcrypt from 'bcrypt'
 import { decode } from "jsonwebtoken"
 import { TokenDecodeInterface } from "../../interface"
 import { MESSAGE_CODE } from "../../utils/ErrorCode"
@@ -7,7 +8,7 @@ import { AnggotaSosmedDTO } from "../anggota/anggotaDTO"
 import { getAnggotaById, updateSosmedAnggota } from "../anggota/anggotaRepository"
 import { getUserById } from "../authentication/authRepository"
 import { ChangePasswordDTO, ProfileDTO } from "./profileDTO"
-import { getProfile, updateProfile } from "./profileRepository"
+import { getProfile, updatePassword, updateProfile } from "./profileRepository"
 
 export const getProfileService = async (token: string) => {
     const decodeToken = decode(token)
@@ -92,7 +93,7 @@ export const updateProfileService = async (token: string, { email, name, nim, fa
 
 }
 
-export const changePasswordService = async (token: string, { newPassword }: ChangePasswordDTO) => {
+export const updatePasswordService = async (token: string, { newPassword, oldPassword }: ChangePasswordDTO) => {
     const decodeToken = decode(token) as TokenDecodeInterface
     const id = decodeToken.id
     const user = await getUserById(id)
@@ -100,9 +101,17 @@ export const changePasswordService = async (token: string, { newPassword }: Chan
         return new ErrorApp(MESSAGES.ERROR.NOT_FOUND.USER.ACCOUNT, 404, MESSAGE_CODE.NOT_FOUND)
     }
 
+    const match = await bcrypt.compare(oldPassword as string, user.password)
+    if (!match) {
+        return new ErrorApp(MESSAGES.ERROR.INVALID.USER.PASSWORD, 401, MESSAGE_CODE.UNAUTHORIZED)
+    }
 
-    const profileField: Partial<ChangePasswordDTO> = { id };
+    if (oldPassword === newPassword) {
+        return new ErrorApp(MESSAGES.ERROR.INVALID.NEW_PASSWORD, 400, MESSAGE_CODE.BAD_REQUEST)
+    }
 
-    const response = await updateProfile(profileField as ProfileDTO)
+    const hashPassword = await bcrypt.hash(newPassword, 10)
+
+    const response = await updatePassword({ newPassword: hashPassword, id })
     return response
 }

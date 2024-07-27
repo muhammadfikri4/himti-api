@@ -3,7 +3,7 @@ import { MESSAGE_CODE } from '../../utils/ErrorCode'
 import { HandleResponse } from '../../utils/HandleResponse'
 import { ErrorApp } from '../../utils/HttpError'
 import { MESSAGES } from '../../utils/Messages'
-import { getProfileService, updateProfileService } from "./profileService"
+import { getProfileService, updatePasswordService, updateProfileService } from "./profileService"
 
 export const getProfileController = async (req: Request, res: Response, next: NextFunction) => {
 
@@ -30,4 +30,15 @@ export const updateProfileController = async (req: Request, res: Response, next:
     }
 
     HandleResponse(res, 200, MESSAGE_CODE.SUCCESS, MESSAGES.SUCCESS.PROFILE.UPDATE, profile)
+}
+
+export const updatePasswordController = async (req: Request, res: Response, next: NextFunction) => {
+
+    const bearerToken = req.headers.authorization?.replace("Bearer ", "")
+    const { newPassword, oldPassword } = req.body
+    const profile = await updatePasswordService(bearerToken as string, { newPassword, oldPassword })
+    if (profile instanceof ErrorApp) {
+        next(profile)
+        return
+    }
 }

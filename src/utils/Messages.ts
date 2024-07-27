@@ -66,7 +66,8 @@ export const MESSAGES = {
             ANGGOTA: "You're not anggota",
             STATUS: "Status must be boolean type",
             NAME: "Name must be a string",
-            JABATAN: "Jabatan is invalid"
+            JABATAN: "Jabatan is invalid",
+            NEW_PASSWORD: "New password cannot be the same as the old password",
         },
         UNAUTHORIZED: {
             AUTH: "If you are not logged in, please log in first",
@@ -90,7 +91,9 @@ export const MESSAGES = {
             START_DATE: "First Date is required when acara is open",
             END_DATE: "End Date is required when acara is open",
             ACARA: "Acara must be select",
-            COORDINATE: "Coordinate is required"
+            COORDINATE: "Coordinate is required",
+            OLD_PASSWORD: "Old Password is required",
+            NEW_PASSWORD: "New Password is required",
         },
         RELATION: {
             ANGKATAN: "Angkatan cannot be deleted because it has a relationship"
