@@ -55,6 +55,7 @@ export const updateProfileService = async (token: string, { email, name, nim, fa
     const sosmed = facebook || instagram || twitter || linkedin
 
     const user = await getUserById(id)
+    console.log(nim)
 
     if (!user) {
         return new ErrorApp(MESSAGES.ERROR.NOT_FOUND.USER.ACCOUNT, 404, MESSAGE_CODE.NOT_FOUND)
