@@ -64,7 +64,7 @@ export const updateProfileService = async (token: string, { email, name, nim, fa
         return new ErrorApp(MESSAGES.ERROR.INVALID.ANGGOTA, 400, MESSAGE_CODE.BAD_REQUEST)
     }
 
-
+    console.log(nim)
     if (nim && user.anggotaId && user.role === 'ANGGOTA') {
         return new ErrorApp(MESSAGES.ERROR.INVALID.NIM_ANGGOTA, 400, MESSAGE_CODE.BAD_REQUEST)
     }
