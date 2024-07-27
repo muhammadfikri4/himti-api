@@ -58,7 +58,7 @@ export const getAnggota = async ({ page, perPage, search, year }: IFilterAnggota
             }
         },
         orderBy: {
-            createdAt: 'desc'
+            nim: 'desc'
         },
         take: perPage,
         skip: (Number(page) - 1) * Number(perPage)
@@ -153,12 +153,7 @@ export const updateAnggota = async (data: AnggotaBodyDTO) => {
         where: {
             id: data.id
         },
-        data: data.nim ? {
-            ...data,
-            nim: data.nim.toString()
-        } : {
-            ...data
-        }
+        data
     })
 }
 

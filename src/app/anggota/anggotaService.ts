@@ -58,7 +58,7 @@ export const updateAnggotaService = async ({ id, name, isActive, email, angkatan
     if (!matchAnggota) {
         return new ErrorApp(MESSAGES.ERROR.NOT_FOUND.ANGGOTA, 404, MESSAGE_CODE.NOT_FOUND)
     }
-    const updateFields: Partial<AnggotaBodyDTO> = {};
+    const updateFields: Partial<AnggotaBodyDTO> = { id };
 
     if (name !== undefined) updateFields.name = name;
     if (isActive !== undefined) updateFields.isActive = isActive;

@@ -13,7 +13,6 @@ export const getProfileController = async (req: Request, res: Response, next: Ne
     if (profile instanceof ErrorApp) {
         next(profile)
         return
-        // return HandleResponse(res, profile.statusCode, profile.code, profile.message)
     }
 
     HandleResponse(res, 200, MESSAGE_CODE.SUCCESS, MESSAGES.SUCCESS.PROFILE.GET, profile)
@@ -28,8 +27,8 @@ export const updateProfileController = async (req: Request, res: Response, next:
     if (profile instanceof ErrorApp) {
         next(profile)
         return
-        // return HandleResponse(res, profile.statusCode, profile.code, profile.message)
     }
-
-    HandleResponse(res, 200, MESSAGE_CODE.SUCCESS, MESSAGES.SUCCESS.PROFILE.UPDATE, null)
+    const [data, sosmed] = profile
+    const { password, ...rest } = data
+    HandleResponse(res, 200, MESSAGE_CODE.SUCCESS, MESSAGES.SUCCESS.PROFILE.UPDATE, { ...rest, ...sosmed })
 }
