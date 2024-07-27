@@ -65,8 +65,7 @@ export const updateProfileService = async (token: string, { email, name, nim, fa
     }
 
     const getNIM = await getUserByNIM(nim.toString())
-
-    if (getNIM && getNIM.id !== id) {
+    if (getNIM && getNIM.id !== user.id) {
         return new ErrorApp(MESSAGES.ERROR.ALREADY.GLOBAL.NIM, 400, MESSAGE_CODE.BAD_REQUEST)
     }
 
