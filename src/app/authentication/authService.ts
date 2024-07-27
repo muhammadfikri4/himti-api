@@ -25,10 +25,11 @@ export const registerService = async ({ email, name, password, nim, code }: Regi
 
     const isAnggota = await getAnggotaByNIM(nim)
     const alreadyUser = await getUserByNIM(nim)
-    if (nim === isAnggota?.nim && nim === alreadyUser?.nim) {
+
+    if (nim === isAnggota?.nim || nim === alreadyUser?.nim) {
         return new ErrorApp(MESSAGES.ERROR.ALREADY.GLOBAL.NIM, 400, MESSAGE_CODE.BAD_REQUEST)
     }
-    if (email === isAnggota?.email && email === alreadyUser?.email) {
+    if (email === isAnggota?.email || email === alreadyUser?.email) {
         return new ErrorApp(MESSAGES.ERROR.ALREADY.GLOBAL.EMAIL, 400, MESSAGE_CODE.BAD_REQUEST)
     }
 
