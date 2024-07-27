@@ -1,10 +1,10 @@
 import bcrypt from 'bcrypt'
 import { decode } from "jsonwebtoken"
-import { REGEX } from 'utils/Regex'
 import { TokenDecodeInterface } from "../../interface"
 import { MESSAGE_CODE } from "../../utils/ErrorCode"
 import { ErrorApp } from "../../utils/HttpError"
 import { MESSAGES } from "../../utils/Messages"
+import { REGEX } from '../../utils/Regex'
 import { AnggotaSosmedDTO } from "../anggota/anggotaDTO"
 import { getAnggotaById, updateSosmedAnggota } from "../anggota/anggotaRepository"
 import { getUserById, getUserByNIM } from "../authentication/authRepository"
