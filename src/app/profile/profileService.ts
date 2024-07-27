@@ -73,6 +73,9 @@ export const updateProfileService = async (token: string, { email, name, nim, fa
         if (getNIMAnggota) {
             return new ErrorApp(MESSAGES.ERROR.ALREADY.USER_NIM, 400, MESSAGE_CODE.BAD_REQUEST)
         }
+        if (nim && nim.length <= 14) {
+            return new ErrorApp(MESSAGES.ERROR.INVALID.NIM.LENGTH, 400, MESSAGE_CODE.BAD_REQUEST)
+        }
     }
 
     const getNIM = await getUserByNIM(nim.toString())
