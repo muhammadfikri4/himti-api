@@ -69,7 +69,7 @@ export const updateProfileService = async (token: string, { email, name, nim, fa
     }
 
     if (!user.anggotaId) {
-        const getNIMAnggota = await getAnggotaByNIM(nim)
+        const getNIMAnggota = nim ? await getAnggotaByNIM(nim) : null;
         if (getNIMAnggota) {
             return new ErrorApp(MESSAGES.ERROR.ALREADY.USER_NIM, 400, MESSAGE_CODE.BAD_REQUEST)
         }
@@ -78,7 +78,7 @@ export const updateProfileService = async (token: string, { email, name, nim, fa
         }
     }
 
-    const getNIM = await getUserByNIM(nim)
+    const getNIM = nim ? await getUserByNIM(nim) : null
     if (getNIM && getNIM.id !== user.id && !user.anggotaId && user.role === 'USER') {
         return new ErrorApp(MESSAGES.ERROR.ALREADY.GLOBAL.NIM, 400, MESSAGE_CODE.BAD_REQUEST)
     }
