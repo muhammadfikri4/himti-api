@@ -1,7 +1,7 @@
-import { imageSchema } from "app/global/imageRequest"
 import { Router } from "express"
-import { validateRequest } from "middleware/validateRequest"
-import { CatchWrapper } from "utils/CatchWrapper"
+import { imageSchema } from "../../app/global/imageRequest"
+import { validateRequest } from "../../middleware/validateRequest"
+import { CatchWrapper } from "../../utils/CatchWrapper"
 import { createMerchandiseController } from "./businessController"
 import { createBusinessSchema } from "./businessRequest"
 
