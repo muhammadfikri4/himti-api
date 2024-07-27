@@ -1,4 +1,4 @@
-import { prisma } from "config"
+import { prisma } from "../../config"
 import { BusinessDTO } from "./businessDTO"
 
 export const createMerchandise = async (data: BusinessDTO) => {
