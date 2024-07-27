@@ -67,3 +67,12 @@ export const updateAcaraService = async ({ id, name, image, description, endTime
 
     return response;
 }
+
+export const getDetailAcaraService = async (id: string) => {
+
+    const acara = await getAcaraById(id)
+    if (!acara) {
+        return AppError(MESSAGES.ERROR.NOT_FOUND.ACARA, 404, MESSAGE_CODE.NOT_FOUND)
+    }
+    return acara
+}

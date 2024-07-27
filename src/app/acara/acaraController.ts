@@ -1,11 +1,11 @@
-import { type Request, type Response } from "express";
+import { NextFunction, type Request, type Response } from "express";
 import { Result } from '../../utils/ApiResponse';
 import { MESSAGE_CODE } from "../../utils/ErrorCode";
 import { HandleResponse } from "../../utils/HandleResponse";
-import { HttpError } from "../../utils/HttpError";
+import { ErrorApp, HttpError } from "../../utils/HttpError";
 import { MESSAGES } from "../../utils/Messages";
 import { AcaraBodyDTO } from "./acaraDTO";
-import { createAcaraService, deleteAcaraService, getAcaraService, updateAcaraService } from "./acaraService";
+import { createAcaraService, deleteAcaraService, getAcaraService, getDetailAcaraService, updateAcaraService } from "./acaraService";
 import { AcaraModelTypes } from "./acaraTypes";
 
 
@@ -57,3 +57,11 @@ export const updateAcaraController = async (req: Request, res: Response) => {
     HandleResponse(res, 200, MESSAGE_CODE.SUCCESS, MESSAGES.SUCCESS.ACARA.UPDATE)
 }
 
+export const getDetailAcaraController = async (req: Request, res: Response, next: NextFunction) => {
+    const { id } = req.params
+    const acara = await getDetailAcaraService(id as string)
+    if (acara instanceof ErrorApp) {
+        return HandleResponse(res, acara.statusCode, acara.code, acara.message)
+    }
+    return HandleResponse(res, 200, MESSAGE_CODE.SUCCESS, MESSAGES.SUCCESS.ACARA.GET, acara)
+}
