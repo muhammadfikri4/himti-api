@@ -11,11 +11,12 @@ export const registerController = async (req: Request, res: Response, next: Next
     const { name, email, password, nim, code } = req.body
 
     const register = await registerService({ name, email, password, nim, code });
-
+    console.log(nim, 'before')
     if (register instanceof ErrorApp) {
         next(register)
         return
     }
+    console.log(nim, 'after')
     HandleResponse(res, 201, MESSAGE_CODE.SUCCESS, MESSAGES.CREATED.USER.ACCOUNT)
 }
 
