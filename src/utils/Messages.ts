@@ -10,7 +10,8 @@ export const MESSAGES = {
         ANGGOTA: "Anggota created successfully",
         ALUMNI: "Alumni created successfully",
         ACARA: "Acara created successfully",
-        ABSENSI: "Absensi created successfully"
+        ABSENSI: "Absensi created successfully",
+        MERCHANDISE: "Merchandise created successfully"
     },
     ERROR: {
         NOT_FOUND: {
@@ -46,7 +47,8 @@ export const MESSAGES = {
             ALUMNI: "Alumni is already exist",
             ANGGOTA_STRUKTURAL: "Anggota cannot join more than 1 struktural",
             JABATAN: "Jabatan is already exists in the struktural",
-            USER_NIM: "User cannot use anggota NIM"
+            USER_NIM: "User cannot use anggota NIM",
+            MERCHANDISE: "Merchandise is already exist"
         },
         INVALID: {
             GLOBAL: {
@@ -70,7 +72,8 @@ export const MESSAGES = {
             JABATAN: "Jabatan is invalid",
             NEW_PASSWORD: "New password cannot be the same as the old password",
             NIM_ANGGOTA: "Anggota cannot change their NIM",
-            CODE_ANGGOTA: "Code is invalid"
+            CODE_ANGGOTA: "Code is invalid",
+            IMAGE_SIZE: "Image size must be less than 5mb"
         },
         UNAUTHORIZED: {
             AUTH: "If you are not logged in, please log in first",
@@ -97,7 +100,10 @@ export const MESSAGES = {
             COORDINATE: "Coordinate is required",
             OLD_PASSWORD: "Old Password is required",
             NEW_PASSWORD: "New Password is required",
-            CODE_ANGGOTA: "Cannot use NIM anggota without referal code"
+            CODE_ANGGOTA: "Cannot use NIM anggota without referal code",
+            TITLE: "Title is required",
+            DESCRIPTION: "Description is required",
+            PRICE: "Price is required",
         },
         RELATION: {
             ANGKATAN: "Angkatan cannot be deleted because it has a relationship"

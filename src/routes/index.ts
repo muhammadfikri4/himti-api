@@ -4,6 +4,7 @@ import acaraRoute from '../app/acara/acaraRoute';
 import anggotaRoute from '../app/anggota/anggotaRoute';
 import angkatanRoute from '../app/angkatan/angkatanRoute';
 import authRoute from '../app/authentication/authRoute';
+import businessRoute from '../app/business/businessRoute';
 import dosenRoute from '../app/dosen/dosenRoute';
 import profileRoute from '../app/profile/profileRoute';
 import strukturalRoute from '../app/struktural/strukturalRoute';
@@ -20,6 +21,7 @@ route.use("/struktural", strukturalRoute)
 route.use("/anggota", anggotaRoute)
 // route.use("/alumni", alumniRoute)
 route.use("/acara", acaraRoute)
+route.use('/business', businessRoute)
 
 route.get("/", (req: Request, res: Response) => {
     return res.json({ message: "Hello World 🚀" })

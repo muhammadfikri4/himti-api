@@ -2,9 +2,10 @@ import { Router } from "express";
 import { validateRequest } from "../../middleware/validateRequest";
 import { VerifyToken } from "../../middleware/verifyToken";
 import { CatchWrapper } from "../../utils/CatchWrapper";
+import { imageSchema } from "../global/imageRequest";
 import { upload } from "./strukturalConfig";
 import { createStrukturalController, deleteStrukturalController, getStrukturalController, updateStrukturalController } from "./strukturalController";
-import { createStrukturalSchema, imageSchema } from "./strukturalRequest";
+import { createStrukturalSchema } from "./strukturalRequest";
 
 
 const route = Router()
