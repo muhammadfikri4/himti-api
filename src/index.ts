@@ -4,12 +4,12 @@ import cookieParser from 'cookie-parser'
 import cors from 'cors'
 import dotenv from 'dotenv'
 import express from 'express'
-import { ENV } from './libs'
+import { environment } from './libs'
 import routes from './routes'
 import { HandlingError } from './utils/HandlingError'
 
 const app = express()
-const port = ENV.PORT || 8000
+const port = environment.PORT || 8000
 dotenv.config()
 // dbconnect()
 app.use(cors({

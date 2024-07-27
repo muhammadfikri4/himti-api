@@ -2,7 +2,7 @@ import { Role } from '@prisma/client'
 import * as bcrypt from 'bcrypt'
 import dotenv from 'dotenv'
 import jwt from 'jsonwebtoken'
-import { ENV } from '../../libs'
+import { environment } from '../../libs'
 import { MESSAGE_CODE } from '../../utils/ErrorCode'
 import { ErrorApp } from '../../utils/HttpError'
 import { MESSAGES } from '../../utils/Messages'
@@ -12,7 +12,7 @@ import { createUser, findUser } from './authRepository'
 
 dotenv.config()
 
-export const registerService = async ({ email, name, password, nim }: RegisterAuthBodyDTO) => {
+export const registerService = async ({ email, name, password, nim, code }: RegisterAuthBodyDTO) => {
 
     const user = await findUser(email)
     if (user) {
@@ -24,7 +24,7 @@ export const registerService = async ({ email, name, password, nim }: RegisterAu
     let anggotaId = null
 
     const isAnggota = await getAnggotaByNIM(nim)
-    if (isAnggota) {
+    if (isAnggota && code === environment.ANGGOTA_CODE) {
         role = "ANGGOTA"
         anggotaId = isAnggota.id
     }
@@ -49,7 +49,7 @@ export const loginService = async (
 
     const token = jwt.sign({
         id: user.id,
-    }, ENV.JWT_SECRET as string, { expiresIn: '3d' })
+    }, environment.JWT_SECRET as string, { expiresIn: '3d' })
 
     const userInfo = {
         name: user.name,

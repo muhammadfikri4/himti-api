@@ -8,9 +8,9 @@ import { loginService, registerService } from "./authService";
 
 export const registerController = async (req: Request, res: Response, next: NextFunction) => {
 
-    const { name, email, password, nim } = req.body
+    const { name, email, password, nim, code } = req.body
 
-    const register = await registerService({ name, email, password, nim });
+    const register = await registerService({ name, email, password, nim, code });
 
     if (register instanceof ErrorApp) {
         next(register)
