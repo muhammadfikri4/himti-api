@@ -6,7 +6,7 @@ import { MESSAGES } from "../../utils/Messages"
 import { AnggotaSosmedDTO } from "../anggota/anggotaDTO"
 import { getAnggotaById, updateSosmedAnggota } from "../anggota/anggotaRepository"
 import { getUserById } from "../authentication/authRepository"
-import { ProfileDTO } from "./profileDTO"
+import { ChangePasswordDTO, ProfileDTO } from "./profileDTO"
 import { getProfile, updateProfile } from "./profileRepository"
 
 export const getProfileService = async (token: string) => {
@@ -54,7 +54,7 @@ export const updateProfileService = async (token: string, { email, name, nim, fa
     const sosmed = facebook || instagram || twitter || linkedin
 
     const user = await getUserById(id)
-
+    console.log(id, "console id")
     if (!user) {
         return new ErrorApp(MESSAGES.ERROR.NOT_FOUND.USER.ACCOUNT, 404, MESSAGE_CODE.NOT_FOUND)
     }
@@ -76,5 +76,20 @@ export const updateProfileService = async (token: string, { email, name, nim, fa
     if (facebook !== undefined) sosmedField.facebook = facebook;
 
     const response = await Promise.all([updateProfile(profileField as ProfileDTO), updateSosmedAnggota(sosmedField as AnggotaSosmedDTO)])
+    return response
+}
+
+export const changePasswordService = async (token: string, { newPassword }: ChangePasswordDTO) => {
+    const decodeToken = decode(token) as TokenDecodeInterface
+    const id = decodeToken.id
+    const user = await getUserById(id)
+    if (!user) {
+        return new ErrorApp(MESSAGES.ERROR.NOT_FOUND.USER.ACCOUNT, 404, MESSAGE_CODE.NOT_FOUND)
+    }
+
+
+    const profileField: Partial<ChangePasswordDTO> = { id };
+
+    const response = await updateProfile(profileField as ProfileDTO)
     return response
 }

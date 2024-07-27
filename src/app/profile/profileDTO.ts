@@ -8,3 +8,9 @@ export interface ProfileDTO {
     twitter?: string
     linkedin?: string
 }
+
+export interface ChangePasswordDTO {
+    id?: string
+    oldPassword: string
+    newPassword: string
+}
