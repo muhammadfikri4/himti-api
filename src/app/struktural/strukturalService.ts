@@ -8,6 +8,7 @@ import { StrukturalBodyDTO } from './strukturalDTO'
 import { createStruktural, deleteStruktural, getStruktural, getStrukturalByAnggotaId, getStrukturalById, getStrukturalByJabatan, getStrukturalCount, updateStruktural } from './strukturalRepository'
 // import { strukturalMapper } from './strukturalResponse'
 import { Jabatan } from '@prisma/client'
+import { strukturalMapper } from './strukturalMapper'
 import { IFilterStruktural } from './strukturalTypes'
 import { strukturalValidate } from './strukturalValidate'
 
@@ -35,12 +36,12 @@ export const getStrukturalService = async ({ search, page = 1, perPage = 10 }: I
     const [struktural, totalData] = await Promise.all([getStruktural({ search, page, perPage }), getStrukturalCount({ search })])
 
     const meta = Meta(page, perPage, totalData)
-
-    if (!struktural.length && !meta.totalPages && !meta.totalData) {
+    const data = strukturalMapper(struktural)
+    if (!data.length && !meta.totalPages && !meta.totalData) {
         return new ErrorApp(MESSAGES.ERROR.NOT_FOUND.STRUKTURAL, 404, MESSAGE_CODE.NOT_FOUND)
     }
 
-    return { data: struktural, meta }
+    return { data, meta }
 }
 
 export const deleteStrukturalService = async ({ id }: StrukturalBodyDTO) => {

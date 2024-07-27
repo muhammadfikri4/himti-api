@@ -51,7 +51,7 @@ export const getStruktural = async ({ search, page, perPage }: IFilterStruktural
             }
         },
         orderBy: {
-            createdAt: 'desc'
+            createdAt: 'asc'
         },
         take: perPage,
         skip: (Number(page) - 1) * Number(perPage)
