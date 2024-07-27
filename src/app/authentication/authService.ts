@@ -30,6 +30,11 @@ export const registerService = async ({ email, name, password, nim, code }: Regi
         return new ErrorApp(MESSAGES.ERROR.REQUIRED.CODE_ANGGOTA, 400, MESSAGE_CODE.BAD_REQUEST)
     }
 
+    if (isAnggota && code && code !== environment.ANGGOTA_CODE) {
+        return new ErrorApp(MESSAGES.ERROR.INVALID.CODE_ANGGOTA, 400, MESSAGE_CODE.BAD_REQUEST)
+
+    }
+
     if (nim === isAnggota?.nim && nim === alreadyUser?.nim) {
         return new ErrorApp(MESSAGES.ERROR.ALREADY.GLOBAL.NIM, 400, MESSAGE_CODE.BAD_REQUEST)
     }

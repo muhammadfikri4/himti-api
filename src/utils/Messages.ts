@@ -70,6 +70,7 @@ export const MESSAGES = {
             JABATAN: "Jabatan is invalid",
             NEW_PASSWORD: "New password cannot be the same as the old password",
             NIM_ANGGOTA: "Anggota cannot change their NIM",
+            CODE_ANGGOTA: "Code is invalid"
         },
         UNAUTHORIZED: {
             AUTH: "If you are not logged in, please log in first",
