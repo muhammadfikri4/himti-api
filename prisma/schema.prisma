@@ -138,6 +138,16 @@ model Prestasi {
   updateAt    DateTime @default(now()) @updatedAt @map("updated_at")
 }
 
+model Merchandise {
+  id          Int      @id @unique @default(autoincrement())
+  image       String
+  title       String
+  description String?
+  price       String
+  createdAt   DateTime @default(now()) @map("created_at")
+  updateAt    DateTime @default(now()) @updatedAt @map("updated_at")
+}
+
 enum Jabatan {
   KETUA_HIMPUNAN
   WAKIL_KETUA_HIMPUNAN
