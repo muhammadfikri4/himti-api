@@ -29,3 +29,11 @@ export const getUserById = async (id: string) => {
         }
     })
 }
+
+export const getUserByNIM = async (nim: string) => {
+    return await prisma.user.findFirst({
+        where: {
+            nim
+        }
+    })
+}

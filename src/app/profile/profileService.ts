@@ -6,7 +6,7 @@ import { ErrorApp } from "../../utils/HttpError"
 import { MESSAGES } from "../../utils/Messages"
 import { AnggotaSosmedDTO } from "../anggota/anggotaDTO"
 import { getAnggotaById, updateSosmedAnggota } from "../anggota/anggotaRepository"
-import { getUserById } from "../authentication/authRepository"
+import { getUserById, getUserByNIM } from "../authentication/authRepository"
 import { ChangePasswordDTO, ProfileDTO } from "./profileDTO"
 import { getProfile, updatePassword, updateProfile } from "./profileRepository"
 
@@ -62,6 +62,13 @@ export const updateProfileService = async (token: string, { email, name, nim, fa
 
     if (!user?.anggotaId && sosmed) {
         return new ErrorApp(MESSAGES.ERROR.INVALID.ANGGOTA, 400, MESSAGE_CODE.BAD_REQUEST)
+    }
+
+    const getNIM = await getUserByNIM(nim.toString())
+
+    if (getNIM && getNIM.id !== id) {
+        return new ErrorApp(MESSAGES.ERROR.INVALID.GLOBAL.EMAIL, 400, MESSAGE_CODE.BAD_REQUEST)
+
     }
 
     const profileField: Partial<ProfileDTO> = { id };
