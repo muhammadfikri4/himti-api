@@ -12,14 +12,14 @@ model User {
   name      String
   email     String    @unique
   password  String
-  role      Role      @default(ADMIN)
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
+  role      Role?     @default(ADMIN)
   nim       String
-  anggotaId String?
+  anggotaId String?   @map("anggota_id")
   Absensi   Absensi[]
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @default(now()) @updatedAt @map("updated_at")
 
-  @@index([email])
+  @@index([email, anggotaId])
 }
 
 model Dosen {
@@ -29,9 +29,9 @@ model Dosen {
   email       String?  @unique
   numberPhone BigInt?  @map("number_phone")
   lesson      String?
-  isActive    Boolean  @default(true)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  isActive    Boolean  @default(true) @map("is_active")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @default(now()) @updatedAt @map("updated_at")
 
   @@index([name, nidn, createdAt])
 }
@@ -39,10 +39,10 @@ model Dosen {
 model Angkatan {
   id        String    @id @default(uuid())
   year      String
-  isActive  Boolean   @default(true)
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
+  isActive  Boolean   @default(true) @map("is_active")
   Anggota   Anggota[]
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @default(now()) @updatedAt @map("updated_at")
 
   @@index([year, createdAt])
 }
@@ -53,9 +53,7 @@ model Anggota {
   email      String?
   nim        String       @unique
   angkatanId String       @map("angkatan_id")
-  createdAt  DateTime     @default(now())
-  isActive   Boolean?     @default(true)
-  updatedAt  DateTime     @updatedAt
+  isActive   Boolean?     @default(true) @map("is_active")
   instagram  String?
   facebook   String?
   twitter    String?
@@ -63,6 +61,8 @@ model Anggota {
   Alumni     Alumni[]
   angkatan   Angkatan     @relation(fields: [angkatanId], references: [id])
   Struktural Struktural[]
+  createdAt  DateTime     @default(now()) @map("created_at")
+  updatedAt  DateTime     @default(now()) @updatedAt @map("updated_at")
 
   @@index([angkatanId, name, nim, createdAt])
 }
@@ -71,30 +71,30 @@ model Alumni {
   id        String   @id @unique @default(uuid())
   company   String?
   image     String
-  anggotaId String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  anggotaId String   @map("anggota_id")
   anggota   Anggota  @relation(fields: [anggotaId], references: [id])
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
 }
 
 model Department {
   id        String   @id @unique @default(uuid())
   name      String
-  createdAt DateTime @default(now())
-  isActive  Boolean  @default(true)
-  updatedAt DateTime @updatedAt
+  isActive  Boolean  @default(true) @map("is_active")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
 }
 
 model Struktural {
   id           String   @id @unique @default(uuid())
   jabatan      Jabatan
   image        String
-  anggotaId    String
-  createdAt    DateTime @default(now())
-  isActive     Boolean  @default(true)
-  updatedAt    DateTime @updatedAt
-  departmentId String?
+  anggotaId    String   @map("anggota_id")
+  isActive     Boolean  @default(true) @map("is_active")
+  departmentId String?  @map("department_id")
   anggota      Anggota  @relation(fields: [anggotaId], references: [id])
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @default(now()) @updatedAt @map("updated_at")
 
   @@index([anggotaId])
 }
@@ -104,12 +104,12 @@ model Acara {
   name        String
   description String?
   image       String
-  isOpen      Boolean   @default(true)
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
-  endTime     DateTime  @default(now())
-  startTime   DateTime  @default(now())
+  isOpen      Boolean   @default(true) @map("is_open")
+  endTime     DateTime? @default(now()) @map("end_time")
+  startTime   DateTime? @default(now()) @map("start_time")
   Absensi     Absensi[]
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @default(now()) @updatedAt @map("updated_at")
 
   @@index([name, startTime, endTime])
 }
@@ -117,15 +117,25 @@ model Acara {
 model Absensi {
   id         Int      @id @unique @default(autoincrement())
   image      String
-  acaraId    String
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
-  userId     String
+  acaraId    String   @map("acara_id")
+  userId     String   @map("user_id")
   acara      Acara    @relation(fields: [acaraId], references: [id])
   user       User     @relation(fields: [userId], references: [id])
   coordinate String
+  createdAt  DateTime @default(now()) @map("created_at")
+  updatedAt  DateTime @default(now()) @updatedAt @map("updated_at")
 
   @@index([userId, acaraId, createdAt])
+}
+
+model Prestasi {
+  id          Int      @id @unique @default(autoincrement())
+  image       String
+  title       String
+  description String?
+  time        DateTime
+  createdAt   DateTime @default(now()) @map("created_at")
+  updateAt    DateTime @default(now()) @updatedAt @map("updated_at")
 }
 
 enum Jabatan {
