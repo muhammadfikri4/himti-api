@@ -96,6 +96,7 @@ export const MESSAGES = {
             COORDINATE: "Coordinate is required",
             OLD_PASSWORD: "Old Password is required",
             NEW_PASSWORD: "New Password is required",
+            CODE_ANGGOTA: "Cannot use NIM anggota without referal code"
         },
         RELATION: {
             ANGKATAN: "Angkatan cannot be deleted because it has a relationship"

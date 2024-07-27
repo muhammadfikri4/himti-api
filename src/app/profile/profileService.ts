@@ -6,7 +6,7 @@ import { ErrorApp } from "../../utils/HttpError"
 import { MESSAGES } from "../../utils/Messages"
 import { AnggotaSosmedDTO } from "../anggota/anggotaDTO"
 import { getAnggotaById, getAnggotaByNIM, updateSosmedAnggota } from "../anggota/anggotaRepository"
-import { getUserById, getUserByNIM } from "../authentication/authRepository"
+import { getUserByEmail, getUserById, getUserByNIM } from "../authentication/authRepository"
 import { ChangePasswordDTO, ProfileDTO } from "./profileDTO"
 import { getProfile, updatePassword, updateProfile } from "./profileRepository"
 
@@ -64,6 +64,10 @@ export const updateProfileService = async (token: string, { email, name, nim, fa
         return new ErrorApp(MESSAGES.ERROR.INVALID.ANGGOTA, 400, MESSAGE_CODE.BAD_REQUEST)
     }
 
+    if (nim && typeof nim !== 'number') {
+        return new ErrorApp(MESSAGES.ERROR.INVALID.NIM.FORMAT, 400, MESSAGE_CODE.BAD_REQUEST)
+    }
+
     if (nim && user.anggotaId && user.role === 'ANGGOTA') {
         return new ErrorApp(MESSAGES.ERROR.INVALID.NIM_ANGGOTA, 400, MESSAGE_CODE.BAD_REQUEST)
     }
@@ -78,6 +82,11 @@ export const updateProfileService = async (token: string, { email, name, nim, fa
     const getNIM = await getUserByNIM(nim.toString())
     if (getNIM && getNIM.id !== user.id && !user.anggotaId && user.role === 'USER') {
         return new ErrorApp(MESSAGES.ERROR.ALREADY.GLOBAL.NIM, 400, MESSAGE_CODE.BAD_REQUEST)
+    }
+
+    const getEmail = await getUserByEmail(email as string)
+    if (getEmail && getEmail.id !== id) {
+        return new ErrorApp(MESSAGES.ERROR.ALREADY.GLOBAL.EMAIL, 400, MESSAGE_CODE.BAD_REQUEST)
     }
 
     const profileField: Partial<ProfileDTO> = { id };

@@ -14,7 +14,7 @@ export const createUser = async ({ email, name, password, nim, role, anggotaId }
     })
 }
 
-export const findUser = async (email: string) => {
+export const getUserByEmail = async (email: string) => {
     return await prisma.user.findFirst({
         where: {
             email

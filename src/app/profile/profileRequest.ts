@@ -6,7 +6,6 @@ export const updateProfileSchema = Joi.object({
         "any.string": MESSAGES.ERROR.INVALID.NAME,
     }),
     nim: Joi.number().optional().max(99999999999999).messages({
-        "any.number": MESSAGES.ERROR.INVALID.NIM.FORMAT,
         "number.max": MESSAGES.ERROR.INVALID.NIM.LENGTH
     }),
     email: Joi.string().optional().messages({

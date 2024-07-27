@@ -8,13 +8,13 @@ import { ErrorApp } from '../../utils/HttpError'
 import { MESSAGES } from '../../utils/Messages'
 import { getAnggotaByNIM } from '../anggota/anggotaRepository'
 import { LoginAuthBodyDTO, RegisterAuthBodyDTO } from './authDTO'
-import { createUser, findUser, getUserByNIM } from './authRepository'
+import { createUser, getUserByEmail, getUserByNIM } from './authRepository'
 
 dotenv.config()
 
 export const registerService = async ({ email, name, password, nim, code }: RegisterAuthBodyDTO) => {
 
-    const user = await findUser(email)
+    const user = await getUserByEmail(email)
     if (user) {
         return new ErrorApp(MESSAGES.ERROR.ALREADY.USER, 400, MESSAGE_CODE.BAD_REQUEST)
     }
@@ -33,6 +33,10 @@ export const registerService = async ({ email, name, password, nim, code }: Regi
         return new ErrorApp(MESSAGES.ERROR.ALREADY.GLOBAL.EMAIL, 400, MESSAGE_CODE.BAD_REQUEST)
     }
 
+    if (isAnggota && !code) {
+        return new ErrorApp(MESSAGES.ERROR.REQUIRED.CODE_ANGGOTA, 400, MESSAGE_CODE.BAD_REQUEST)
+    }
+
     if (isAnggota && code === environment.ANGGOTA_CODE) {
         role = "ANGGOTA"
         anggotaId = isAnggota.id
@@ -46,7 +50,7 @@ export const loginService = async (
     { email, password }: LoginAuthBodyDTO
 ) => {
 
-    const user = await findUser(email)
+    const user = await getUserByEmail(email)
     if (!user) {
         return new ErrorApp(MESSAGES.ERROR.NOT_FOUND.USER.ACCOUNT, 404, MESSAGE_CODE.NOT_FOUND)
     }
