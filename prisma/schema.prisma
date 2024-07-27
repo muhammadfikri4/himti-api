@@ -138,7 +138,7 @@ model Prestasi {
   updateAt    DateTime @default(now()) @updatedAt @map("updated_at")
 }
 
-model Merchandise {
+model Bussiness {
   id          Int      @id @unique @default(autoincrement())
   image       String
   title       String
@@ -160,4 +160,9 @@ enum Role {
   ADMIN
   USER
   ANGGOTA
+}
+
+enum BussinessType {
+  MERCHANDISE
+  SERVICE
 }

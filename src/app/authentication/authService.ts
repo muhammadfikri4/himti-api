@@ -8,7 +8,7 @@ import { ErrorApp } from '../../utils/HttpError'
 import { MESSAGES } from '../../utils/Messages'
 import { getAnggotaByNIM } from '../anggota/anggotaRepository'
 import { LoginAuthBodyDTO, RegisterAuthBodyDTO } from './authDTO'
-import { createUser, findUser } from './authRepository'
+import { createUser, findUser, getUserByNIM } from './authRepository'
 
 dotenv.config()
 
@@ -24,6 +24,14 @@ export const registerService = async ({ email, name, password, nim, code }: Regi
     let anggotaId = null
 
     const isAnggota = await getAnggotaByNIM(nim)
+    const alreadyUser = await getUserByNIM(nim)
+    if (nim === isAnggota?.nim && nim === alreadyUser?.nim) {
+        return new ErrorApp(MESSAGES.ERROR.ALREADY.GLOBAL.NIM, 400, MESSAGE_CODE.BAD_REQUEST)
+    }
+    if (email === isAnggota?.email && email === alreadyUser?.email) {
+        return new ErrorApp(MESSAGES.ERROR.ALREADY.GLOBAL.EMAIL, 400, MESSAGE_CODE.BAD_REQUEST)
+    }
+
     if (isAnggota && code === environment.ANGGOTA_CODE) {
         role = "ANGGOTA"
         anggotaId = isAnggota.id

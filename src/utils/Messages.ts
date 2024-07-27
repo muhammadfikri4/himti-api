@@ -45,7 +45,8 @@ export const MESSAGES = {
             ANGGOTA: "Anggota is already exist",
             ALUMNI: "Alumni is already exist",
             ANGGOTA_STRUKTURAL: "Anggota cannot join more than 1 struktural",
-            JABATAN: "Jabatan is already exists in the struktural"
+            JABATAN: "Jabatan is already exists in the struktural",
+            USER_NIM: "User cannot use anggota NIM"
         },
         INVALID: {
             GLOBAL: {
@@ -68,6 +69,7 @@ export const MESSAGES = {
             NAME: "Name must be a string",
             JABATAN: "Jabatan is invalid",
             NEW_PASSWORD: "New password cannot be the same as the old password",
+            NIM_ANGGOTA: "Anggota cannot change their NIM",
         },
         UNAUTHORIZED: {
             AUTH: "If you are not logged in, please log in first",
