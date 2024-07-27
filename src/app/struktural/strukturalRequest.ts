@@ -36,6 +36,4 @@ export const imageSchema = Joi.object({
     filename: Joi.required().messages({
         "any.required": MESSAGES.ERROR.REQUIRED.IMAGE
     }),
-
-
 })

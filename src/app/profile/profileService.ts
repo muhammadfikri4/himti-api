@@ -1,5 +1,6 @@
 import bcrypt from 'bcrypt'
 import { decode } from "jsonwebtoken"
+import { REGEX } from 'utils/Regex'
 import { TokenDecodeInterface } from "../../interface"
 import { MESSAGE_CODE } from "../../utils/ErrorCode"
 import { ErrorApp } from "../../utils/HttpError"
@@ -68,7 +69,10 @@ export const updateProfileService = async (token: string, { email, name, nim, fa
 
     if (getNIM && getNIM.id !== id) {
         return new ErrorApp(MESSAGES.ERROR.INVALID.GLOBAL.EMAIL, 400, MESSAGE_CODE.BAD_REQUEST)
+    }
 
+    if (email && !REGEX.email.test(email)) {
+        return new ErrorApp(MESSAGES.ERROR.INVALID.GLOBAL.EMAIL, 400, MESSAGE_CODE.BAD_REQUEST)
     }
 
     const profileField: Partial<ProfileDTO> = { id };
