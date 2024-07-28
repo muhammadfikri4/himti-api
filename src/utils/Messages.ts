@@ -165,6 +165,11 @@ export const MESSAGES = {
             GET: "Success to fetch Service",
             DELETE: "Success to delete Service",
             UPDATE: "Success to update Service"
+        },
+        USER_DATA: {
+            GET: "Success to fetch user data",
+            UPDATE: "Success to update user data",
+            DELETE: "Success to delete user data"
         }
     }
 }
