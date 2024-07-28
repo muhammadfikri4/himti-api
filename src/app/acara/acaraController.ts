@@ -1,38 +1,38 @@
 import { NextFunction, type Request, type Response } from "express";
-import { Result } from '../../utils/ApiResponse';
 import { MESSAGE_CODE } from "../../utils/ErrorCode";
 import { HandleResponse } from "../../utils/HandleResponse";
 import { ErrorApp, HttpError } from "../../utils/HttpError";
 import { MESSAGES } from "../../utils/Messages";
 import { AcaraBodyDTO } from "./acaraDTO";
 import { createAcaraService, deleteAcaraService, getAcaraService, getDetailAcaraService, updateAcaraService } from "./acaraService";
-import { AcaraModelTypes } from "./acaraTypes";
 
 
 
-export const createAcaraController = async (req: Request, res: Response) => {
+export const createAcaraController = async (req: Request, res: Response, next: NextFunction) => {
 
-    const { name, description, endTime, isOpen, startTime, } = req.body as AcaraBodyDTO
+    const body = req.body as AcaraBodyDTO
+    const file = req.file
 
-
-    const strukturalCreation = await createAcaraService({ name, description, endTime, image: req.file?.path, isOpen, startTime });
-    if ((strukturalCreation as HttpError)?.message) {
-
-        return HandleResponse(res, (strukturalCreation as HttpError).statusCode, (strukturalCreation as HttpError).code, (strukturalCreation as HttpError).message)
+    const acara = await createAcaraService({ ...body, image: file as unknown as string });
+    if (acara instanceof ErrorApp) {
+        next(acara)
+        return
     }
-    return HandleResponse(res, 201, MESSAGE_CODE.SUCCESS, MESSAGES.CREATED.ACARA)
+    HandleResponse(res, 201, MESSAGE_CODE.SUCCESS, MESSAGES.CREATED.ACARA)
 }
 
-export const getAcaraController = async (req: Request, res: Response) => {
+export const getAcaraController = async (req: Request, res: Response, next: NextFunction) => {
 
     const { name, page, perPage } = req.query
 
     const acara = await getAcaraService({ name: name as string, page: page ? Number(page) : undefined, perPage: perPage ? Number(perPage) : undefined });
 
-    if (!acara.data.length) {
-        return HandleResponse(res, 404, MESSAGE_CODE.NOT_FOUND, MESSAGES.ERROR.NOT_FOUND.ACARA, acara.data, acara.meta)
+    if (acara instanceof ErrorApp) {
+        next(acara)
+        return
     }
-    HandleResponse<AcaraModelTypes[]>(res, 200, MESSAGE_CODE.SUCCESS, MESSAGES.SUCCESS.ACARA.GET, (acara as unknown as Result<AcaraModelTypes[]>)?.data, (acara as unknown as Result)?.meta)
+
+    HandleResponse(res, 200, MESSAGE_CODE.SUCCESS, MESSAGES.SUCCESS.ACARA.GET, acara.data, acara.meta)
 
 }
 

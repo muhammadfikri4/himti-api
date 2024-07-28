@@ -8,6 +8,7 @@ export const createMerchandiseService = async (data: BusinessDTO) => {
     const { title } = data
     const getMerch = await getMerchandiseByTitle(title)
 
+    if (!data.image) return new ErrorApp(MESSAGES.ERROR.REQUIRED.IMAGE, 400, MESSAGE_CODE.BAD_REQUEST)
     if (getMerch) return new ErrorApp(MESSAGES.ERROR.ALREADY.MERCHANDISE, 400, MESSAGE_CODE.BAD_REQUEST)
     if (data?.image?.size as number > 5242880) return new ErrorApp(MESSAGES.ERROR.INVALID.IMAGE_SIZE, 400, MESSAGE_CODE.BAD_REQUEST)
 

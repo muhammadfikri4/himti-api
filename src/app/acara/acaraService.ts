@@ -1,7 +1,6 @@
 import dotenv from 'dotenv'
-import { Result } from '../../utils/ApiResponse'
 import { MESSAGE_CODE } from '../../utils/ErrorCode'
-import { AppError, HttpError } from '../../utils/HttpError'
+import { ErrorApp } from '../../utils/HttpError'
 import { MESSAGES } from '../../utils/Messages'
 import { Meta } from '../../utils/Meta'
 import { AcaraBodyDTO } from './acaraDTO'
@@ -13,18 +12,17 @@ import { acaraValidate } from './acaraValidate'
 dotenv.config();
 
 export const createAcaraService = async ({ name, description, endTime, image, isOpen, startTime }: AcaraBodyDTO) => {
-
-    const validate = await acaraValidate({ name: name as string, image, endTime, startTime, isOpen })
-    if ((validate as HttpError)?.message) {
-        return AppError((validate as HttpError).message, (validate as HttpError).statusCode, (validate as HttpError).code)
+    const open = typeof isOpen !== 'undefined' ? Boolean(isOpen) : undefined
+    const validate = await acaraValidate({ name: name as string, image, endTime, startTime, isOpen: open })
+    if (validate instanceof ErrorApp) {
+        return new ErrorApp(validate.message, validate.statusCode, validate.code)
     }
-
-
-    const newAcara = await createAcara({ name, image, description, isOpen, endTime, startTime })
-    return newAcara
+    const path = (image as unknown as Express.Multer.File).path
+    const response = await createAcara({ name, image: path, description, isOpen: open, endTime, startTime })
+    return response
 }
 
-export const getAcaraService = async ({ name, page = 1, perPage = 10 }: IFilterAcara): Promise<Result<AcaraModelTypes[]>> => {
+export const getAcaraService = async ({ name, page = 1, perPage = 10 }: IFilterAcara) => {
 
     const [acara, totalData] = await Promise.all([
         getAcara({ name, page, perPage }),
@@ -32,6 +30,10 @@ export const getAcaraService = async ({ name, page = 1, perPage = 10 }: IFilterA
     ])
 
     const data = await acaraMapper(acara as unknown as AcaraModelTypes[])
+    if (!data.length) {
+        return new ErrorApp(MESSAGES.ERROR.NOT_FOUND.ACARA, 404, MESSAGE_CODE.NOT_FOUND)
+
+    }
     const response = { data, meta: Meta(page, perPage, totalData) }
     return response
 }
@@ -41,7 +43,7 @@ export const deleteAcaraService = async ({ id }: AcaraBodyDTO) => {
     const acara = await getAcaraById(id as string)
 
     if (!acara) {
-        return AppError(MESSAGES.ERROR.NOT_FOUND.ANGKATAN.NAME, 404, MESSAGE_CODE.NOT_FOUND)
+        return new ErrorApp(MESSAGES.ERROR.NOT_FOUND.ACARA, 404, MESSAGE_CODE.NOT_FOUND)
     }
 
     const response = await deleteAcara(id as string)
@@ -49,22 +51,21 @@ export const deleteAcaraService = async ({ id }: AcaraBodyDTO) => {
 }
 export const updateAcaraService = async ({ id, name, image, description, endTime, isOpen, startTime, }: AcaraBodyDTO) => {
 
-    const matchStruktural = await getAcaraById(id as string)
+    const matchAcara = await getAcaraById(id as string)
 
-    if (!matchStruktural) {
-        return AppError(MESSAGES.ERROR.NOT_FOUND.STRUKTURAL, 404, MESSAGE_CODE.NOT_FOUND)
+    if (!matchAcara) {
+        return new ErrorApp(MESSAGES.ERROR.NOT_FOUND.ACARA, 404, MESSAGE_CODE.NOT_FOUND)
     }
     const updateFields: Partial<AcaraModelTypes> = {};
 
-    if (name !== undefined) updateFields.name = name;
-    if (description !== undefined) updateFields.description = description;
-    if (image !== undefined) updateFields.image = image;
-    if (isOpen !== undefined) updateFields.isOpen = JSON.parse(String(isOpen));
-    if (startTime !== undefined) updateFields.startTime = startTime;
-    if (endTime !== undefined) updateFields.endTime = endTime;
+    if (name) updateFields.name = name;
+    if (description) updateFields.description = description;
+    if (image) updateFields.image = image;
+    if (isOpen) updateFields.isOpen = JSON.parse(String(isOpen));
+    if (startTime) updateFields.startTime = startTime;
+    if (endTime) updateFields.endTime = endTime;
 
     const response = await updateAcara(updateFields, id as string)
-
     return response;
 }
 
@@ -72,7 +73,7 @@ export const getDetailAcaraService = async (id: string) => {
 
     const acara = await getAcaraById(id)
     if (!acara) {
-        return AppError(MESSAGES.ERROR.NOT_FOUND.ACARA, 404, MESSAGE_CODE.NOT_FOUND)
+        return new ErrorApp(MESSAGES.ERROR.NOT_FOUND.ACARA, 404, MESSAGE_CODE.NOT_FOUND)
     }
     return acara
 }
