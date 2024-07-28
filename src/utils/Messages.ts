@@ -30,7 +30,9 @@ export const MESSAGES = {
             ALUMNI: "Alumni not found",
             ACARA: "Acara not found",
             USER_ID: "User ID not found",
-            ABSENSI: "Absensi not found"
+            ABSENSI: "Absensi not found",
+            MERCHANDISE: "Merchandise not found",
+            SERVICE: "Service not found"
         },
         ALREADY: {
             GLOBAL: {
@@ -153,6 +155,16 @@ export const MESSAGES = {
             GET: "Success to fetch Absensi",
             DELETE: "Success to delete Absensi",
             UPDATE: "Success to update Absensi"
+        },
+        MERCHANDISE: {
+            GET: "Success to fetch Merchandise",
+            DELETE: "Success to delete Merchandise",
+            UPDATE: "Success to update Merchandise"
+        },
+        SERVICE: {
+            GET: "Success to fetch Service",
+            DELETE: "Success to delete Service",
+            UPDATE: "Success to update Service"
         }
     }
 }

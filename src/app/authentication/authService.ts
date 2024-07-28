@@ -85,8 +85,6 @@ export const loginAdminService = async ({ email, password }: LoginAuthBodyDTO) =
         return new ErrorApp(MESSAGES.ERROR.NOT_FOUND.USER.ACCOUNT, 404, MESSAGE_CODE.NOT_FOUND)
     }
 
-
-
     const match = await bcrypt.compare(password, user.password)
     if (!match) {
         return new ErrorApp(MESSAGES.ERROR.INVALID.USER.PASSWORD, 401, MESSAGE_CODE.UNAUTHORIZED)

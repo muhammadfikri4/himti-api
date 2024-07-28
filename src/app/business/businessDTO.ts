@@ -14,3 +14,9 @@ export interface ImageProps {
     size: number,
     filename: string,
 }
+
+export interface IFilterBusiness {
+    search?: string
+    page?: number
+    perPage?: number
+}
