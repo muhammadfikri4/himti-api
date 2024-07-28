@@ -4,7 +4,7 @@ import { HandleResponse } from "../../utils/HandleResponse";
 import { ErrorApp } from "../../utils/HttpError";
 import { MESSAGES } from "../../utils/Messages";
 import { LoginAuthResponse } from "./authDTO";
-import { loginService, registerService } from "./authService";
+import { loginAdminService, loginService, registerService } from "./authService";
 
 export const registerController = async (req: Request, res: Response, next: NextFunction) => {
 
@@ -30,4 +30,17 @@ export const loginController = async (req: Request, res: Response, next: NextFun
     }
     res.cookie("access_token", login, { httpOnly: true })
     HandleResponse<LoginAuthResponse>(res, 200, MESSAGE_CODE.SUCCESS, MESSAGES.SUCCESS.USER, login as LoginAuthResponse)
+}
+
+export const loginAdminController = async (req: Request, res: Response, next: NextFunction) => {
+    const { email, password } = req.body
+
+
+    const login = await loginAdminService({ email, password });
+    if (login instanceof ErrorApp) {
+        next(login)
+        return
+    }
+    res.cookie("access_token", login, { httpOnly: true })
+    HandleResponse(res, 200, MESSAGE_CODE.SUCCESS, MESSAGES.SUCCESS.USER, login)
 }

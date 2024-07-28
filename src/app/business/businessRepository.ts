@@ -28,3 +28,12 @@ export const getMerchandiseByTitle = async (title: string) => {
         }
     })
 }
+
+export const getServiceByTitle = async (title: string) => {
+    return await prisma.bussiness.findFirst({
+        where: {
+            type: 'MERCHANDISE',
+            title
+        }
+    })
+}

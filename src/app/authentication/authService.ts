@@ -78,3 +78,27 @@ export const loginService = async (
     return { access_token: token, user: userInfo }
 
 }
+
+export const loginAdminService = async ({ email, password }: LoginAuthBodyDTO) => {
+    const user = await getUserByEmail(email)
+    if (!user) {
+        return new ErrorApp(MESSAGES.ERROR.NOT_FOUND.USER.ACCOUNT, 404, MESSAGE_CODE.NOT_FOUND)
+    }
+
+
+
+    const match = await bcrypt.compare(password, user.password)
+    if (!match) {
+        return new ErrorApp(MESSAGES.ERROR.INVALID.USER.PASSWORD, 401, MESSAGE_CODE.UNAUTHORIZED)
+    }
+
+    if (user.role !== 'ADMIN') {
+        return new ErrorApp(MESSAGES.ERROR.INVALID.ROLE_ADMIN, 401, MESSAGE_CODE.UNAUTHORIZED)
+    }
+
+    const token = jwt.sign({
+        id: user.id,
+    }, environment.JWT_SECRET as string, { expiresIn: '3d' })
+
+    return { access_token: token }
+}
