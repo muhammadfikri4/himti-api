@@ -1,8 +1,8 @@
-import { imageSchema } from "app/global/imageRequest";
 import { Router } from "express";
-import { validateRequest } from "middleware/validateRequest";
+import { validateRequest } from "../../middleware/validateRequest";
 import { VerifyToken } from "../../middleware/verifyToken";
 import { CatchWrapper } from "../../utils/CatchWrapper";
+import { imageSchema } from "../global/imageRequest";
 import { upload } from "./absensiConfig";
 import { createAbsensiAcaraController, createAbsensiSubAcaraController, getAbsensiController } from "./absensiController";
 import { createAbsensiAcaraSchema, createAbsensiSubAcaraSchema } from "./absensiRequest";
