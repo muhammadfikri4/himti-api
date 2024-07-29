@@ -29,6 +29,7 @@ export const MESSAGES = {
             ANGGOTA: "Anggota not found",
             ALUMNI: "Alumni not found",
             ACARA: "Acara not found",
+            SUB_ACARA: "Sub Acara not found",
             USER_ID: "User ID not found",
             ABSENSI: "Absensi not found",
             MERCHANDISE: "Merchandise not found",
@@ -108,6 +109,8 @@ export const MESSAGES = {
             TITLE: "Title is required",
             DESCRIPTION: "Description is required",
             PRICE: "Price is required",
+            ACARA_ID: "Acara Id is required",
+            SUB_ACARA_ID: "Sub Acara Id is required",
         },
         RELATION: {
             ANGKATAN: "Angkatan cannot be deleted because it has a relationship"

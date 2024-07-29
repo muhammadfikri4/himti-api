@@ -2,32 +2,43 @@ import { decode } from "jsonwebtoken"
 import { MESSAGE_CODE } from "../../utils/ErrorCode"
 import { ErrorApp } from "../../utils/HttpError"
 import { MESSAGES } from "../../utils/Messages"
-import { AbsensiDTO, TokenTypes } from "./absensiDTO"
+import { getSubAcaraById } from "../acara/acaraRepository"
+import { AbsensiDTO, IFilterAbsensi, TokenTypes } from "./absensiDTO"
 import { absensiMapper } from "./absensiMapper"
 import { createAbsensi, getAbsensiByUserId } from "./absensiRepository"
-import { createAbsensiValidate } from "./absensiValidate"
+import { createAbsensiAcaraValidate, createAbsensiSubAcaraValidate } from "./absensiValidate"
 
-export const createAbsensiService = async ({ acaraId, image, coordinate }: AbsensiDTO, token: string) => {
+export const createAbsensiAcaraService = async ({ acaraId, image, address, coordinate }: AbsensiDTO, token: string) => {
     const decodeToken = decode(token)
-    // if (!(decodeToken as TokenTypes)?.id) {
-    //     return new ErrorApp(MESSAGES.ERROR.NOT_FOUND.USER_ID, 404, MESSAGE_CODE.NOT_FOUND)
-    // }
-    const validate = await createAbsensiValidate({ acaraId, image, userId: (decodeToken as TokenTypes)?.id as string, coordinate })
+
+    const validate = await createAbsensiAcaraValidate({ acaraId, image, userId: (decodeToken as TokenTypes)?.id as string, coordinate })
 
     if (validate instanceof ErrorApp) {
         return validate
     }
 
-    const absensi = await createAbsensi({ acaraId, image, userId: (decodeToken as TokenTypes)?.id as string, coordinate })
+    const absensi = await createAbsensi({ acaraId, image, userId: (decodeToken as TokenTypes)?.id as string, coordinate, address })
+    return absensi
+}
+export const createAbsensiSubAcaraService = async ({ subAcaraId, image, coordinate, address }: AbsensiDTO, token: string) => {
+    const decodeToken = decode(token)
+
+    const validate = await createAbsensiSubAcaraValidate({ subAcaraId, image, userId: (decodeToken as TokenTypes)?.id as string, coordinate })
+
+    if (validate instanceof ErrorApp) {
+        return validate
+    }
+
+    const getSubAcara = await getSubAcaraById(subAcaraId as string)
+
+    const absensi = await createAbsensi({ acaraId: getSubAcara?.acaraId, subAcaraId, image, userId: (decodeToken as TokenTypes)?.id as string, coordinate, address: address ? address : undefined })
     return absensi
 }
 
-export const getAbsensiService = async (token: string) => {
+export const getAbsensiService = async ({ acaraId, page = 1, perPage = 10, subAcaraId }: IFilterAbsensi, token: string) => {
     const decodeToken = decode(token)
-    // if (!(decodeToken as TokenTypes)?.id) {
-    //     return new ErrorApp(MESSAGES.ERROR.NOT_FOUND.USER_ID, 404, MESSAGE_CODE.NOT_FOUND)
-    // }
-    const absensi = await getAbsensiByUserId((decodeToken as TokenTypes)?.id as string)
+
+    const absensi = await getAbsensiByUserId((decodeToken as TokenTypes)?.id as string, acaraId, subAcaraId, page, perPage)
     if (!absensi.length) {
         return new ErrorApp(MESSAGES.ERROR.NOT_FOUND.ABSENSI, 404, MESSAGE_CODE.NOT_FOUND)
     }

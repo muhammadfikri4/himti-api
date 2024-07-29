@@ -1,5 +1,5 @@
 import { prisma } from "../../config";
-import { AcaraBodyDTO } from "./acaraDTO";
+import { AcaraBodyDTO, SubAcaraBodyDTO } from "./acaraDTO";
 import { IFilterAcara } from "./acaraTypes";
 
 export const createAcara = async ({ description, endTime, image, isOpen, name, startTime }: AcaraBodyDTO) => {
@@ -14,6 +14,21 @@ export const createAcara = async ({ description, endTime, image, isOpen, name, s
         }
     })
 }
+
+export const createSubAcara = async ({ description, endTime, image, isOpen, name, startTime, acaraId }: SubAcaraBodyDTO) => {
+    return await prisma.subAcara.create({
+        data: {
+            name: name as string,
+            description,
+            endTime,
+            isOpen,
+            startTime,
+            image: image as string,
+            acaraId
+        }
+    })
+}
+
 
 
 export const getAcara = async ({ page, perPage, name }: IFilterAcara) => {
@@ -43,6 +58,13 @@ export const getAcaraCount = async ({ name }: IFilterAcara) => {
     })
 }
 
+export const getSubAcaraById = async (id: string) => {
+    return await prisma.subAcara.findUnique({
+        where: {
+            id
+        }
+    })
+}
 export const getAcaraById = async (id: string) => {
     return await prisma.acara.findUnique({
         where: {

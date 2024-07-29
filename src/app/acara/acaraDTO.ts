@@ -8,3 +8,7 @@ export interface AcaraBodyDTO {
     startTime?: Date,
     endTime?: Date
 }
+
+export interface SubAcaraBodyDTO extends AcaraBodyDTO {
+    acaraId: string
+}

@@ -100,6 +100,22 @@ model Struktural {
 }
 
 model Acara {
+  id          String     @id @unique @default(uuid())
+  name        String
+  description String?
+  image       String
+  isOpen      Boolean    @default(true) @map("is_open")
+  endTime     DateTime?  @default(now()) @map("end_time")
+  startTime   DateTime?  @default(now()) @map("start_time")
+  Absensi     Absensi[]
+  createdAt   DateTime   @default(now()) @map("created_at")
+  updatedAt   DateTime   @default(now()) @updatedAt @map("updated_at")
+  SubAcara    SubAcara[]
+
+  @@index([name, startTime, endTime])
+}
+
+model SubAcara {
   id          String    @id @unique @default(uuid())
   name        String
   description String?
@@ -107,6 +123,8 @@ model Acara {
   isOpen      Boolean   @default(true) @map("is_open")
   endTime     DateTime? @default(now()) @map("end_time")
   startTime   DateTime? @default(now()) @map("start_time")
+  acaraId     String
+  Acara       Acara     @relation(fields: [acaraId], references: [id], onDelete: Restrict)
   Absensi     Absensi[]
   createdAt   DateTime  @default(now()) @map("created_at")
   updatedAt   DateTime  @default(now()) @updatedAt @map("updated_at")
@@ -115,15 +133,18 @@ model Acara {
 }
 
 model Absensi {
-  id         Int      @id @unique @default(autoincrement())
+  id         Int       @id @unique @default(autoincrement())
   image      String
-  acaraId    String   @map("acara_id")
-  userId     String   @map("user_id")
-  acara      Acara    @relation(fields: [acaraId], references: [id])
-  user       User     @relation(fields: [userId], references: [id])
+  acaraId    String    @map("acara_id")
+  userId     String    @map("user_id")
+  subAcaraId String?   @map("sub_acara_id")
+  acara      Acara     @relation(fields: [acaraId], references: [id])
+  user       User      @relation(fields: [userId], references: [id])
   coordinate String
-  createdAt  DateTime @default(now()) @map("created_at")
-  updatedAt  DateTime @default(now()) @updatedAt @map("updated_at")
+  address    String?
+  createdAt  DateTime  @default(now()) @map("created_at")
+  updatedAt  DateTime  @default(now()) @updatedAt @map("updated_at")
+  SubAcara   SubAcara? @relation(fields: [subAcaraId], references: [id])
 
   @@index([userId, acaraId, createdAt])
 }
