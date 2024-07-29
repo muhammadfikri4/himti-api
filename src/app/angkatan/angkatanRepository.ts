@@ -19,7 +19,7 @@ export const getAngkatan = async ({ page, perPage, search }: IFilterAngkatan) =>
             },
         },
         orderBy: {
-            createdAt: 'desc'
+            year: 'desc'
         },
         take: perPage,
         skip: (Number(page) - 1) * Number(perPage)
@@ -40,7 +40,7 @@ export const getAngkatanByYear = async (id: string) => {
             id
         },
         orderBy: {
-            createdAt: 'desc'
+            year: 'desc'
         }
     })
 }
