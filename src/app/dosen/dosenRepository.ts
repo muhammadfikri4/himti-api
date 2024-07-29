@@ -1,3 +1,4 @@
+import { Prisma } from "@prisma/client";
 import { prisma } from "../../config";
 import { DosenBodyDTO } from "./dosenDTO";
 import { IFilterDosen } from "./dosenTypes";
@@ -17,29 +18,33 @@ export const createDosen = async ({ email, isActive, lesson, name, nidn, numberP
 }
 
 export const getDosen = async ({ page, perPage, search }: IFilterDosen) => {
-    return await prisma.dosen.findMany({
-        where: {
-            OR: [
-                {
-                    email: {
-                        contains: search,
-                        mode: 'insensitive'
-                    }
-                },
-                {
-                    name: {
-                        contains: search,
-                        mode: 'insensitive'
-                    }
-                },
-                {
-                    nidn: {
-                        contains: search,
-                        mode: 'insensitive'
-                    }
+    const filter = {} as { OR: Prisma.DosenWhereInput[] }
+
+    if (search) {
+        filter.OR = [
+            {
+                email: {
+                    contains: search,
+                    mode: 'insensitive'
                 }
-            ]
-        },
+            },
+            {
+                name: {
+                    contains: search,
+                    mode: 'insensitive'
+                }
+            },
+            {
+                nidn: {
+                    contains: search,
+                    mode: 'insensitive'
+                }
+            }
+        ]
+    }
+
+    return await prisma.dosen.findMany({
+        where: filter,
         orderBy: {
             createdAt: 'desc'
         },
@@ -49,29 +54,34 @@ export const getDosen = async ({ page, perPage, search }: IFilterDosen) => {
 }
 
 export const getDosenCount = async ({ search }: IFilterDosen) => {
-    return await prisma.dosen.count({
-        where: {
-            OR: [
-                {
-                    email: {
-                        contains: search,
-                        mode: 'insensitive'
-                    }
-                },
-                {
-                    name: {
-                        contains: search,
-                        mode: 'insensitive'
-                    }
-                },
-                {
-                    nidn: {
-                        contains: search,
-                        mode: 'insensitive'
-                    }
+
+    const filter = {} as { OR: Prisma.DosenWhereInput[] }
+
+    if (search) {
+        filter.OR = [
+            {
+                email: {
+                    contains: search,
+                    mode: 'insensitive'
                 }
-            ]
-        },
+            },
+            {
+                name: {
+                    contains: search,
+                    mode: 'insensitive'
+                }
+            },
+            {
+                nidn: {
+                    contains: search,
+                    mode: 'insensitive'
+                }
+            }
+        ]
+    }
+
+    return await prisma.dosen.count({
+        where: filter
     })
 }
 

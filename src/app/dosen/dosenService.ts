@@ -31,6 +31,7 @@ export const getDosenService = async ({ search, page = 1, perPage = 10 }: IFilte
 
     const data = dosenMapper(dosens as unknown as DosenModelTypes[])
     const meta = Meta(page, perPage, totalData)
+
     if (!data.length && !meta.totalPages && !meta.totalData) {
         return new ErrorApp(MESSAGES.ERROR.NOT_FOUND.DOSEN, 404, MESSAGE_CODE.NOT_FOUND)
     }
