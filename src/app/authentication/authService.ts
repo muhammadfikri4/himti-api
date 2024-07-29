@@ -35,11 +35,26 @@ export const registerService = async ({ email, name, password, nim, code }: Regi
 
     }
 
-    if (nim === isAnggota?.nim && nim === alreadyUser?.nim) {
-        return new ErrorApp(MESSAGES.ERROR.ALREADY.GLOBAL.NIM, 400, MESSAGE_CODE.BAD_REQUEST)
+    if (!isAnggota && code) {
+        return new ErrorApp(MESSAGES.ERROR.INVALID.CODE_USER, 400, MESSAGE_CODE.BAD_REQUEST)
     }
-    if (email === isAnggota?.email && email === alreadyUser?.email) {
-        return new ErrorApp(MESSAGES.ERROR.ALREADY.GLOBAL.EMAIL, 400, MESSAGE_CODE.BAD_REQUEST)
+
+    if (nim) {
+        if (nim === isAnggota?.nim) {
+            return new ErrorApp(MESSAGES.ERROR.ALREADY.GLOBAL.NIM, 400, MESSAGE_CODE.BAD_REQUEST)
+        }
+        if (nim === alreadyUser?.nim) {
+            return new ErrorApp(MESSAGES.ERROR.ALREADY.GLOBAL.NIM, 400, MESSAGE_CODE.BAD_REQUEST)
+        }
+    }
+
+    if (email) {
+        if (email === isAnggota?.email) {
+            return new ErrorApp(MESSAGES.ERROR.ALREADY.GLOBAL.EMAIL, 400, MESSAGE_CODE.BAD_REQUEST)
+        }
+        if (email === alreadyUser?.email) {
+            return new ErrorApp(MESSAGES.ERROR.ALREADY.GLOBAL.EMAIL, 400, MESSAGE_CODE.BAD_REQUEST)
+        }
     }
 
     if (isAnggota && code === environment.ANGGOTA_CODE) {

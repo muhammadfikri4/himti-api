@@ -76,7 +76,8 @@ export const MESSAGES = {
             NIM_ANGGOTA: "Anggota cannot change their NIM",
             CODE_ANGGOTA: "Code is invalid",
             IMAGE_SIZE: "Image size must be less than 5mb",
-            ROLE_ADMIN: "You're not admin"
+            ROLE_ADMIN: "You're not admin",
+            CODE_USER: "User is not allowed to use Code"
         },
         UNAUTHORIZED: {
             AUTH: "If you are not logged in, please log in first",
