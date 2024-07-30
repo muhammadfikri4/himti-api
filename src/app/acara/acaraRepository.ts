@@ -101,3 +101,11 @@ export const getSubAcaraByAcaraId = async (acaraId: string, isOpenAbsen?: boolea
         }
     })
 }
+
+export const getSingleSubAcaraById = async (id: string) => {
+    return await prisma.subAcara.findUnique({
+        where: {
+            id,
+        }
+    })
+}

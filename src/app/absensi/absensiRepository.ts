@@ -38,6 +38,12 @@ export const getAbsensiByUserId = async (userId: string, acaraId?: string, subAc
                 select: {
                     id: true,
                     name: true
+                },
+            },
+            subAcara: {
+                select: {
+                    id: true,
+                    name: true
                 }
             },
             user: {
