@@ -32,7 +32,7 @@ export const loginSchema = Joi.object({
 })
 export const validateOtpSchema = Joi.object({
 
-    otpId: Joi.string().required().messages({
+    key: Joi.string().required().messages({
         "any.required": MESSAGES.ERROR.REQUIRED.OTP_ID,
     }),
     otp: Joi.number().required().messages({

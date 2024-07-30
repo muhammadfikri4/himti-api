@@ -135,7 +135,7 @@ export const requestOtpService = async (token: string) => {
     const otp = await createOtp(randomOtp, expired)
     await SendEmail(user.email, user.name, randomOtp)
     const data = {
-        otpId: otp.id,
+        key: otp.id,
         otp: otp.otp,
         isVerified: otp.isVerified,
         expired
@@ -144,9 +144,9 @@ export const requestOtpService = async (token: string) => {
     return data
 }
 
-export const validateOtpService = async ({ otpId, otp }: ValidateOtpDTO) => {
+export const validateOtpService = async ({ key, otp }: ValidateOtpDTO) => {
 
-    const findOtp = await getOtp(otpId)
+    const findOtp = await getOtp(key)
 
     if (!findOtp) {
         return new ErrorApp(MESSAGES.ERROR.INVALID.OTP_ID, 400, MESSAGE_CODE.BAD_REQUEST)
@@ -160,10 +160,10 @@ export const validateOtpService = async ({ otpId, otp }: ValidateOtpDTO) => {
         return new ErrorApp(MESSAGES.ERROR.INVALID.OTP_EXPIRED, 400, MESSAGE_CODE.BAD_REQUEST)
     }
 
-    const verified = await verifiedOtp(otpId)
+    const verified = await verifiedOtp(key)
 
     const data = {
-        otpId: verified.id,
+        key: verified.id,
         isVerified: verified.isVerified
     }
     return data
