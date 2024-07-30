@@ -32,8 +32,14 @@ export const getSubAcara = async ({ page, perPage, search, acaraId }: IFilterSub
     }
 
     if (acaraId) {
-        filter.AND = {
-            acaraId
+        if (search) {
+            filter.AND = {
+                acaraId
+            }
+        } else {
+            filter.OR.push({
+                acaraId
+            })
         }
     }
 
@@ -58,7 +64,7 @@ export const getSubAcara = async ({ page, perPage, search, acaraId }: IFilterSub
 }
 
 export const getSubAcaraCount = async ({ search, acaraId }: IFilterSubAcara) => {
-    const filter = { OR: [] } as { OR: Prisma.SubAcaraWhereInput[] }
+    const filter = { OR: [], AND: {} } as { OR: Prisma.SubAcaraWhereInput[], AND: Prisma.SubAcaraWhereInput }
 
     if (search) {
 
@@ -71,9 +77,15 @@ export const getSubAcaraCount = async ({ search, acaraId }: IFilterSubAcara) => 
     }
 
     if (acaraId) {
-        filter.OR.push({
-            acaraId
-        })
+        if (search) {
+            filter.AND = {
+                acaraId
+            }
+        } else {
+            filter.OR.push({
+                acaraId
+            })
+        }
     }
 
     return await prisma.subAcara.count({
