@@ -33,7 +33,7 @@ export const createAbsensiAcaraValidate = async ({ acaraId, image, userId, coord
 }
 export const createAbsensiSubAcaraValidate = async ({ subAcaraId, image, userId, coordinate }: AbsensiDTO) => {
     if (!subAcaraId) {
-        return new ErrorApp(MESSAGES.ERROR.REQUIRED.ACARA, 400, MESSAGE_CODE.BAD_REQUEST)
+        return new ErrorApp(MESSAGES.ERROR.REQUIRED.SUB_ACARA_ID, 400, MESSAGE_CODE.BAD_REQUEST)
     }
     const getSubAcara = await getSubAcaraById(subAcaraId as string)
     if (!getSubAcara) {

@@ -11,9 +11,7 @@ export const createAbsensiAcaraSchema = Joi.object({
     address: Joi.string().optional().allow(null)
 })
 export const createAbsensiSubAcaraSchema = Joi.object({
-    subAcaraId: Joi.string().required().messages({
-        "any.required": MESSAGES.ERROR.REQUIRED.SUB_ACARA_ID
-    }),
+    subAcaraId: Joi.string().optional(),
     coordinate: Joi.string().required().messages({
         "any.required": MESSAGES.ERROR.REQUIRED.COORDINATE
     }),
