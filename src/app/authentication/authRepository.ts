@@ -37,3 +37,39 @@ export const getUserByNIM = async (nim: string) => {
         }
     })
 }
+
+export const createOtp = async (otp: number) => {
+    return await prisma.oTP.create({
+        data: {
+            otp,
+            isVerified: false
+        }
+    })
+}
+
+export const getOtp = async (id: string) => {
+    return await prisma.oTP.findUnique({
+        where: {
+            id
+        }
+    })
+}
+
+export const verifiedOtp = async (id: string) => {
+    return await prisma.oTP.update({
+        where: {
+            id
+        },
+        data: {
+            isVerified: true
+        }
+    })
+}
+
+export const deleteOtp = async (id: string) => {
+    return await prisma.oTP.delete({
+        where: {
+            id
+        }
+    })
+}

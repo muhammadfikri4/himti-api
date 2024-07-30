@@ -1,14 +1,17 @@
 import { Role } from '@prisma/client'
 import * as bcrypt from 'bcrypt'
 import dotenv from 'dotenv'
-import jwt from 'jsonwebtoken'
+import jwt, { decode } from 'jsonwebtoken'
+import { TokenDecodeInterface } from '../../interface'
 import { environment } from '../../libs'
 import { MESSAGE_CODE } from '../../utils/ErrorCode'
+import { random } from '../../utils/GeneratedRandomOTP'
 import { ErrorApp } from '../../utils/HttpError'
+import { SendEmail } from '../../utils/MailerConfig'
 import { MESSAGES } from '../../utils/Messages'
 import { getAnggotaByNIM } from '../anggota/anggotaRepository'
-import { LoginAuthBodyDTO, RegisterAuthBodyDTO } from './authDTO'
-import { createUser, getUserByEmail, getUserByNIM } from './authRepository'
+import { LoginAuthBodyDTO, RegisterAuthBodyDTO, ValidateOtpDTO } from './authDTO'
+import { createOtp, createUser, getOtp, getUserByEmail, getUserById, getUserByNIM, verifiedOtp } from './authRepository'
 
 dotenv.config()
 
@@ -114,4 +117,45 @@ export const loginAdminService = async ({ email, password }: LoginAuthBodyDTO) =
     }, environment.JWT_SECRET as string, { expiresIn: '3d' })
 
     return { access_token: token }
+}
+
+export const requestOtpService = async (token: string) => {
+
+    const decodeToken = decode(token) as TokenDecodeInterface
+    const id = decodeToken?.id
+    const user = await getUserById(id)
+    if (!user) {
+        return new ErrorApp(MESSAGES.ERROR.NOT_FOUND.USER.ACCOUNT, 404, MESSAGE_CODE.NOT_FOUND)
+    }
+
+    const otp = await createOtp(random)
+    await SendEmail(user.email, user.name, random)
+
+    const data = {
+        id: otp.id,
+        otp: otp.otp,
+        isVerified: otp.isVerified
+    }
+    return data
+}
+
+export const validateOtpService = async ({ id, otp }: ValidateOtpDTO) => {
+
+    const findOtp = await getOtp(id)
+
+    if (!findOtp) {
+        return new ErrorApp(MESSAGES.ERROR.INVALID.OTP_ID, 400, MESSAGE_CODE.BAD_REQUEST)
+    }
+
+    if (otp !== findOtp.otp) {
+        return new ErrorApp(MESSAGES.ERROR.INVALID.OTP_NUMBER, 400, MESSAGE_CODE.BAD_REQUEST)
+    }
+
+    const verified = await verifiedOtp(id)
+
+    const data = {
+        id: verified.id,
+        isVerified: verified.isVerified
+    }
+    return data
 }

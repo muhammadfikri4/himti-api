@@ -172,6 +172,14 @@ model Bussiness {
   updateAt    DateTime       @default(now()) @updatedAt @map("updated_at")
 }
 
+model OTP {
+  id         String   @id @unique @default(uuid())
+  otp        Int
+  isVerified Boolean  @default(false) @map("is_verified")
+  createdAt  DateTime @default(now()) @map("created_at")
+  updateAt   DateTime @default(now()) @updatedAt @map("updated_at")
+}
+
 enum Jabatan {
   KETUA_HIMPUNAN
   WAKIL_KETUA_HIMPUNAN

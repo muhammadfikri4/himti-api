@@ -10,6 +10,7 @@ import profileRoute from '../app/profile/profileRoute';
 import strukturalRoute from '../app/struktural/strukturalRoute';
 import subAcaraRoute from '../app/sub-acara/subAcaraRoute';
 import userRoute from '../app/user/userRoute';
+import { MESSAGE_CODE } from "../utils/ErrorCode";
 import { MESSAGES } from "../utils/Messages";
 
 const route = Router();
@@ -31,7 +32,11 @@ route.get("/", (req: Request, res: Response) => {
 })
 
 route.use("*", (req: Request, res: Response) => {
-    return res.status(404).json({ message: MESSAGES.ERROR.NOT_FOUND.ROUTE })
+    return res.status(404).json({
+        status: 404,
+        code: MESSAGE_CODE.NOT_FOUND,
+        message: MESSAGES.ERROR.NOT_FOUND.ROUTE
+    })
 })
 
 export default route

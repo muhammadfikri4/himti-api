@@ -1,12 +1,10 @@
 import { NextFunction, type Request, type Response } from "express";
 import { MESSAGE_CODE } from "../../utils/ErrorCode";
-import { random } from "../../utils/GeneratedRandomOTP";
 import { HandleResponse } from "../../utils/HandleResponse";
 import { ErrorApp } from "../../utils/HttpError";
-import { SendEmail } from "../../utils/MailerConfig";
 import { MESSAGES } from "../../utils/Messages";
 import { LoginAuthResponse } from "./authDTO";
-import { loginAdminService, loginService, registerService } from "./authService";
+import { loginAdminService, loginService, registerService, requestOtpService, validateOtpService } from "./authService";
 
 export const registerController = async (req: Request, res: Response, next: NextFunction) => {
 
@@ -23,7 +21,6 @@ export const registerController = async (req: Request, res: Response, next: Next
 
 export const loginController = async (req: Request, res: Response, next: NextFunction) => {
     const { email, password } = req.body
-
 
     const login = await loginService({ email, password });
     if (login instanceof ErrorApp) {
@@ -47,10 +44,32 @@ export const loginAdminController = async (req: Request, res: Response, next: Ne
     HandleResponse(res, 200, MESSAGE_CODE.SUCCESS, MESSAGES.SUCCESS.USER, login)
 }
 
-export const forgotPassword = async (req: Request, res: Response, next: NextFunction) => {
 
-    const { name, email } = req.body
 
-    await SendEmail(email, name, random)
-    HandleResponse(res, 200, MESSAGE_CODE.SUCCESS, MESSAGES.SUCCESS.OTP.SEND)
+export const requestOtpController = async (req: Request, res: Response, next: NextFunction) => {
+
+    const token = req.headers.authorization?.replace("Bearer ", "")
+
+    const otp = await requestOtpService(token as string)
+
+    if (otp instanceof ErrorApp) {
+        next(otp)
+        return
+    }
+
+    HandleResponse(res, 200, MESSAGE_CODE.SUCCESS, MESSAGES.SUCCESS.OTP.SEND, otp)
+}
+
+export const validateOtpController = async (req: Request, res: Response, next: NextFunction) => {
+
+    const { id, otp } = req.body
+
+    const otps = await validateOtpService({ id, otp })
+
+    if (otps instanceof ErrorApp) {
+        next(otps)
+        return
+    }
+
+    HandleResponse(res, 200, MESSAGE_CODE.SUCCESS, MESSAGES.SUCCESS.OTP.VERIFY, otps)
 }

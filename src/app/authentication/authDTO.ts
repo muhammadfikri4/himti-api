@@ -23,3 +23,13 @@ export interface LoginAuthResponse {
         role: Role
     }
 }
+
+export interface RequestOtpDTO {
+    name: string
+    email: string
+}
+
+export interface ValidateOtpDTO {
+    id: string,
+    otp: number
+}

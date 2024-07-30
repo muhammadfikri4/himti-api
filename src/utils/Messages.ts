@@ -35,7 +35,8 @@ export const MESSAGES = {
             ABSENSI: "Absensi not found",
             MERCHANDISE: "Merchandise not found",
             SERVICE: "Service not found",
-            ROUTE: "Route not found, Check again your endpoint!"
+            ROUTE: "Route not found, Check again your endpoint!",
+
         },
         ALREADY: {
             GLOBAL: {
@@ -81,7 +82,9 @@ export const MESSAGES = {
             IMAGE_SIZE: "Image size must be less than 5mb",
             ROLE_ADMIN: "You're not admin",
             CODE_USER: "User is not allowed to use Code",
-            FILE_TYPE: "Invalid Image Type"
+            FILE_TYPE: "Invalid Image Type",
+            OTP_ID: "Invalid OTP ID",
+            OTP_NUMBER: "OTP is invalid, check your email to get a valid OTP",
         },
         UNAUTHORIZED: {
             AUTH: "If you are not logged in, please log in first",
@@ -114,6 +117,8 @@ export const MESSAGES = {
             PRICE: "Price is required",
             ACARA_ID: "Acara Id is required",
             SUB_ACARA_ID: "Sub Acara Id is required",
+            OTP_ID: "OTP ID is required",
+            OTP: "OTP is required",
         },
         RELATION: {
             ANGKATAN: "Angkatan cannot be deleted because it has a relationship"

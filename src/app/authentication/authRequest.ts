@@ -30,3 +30,15 @@ export const loginSchema = Joi.object({
         "string.min": MESSAGES.ERROR.INVALID.USER.PASSWORD_LENGTH
     }),
 })
+export const validateOtpSchema = Joi.object({
+
+    id: Joi.string().required().messages({
+        "any.required": MESSAGES.ERROR.REQUIRED.OTP_ID,
+    }),
+    otp: Joi.number().required().messages({
+        "any.required": MESSAGES.ERROR.REQUIRED.OTP
+    }),
+})
+
+
+export const requestOtpSchema = Joi.object()
