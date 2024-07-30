@@ -18,7 +18,7 @@ export const createSubAcaraController = async (req: Request, res: Response, next
         next(acara)
         return
     }
-    HandleResponse(res, 201, MESSAGE_CODE.SUCCESS, MESSAGES.CREATED.ACARA)
+    HandleResponse(res, 201, MESSAGE_CODE.SUCCESS, MESSAGES.CREATED.SUB_ACARA)
 }
 
 export const getSubAcaraController = async (req: Request, res: Response, next: NextFunction) => {
@@ -32,7 +32,7 @@ export const getSubAcaraController = async (req: Request, res: Response, next: N
         return
     }
 
-    HandleResponse(res, 200, MESSAGE_CODE.SUCCESS, MESSAGES.SUCCESS.ACARA.GET, acara.data, acara.meta)
+    HandleResponse(res, 200, MESSAGE_CODE.SUCCESS, MESSAGES.SUCCESS.SUB_ACARA.GET, acara.data, acara.meta)
 
 }
 
@@ -43,7 +43,7 @@ export const deleteSubAcaraController = async (req: Request, res: Response) => {
     if ((deleteStruktural as HttpError)?.message) {
         return HandleResponse(res, (deleteStruktural as HttpError).statusCode, (deleteStruktural as HttpError).code, (deleteStruktural as HttpError).message)
     }
-    HandleResponse(res, 200, MESSAGE_CODE.SUCCESS, MESSAGES.SUCCESS.ACARA.DELETE)
+    HandleResponse(res, 200, MESSAGE_CODE.SUCCESS, MESSAGES.SUCCESS.SUB_ACARA.DELETE)
 }
 
 export const updateSubAcaraController = async (req: Request, res: Response) => {
@@ -54,7 +54,7 @@ export const updateSubAcaraController = async (req: Request, res: Response) => {
     if ((updateStruktural as HttpError)?.message) {
         return HandleResponse(res, (updateStruktural as HttpError).statusCode, (updateStruktural as HttpError).code, (updateStruktural as HttpError).message)
     }
-    HandleResponse(res, 200, MESSAGE_CODE.SUCCESS, MESSAGES.SUCCESS.ACARA.UPDATE)
+    HandleResponse(res, 200, MESSAGE_CODE.SUCCESS, MESSAGES.SUCCESS.SUB_ACARA.UPDATE)
 }
 
 export const getDetailSubAcaraController = async (req: Request, res: Response, next: NextFunction) => {
@@ -63,5 +63,5 @@ export const getDetailSubAcaraController = async (req: Request, res: Response, n
     if (acara instanceof ErrorApp) {
         return HandleResponse(res, acara.statusCode, acara.code, acara.message)
     }
-    return HandleResponse(res, 200, MESSAGE_CODE.SUCCESS, MESSAGES.SUCCESS.ACARA.GET, acara)
+    return HandleResponse(res, 200, MESSAGE_CODE.SUCCESS, MESSAGES.SUCCESS.SUB_ACARA.GET, acara)
 }

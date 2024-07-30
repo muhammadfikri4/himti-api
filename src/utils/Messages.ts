@@ -10,6 +10,7 @@ export const MESSAGES = {
         ANGGOTA: "Anggota created successfully",
         ALUMNI: "Alumni created successfully",
         ACARA: "Acara created successfully",
+        SUB_ACARA: "Sub Acara created successfully",
         ABSENSI: "Absensi created successfully",
         MERCHANDISE: "Merchandise created successfully"
     },
@@ -152,6 +153,11 @@ export const MESSAGES = {
             GET: "Success to fetch Acara",
             DELETE: "Success to delete Acara",
             UPDATE: "Success to update Acara"
+        },
+        SUB_ACARA: {
+            GET: "Success to fetch Sub Acara",
+            DELETE: "Success to delete Sub Acara",
+            UPDATE: "Success to update Sub Acara"
         },
         PROFILE: {
             GET: "Success to fetch profile",
