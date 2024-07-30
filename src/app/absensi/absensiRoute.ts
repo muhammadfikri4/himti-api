@@ -11,6 +11,6 @@ const route = Router()
 
 route.post("/acara", VerifyToken, validateRequest(createAbsensiAcaraSchema, imageSchema), upload.single("image"), CatchWrapper(createAbsensiAcaraController))
 route.post("/sub-acara", VerifyToken, validateRequest(createAbsensiSubAcaraSchema, imageSchema), upload.single("image"), CatchWrapper(createAbsensiSubAcaraController))
-route.get("/acara", VerifyToken, CatchWrapper(getAbsensiController))
+route.get("/", VerifyToken, CatchWrapper(getAbsensiController))
 
 export default route
