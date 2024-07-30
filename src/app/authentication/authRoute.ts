@@ -1,6 +1,6 @@
 import { Router } from "express";
-import { VerifyToken } from "middleware/verifyToken";
 import { validateRequest } from "../../middleware/validateRequest";
+import { VerifyToken } from "../../middleware/verifyToken";
 import { CatchWrapper } from "../../utils/CatchWrapper";
 import { loginAdminController, loginController, registerController, requestOtpController, validateOtpController } from "./authController";
 import { loginSchema, registerSchema, requestOtpSchema, validateOtpSchema } from "./authRequest";
