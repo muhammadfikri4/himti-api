@@ -182,6 +182,11 @@ export const MESSAGES = {
             GET: "Success to fetch user data",
             UPDATE: "Success to update user data",
             DELETE: "Success to delete user data"
+        },
+        OTP: {
+            SEND: "Success to send otp",
+            VERIFY: "Success to verify otp",
+            RESEND: "Success to resend otp"
         }
     }
 }

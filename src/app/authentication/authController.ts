@@ -1,7 +1,9 @@
 import { NextFunction, type Request, type Response } from "express";
 import { MESSAGE_CODE } from "../../utils/ErrorCode";
+import { random } from "../../utils/GeneratedRandomOTP";
 import { HandleResponse } from "../../utils/HandleResponse";
 import { ErrorApp } from "../../utils/HttpError";
+import { SendEmail } from "../../utils/MailerConfig";
 import { MESSAGES } from "../../utils/Messages";
 import { LoginAuthResponse } from "./authDTO";
 import { loginAdminService, loginService, registerService } from "./authService";
@@ -43,4 +45,12 @@ export const loginAdminController = async (req: Request, res: Response, next: Ne
     }
     res.cookie("access_token", login, { httpOnly: true })
     HandleResponse(res, 200, MESSAGE_CODE.SUCCESS, MESSAGES.SUCCESS.USER, login)
+}
+
+export const forgotPassword = async (req: Request, res: Response, next: NextFunction) => {
+
+    const { name, email } = req.body
+
+    await SendEmail(email, name, random)
+    HandleResponse(res, 200, MESSAGE_CODE.SUCCESS, MESSAGES.SUCCESS.OTP.SEND)
 }
