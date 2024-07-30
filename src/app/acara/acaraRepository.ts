@@ -89,3 +89,12 @@ export const updateAcara = async (data: AcaraBodyDTO, id: string) => {
         data
     })
 }
+
+export const getSubAcaraByAcaraId = async (acaraId: string, isOpenAbsen?: boolean) => {
+    return await prisma.subAcara.findMany({
+        where: {
+            acaraId,
+            isOpenAbsen
+        }
+    })
+}

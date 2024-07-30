@@ -5,11 +5,20 @@ import { MESSAGES } from '../../utils/Messages'
 import { Meta } from '../../utils/Meta'
 import { AcaraBodyDTO } from './acaraDTO'
 import { acaraMapper } from './acaraMapper'
-import { createAcara, deleteAcara, getAcara, getAcaraById, getAcaraCount, updateAcara } from './acaraRepository'
+import { createAcara, deleteAcara, getAcara, getAcaraById, getAcaraCount, getSubAcaraByAcaraId, updateAcara } from './acaraRepository'
 import { AcaraModelTypes, IFilterAcara } from './acaraTypes'
 import { acaraValidate } from './acaraValidate'
 
 dotenv.config();
+
+export const isAbsenValue = (open?: string) => {
+    if (open === 'true') {
+        return true
+    } else if (open === 'false') {
+        return false
+    }
+    return undefined
+}
 
 export const createAcaraService = async ({ name, description, endTime, image, isOpen, startTime }: AcaraBodyDTO) => {
     const open = typeof isOpen !== 'undefined' ? JSON.parse(String(isOpen)) : undefined
@@ -69,11 +78,17 @@ export const updateAcaraService = async ({ id, name, image, description, endTime
     return response;
 }
 
-export const getDetailAcaraService = async (id: string) => {
+export const getDetailAcaraService = async (id: string, isAbsen?: string) => {
+
+    const absen = isAbsenValue(isAbsen)
 
     const acara = await getAcaraById(id)
+    const subAcara = await getSubAcaraByAcaraId(id, absen) || []
     if (!acara) {
         return new ErrorApp(MESSAGES.ERROR.NOT_FOUND.ACARA, 404, MESSAGE_CODE.NOT_FOUND)
     }
-    return acara
+    return {
+        ...acara,
+        subAcara
+    }
 }
