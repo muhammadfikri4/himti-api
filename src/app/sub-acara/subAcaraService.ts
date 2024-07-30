@@ -37,6 +37,7 @@ export const getSubAcaraService = async ({ search, page = 1, perPage = 10, acara
     ])
 
     if (!subAcara.length) {
+        console.log(subAcara)
         return new ErrorApp(MESSAGES.ERROR.NOT_FOUND.SUB_ACARA, 404, MESSAGE_CODE.NOT_FOUND)
 
     }

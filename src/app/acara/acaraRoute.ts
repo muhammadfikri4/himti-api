@@ -10,9 +10,9 @@ import { createAcaraSchema } from "./acaraRequest";
 const route = Router()
 
 route.post("/", VerifyToken, CatchWrapper(upload.single("image")), validateRequest(createAcaraSchema, imageSchema), CatchWrapper(createAcaraController))
-route.get("/", getAcaraController)
-route.delete("/:id", VerifyToken, deleteAcaraController)
+route.get("/", CatchWrapper(getAcaraController))
+route.delete("/:id", VerifyToken, CatchWrapper(deleteAcaraController))
 route.put("/:id", VerifyToken, CatchWrapper(upload.single("image")), updateAcaraController)
-route.get("/:id", getDetailAcaraController)
+route.get("/:id", CatchWrapper(getDetailAcaraController))
 
 export default route

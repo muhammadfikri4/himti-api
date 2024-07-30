@@ -1,7 +1,7 @@
 import { NextFunction, type Request, type Response } from "express";
 import { MESSAGE_CODE } from "../../utils/ErrorCode";
 import { HandleResponse } from "../../utils/HandleResponse";
-import { ErrorApp, HttpError } from "../../utils/HttpError";
+import { ErrorApp } from "../../utils/HttpError";
 import { MESSAGES } from "../../utils/Messages";
 import { AcaraBodyDTO } from "./acaraDTO";
 import { createAcaraService, deleteAcaraService, getAcaraService, getDetailAcaraService, updateAcaraService } from "./acaraService";
@@ -39,9 +39,9 @@ export const getAcaraController = async (req: Request, res: Response, next: Next
 export const deleteAcaraController = async (req: Request, res: Response) => {
     const { id } = req.params;
 
-    const deleteStruktural = await deleteAcaraService({ id });
-    if ((deleteStruktural as HttpError)?.message) {
-        return HandleResponse(res, (deleteStruktural as HttpError).statusCode, (deleteStruktural as HttpError).code, (deleteStruktural as HttpError).message)
+    const acara = await deleteAcaraService({ id });
+    if (acara instanceof ErrorApp) {
+        return HandleResponse(res, acara.statusCode, acara.code, acara.message)
     }
     HandleResponse(res, 200, MESSAGE_CODE.SUCCESS, MESSAGES.SUCCESS.ACARA.DELETE)
 }
@@ -50,9 +50,9 @@ export const updateAcaraController = async (req: Request, res: Response) => {
     const { id } = req.params;
     const { name, description, endTime, isOpen, startTime, } = req.body as AcaraBodyDTO
 
-    const updateStruktural = await updateAcaraService({ id, name, description, endTime, isOpen, startTime, image: req.file?.path });
-    if ((updateStruktural as HttpError)?.message) {
-        return HandleResponse(res, (updateStruktural as HttpError).statusCode, (updateStruktural as HttpError).code, (updateStruktural as HttpError).message)
+    const acara = await updateAcaraService({ id, name, description, endTime, isOpen, startTime, image: req.file?.path });
+    if (acara instanceof ErrorApp) {
+        return HandleResponse(res, acara.statusCode, acara.code, acara.message)
     }
     HandleResponse(res, 200, MESSAGE_CODE.SUCCESS, MESSAGES.SUCCESS.ACARA.UPDATE)
 }
@@ -61,7 +61,8 @@ export const getDetailAcaraController = async (req: Request, res: Response, next
     const { id } = req.params
     const acara = await getDetailAcaraService(id as string)
     if (acara instanceof ErrorApp) {
-        return HandleResponse(res, acara.statusCode, acara.code, acara.message)
+        next(acara)
+        return
     }
     return HandleResponse(res, 200, MESSAGE_CODE.SUCCESS, MESSAGES.SUCCESS.ACARA.GET, acara)
 }
