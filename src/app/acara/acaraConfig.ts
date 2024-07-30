@@ -3,6 +3,9 @@ import { type Request } from 'express';
 import multer, { FileFilterCallback } from 'multer';
 import { CloudinaryStorage } from 'multer-storage-cloudinary';
 import { environment } from '../../libs';
+import { MESSAGE_CODE } from '../../utils/ErrorCode';
+import { ErrorApp } from '../../utils/HttpError';
+import { MESSAGES } from '../../utils/Messages';
 
 cloudinary.config({
     cloud_name: environment.CLOUDINARY_CLOUD_NAME,
@@ -25,8 +28,13 @@ const fileFilter = (req: Request, file: Express.Multer.File, cb: FileFilterCallb
         file.mimetype === "image/jpeg"
     ) {
         cb(null, true);
+    } else if (file.size > 5242880) {
+
+        cb(null, false);
+        return new ErrorApp(MESSAGES.ERROR.INVALID.IMAGE_SIZE, 400, MESSAGE_CODE.BAD_REQUEST)
     } else {
         cb(null, false);
+        return new ErrorApp(MESSAGES.ERROR.INVALID.FILE_TYPE, 400, MESSAGE_CODE.BAD_REQUEST)
     }
 };
 

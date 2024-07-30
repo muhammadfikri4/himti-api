@@ -33,7 +33,8 @@ export const MESSAGES = {
             USER_ID: "User ID not found",
             ABSENSI: "Absensi not found",
             MERCHANDISE: "Merchandise not found",
-            SERVICE: "Service not found"
+            SERVICE: "Service not found",
+            ROUTE: "Route not found, Check again your endpoint!"
         },
         ALREADY: {
             GLOBAL: {
@@ -78,7 +79,8 @@ export const MESSAGES = {
             CODE_ANGGOTA: "Code is invalid",
             IMAGE_SIZE: "Image size must be less than 5mb",
             ROLE_ADMIN: "You're not admin",
-            CODE_USER: "User is not allowed to use Code"
+            CODE_USER: "User is not allowed to use Code",
+            FILE_TYPE: "Invalid Image Type"
         },
         UNAUTHORIZED: {
             AUTH: "If you are not logged in, please log in first",
