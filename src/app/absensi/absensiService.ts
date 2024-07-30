@@ -31,7 +31,7 @@ export const createAbsensiSubAcaraService = async ({ subAcaraId, image, coordina
 
     const getSubAcara = await getSubAcaraById(subAcaraId as string)
 
-    const absensi = await createAbsensi({ acaraId: getSubAcara?.acaraId, subAcaraId, image, userId: (decodeToken as TokenTypes)?.id as string, coordinate, address: address ? address : undefined })
+    const absensi = await createAbsensi({ acaraId: getSubAcara?.acaraId, subAcaraId, image, userId: (decodeToken as TokenTypes)?.id as string, coordinate, address })
     return absensi
 }
 
