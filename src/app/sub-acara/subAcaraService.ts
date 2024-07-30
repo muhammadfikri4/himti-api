@@ -5,6 +5,7 @@ import { MESSAGES } from '../../utils/Messages'
 import { Meta } from '../../utils/Meta'
 import { getAcaraById } from '../acara/acaraRepository'
 import { SubAcaraBodyDTO } from './subAcaraDTO'
+import { subAcaraMapper } from './subAcaraMapper'
 import { createSubAcara, deleteSubAcara, getSubAcara, getSubAcaraById, getSubAcaraCount, updateSubAcara } from './subAcaraRepository'
 import { IFilterSubAcara, SubAcaraModelTypes } from './subAcaraTypes'
 import { acaraValidate } from './subAcaraValidate'
@@ -36,12 +37,12 @@ export const getSubAcaraService = async ({ search, page = 1, perPage = 10, acara
         getSubAcaraCount({ search, acaraId })
     ])
 
-    if (!subAcara.length) {
-        console.log(subAcara)
+    const data = subAcaraMapper(subAcara as unknown as SubAcaraModelTypes[])
+    if (!data.length) {
         return new ErrorApp(MESSAGES.ERROR.NOT_FOUND.SUB_ACARA, 404, MESSAGE_CODE.NOT_FOUND)
 
     }
-    const response = { data: subAcara, meta: Meta(page, perPage, totalData) }
+    const response = { data, meta: Meta(page, perPage, totalData) }
     return response
 }
 

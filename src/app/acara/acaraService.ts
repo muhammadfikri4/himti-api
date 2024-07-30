@@ -4,15 +4,15 @@ import { ErrorApp } from '../../utils/HttpError'
 import { MESSAGES } from '../../utils/Messages'
 import { Meta } from '../../utils/Meta'
 import { AcaraBodyDTO } from './acaraDTO'
+import { acaraMapper } from './acaraMapper'
 import { createAcara, deleteAcara, getAcara, getAcaraById, getAcaraCount, updateAcara } from './acaraRepository'
-import { acaraMapper } from './acaraResponse'
 import { AcaraModelTypes, IFilterAcara } from './acaraTypes'
 import { acaraValidate } from './acaraValidate'
 
 dotenv.config();
 
 export const createAcaraService = async ({ name, description, endTime, image, isOpen, startTime }: AcaraBodyDTO) => {
-    const open = typeof isOpen !== 'undefined' ? Boolean(isOpen) : undefined
+    const open = typeof isOpen !== 'undefined' ? JSON.parse(String(isOpen)) : undefined
     const validate = await acaraValidate({ name: name as string, image, endTime, startTime, isOpen: open })
     if (validate instanceof ErrorApp) {
         return new ErrorApp(validate.message, validate.statusCode, validate.code)

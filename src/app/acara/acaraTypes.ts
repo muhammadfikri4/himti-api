@@ -5,6 +5,7 @@ export interface AcaraModelTypes {
     description?: string,
     image?: string,
     isOpen?: boolean,
+    isOpenAbsen?: boolean,
     startTime?: Date,
     endTime?: Date
     createdAt: Date,
