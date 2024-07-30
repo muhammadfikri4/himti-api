@@ -95,6 +95,9 @@ export const getSubAcaraByAcaraId = async (acaraId: string, isOpenAbsen?: boolea
         where: {
             acaraId,
             isOpenAbsen
+        },
+        orderBy: {
+            createdAt: 'desc'
         }
     })
 }

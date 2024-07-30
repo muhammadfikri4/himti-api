@@ -60,8 +60,9 @@ export const updateAcaraController = async (req: Request, res: Response) => {
 export const getDetailAcaraController = async (req: Request, res: Response, next: NextFunction) => {
     const { id } = req.params
     const { isAbsen } = req.query
+    const token = req.headers.authorization?.replace("Bearer ", "")
 
-    const acara = await getDetailAcaraService(id as string, isAbsen ? isAbsen as string : undefined)
+    const acara = await getDetailAcaraService(id as string, isAbsen ? isAbsen as string : undefined, token)
     if (acara instanceof ErrorApp) {
         next(acara)
         return

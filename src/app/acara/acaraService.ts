@@ -1,4 +1,8 @@
+import { Acara } from '@prisma/client'
+import { getUserById } from 'app/authentication/authRepository'
 import dotenv from 'dotenv'
+import { TokenDecodeInterface } from 'interface'
+import { decode } from 'jsonwebtoken'
 import { MESSAGE_CODE } from '../../utils/ErrorCode'
 import { ErrorApp } from '../../utils/HttpError'
 import { MESSAGES } from '../../utils/Messages'
@@ -78,12 +82,27 @@ export const updateAcaraService = async ({ id, name, image, description, endTime
     return response;
 }
 
-export const getDetailAcaraService = async (id: string, isAbsen?: string) => {
+export const getDetailAcaraService = async (id: string, isAbsen?: string, token?: string) => {
 
     const absen = isAbsenValue(isAbsen)
+    let subAcara: Array<Acara | null> = []
+
+    if (!token) {
+        subAcara = []
+    }
+
+    if (token) {
+        const decodeToken = decode(token)
+        const userId = (decodeToken as TokenDecodeInterface)?.id
+        const user = await getUserById(userId)
+        if (user?.role === 'USER' && !user.anggotaId) {
+            subAcara = []
+        } else if (user?.role === 'ANGGOTA' || user?.role === 'ADMIN') {
+            subAcara = await getSubAcaraByAcaraId(id, absen) || []
+        }
+    }
 
     const acara = await getAcaraById(id)
-    const subAcara = await getSubAcaraByAcaraId(id, absen) || []
     if (!acara) {
         return new ErrorApp(MESSAGES.ERROR.NOT_FOUND.ACARA, 404, MESSAGE_CODE.NOT_FOUND)
     }
