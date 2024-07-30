@@ -119,7 +119,7 @@ export const MESSAGES = {
             PRICE: "Price is required",
             ACARA_ID: "Acara Id is required",
             SUB_ACARA_ID: "Sub Acara Id is required",
-            OTP_ID: "OTP ID is required",
+            OTP_KEY: "OTP Key is required",
             OTP: "OTP is required",
         },
         RELATION: {

@@ -174,7 +174,7 @@ model Bussiness {
 
 model OTP {
   id         String    @id @unique @default(uuid())
-  otp        Int
+  otp        String
   isVerified Boolean   @default(false) @map("is_verified")
   expired    DateTime?
   createdAt  DateTime  @default(now()) @map("created_at")

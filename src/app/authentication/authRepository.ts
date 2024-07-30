@@ -38,7 +38,7 @@ export const getUserByNIM = async (nim: string) => {
     })
 }
 
-export const createOtp = async (otp: number, expired: Date) => {
+export const createOtp = async (otp: string, expired: Date) => {
     return await prisma.oTP.create({
         data: {
             otp,

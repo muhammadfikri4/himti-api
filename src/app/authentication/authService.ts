@@ -132,11 +132,14 @@ export const requestOtpService = async (token: string) => {
     const expired = new Date(Date.now() + 3 * 60 * 1000)
 
     const randomOtp = random()
-    const otp = await createOtp(randomOtp, expired)
+    const hashOtp = await bcrypt.hash(randomOtp.toString(), 10)
+    const otp = await createOtp(hashOtp, expired)
+
+
     await SendEmail(user.email, user.name, randomOtp)
     const data = {
         key: otp.id,
-        otp: otp.otp,
+        otp: hashOtp,
         isVerified: otp.isVerified,
         expired
     }
@@ -152,11 +155,14 @@ export const validateOtpService = async ({ key, otp }: ValidateOtpDTO) => {
         return new ErrorApp(MESSAGES.ERROR.INVALID.OTP_ID, 400, MESSAGE_CODE.BAD_REQUEST)
     }
 
-    if (otp !== findOtp.otp) {
+    const matchOtp = await bcrypt.compare(otp.toString(), findOtp.otp)
+
+    if (!matchOtp) {
         return new ErrorApp(MESSAGES.ERROR.INVALID.OTP_NUMBER, 400, MESSAGE_CODE.BAD_REQUEST)
     }
 
-    if (new Date(findOtp.expired as Date) < new Date(Date.now())) {
+    const isExpired = new Date(findOtp.expired as Date) < new Date(Date.now())
+    if (isExpired) {
         return new ErrorApp(MESSAGES.ERROR.INVALID.OTP_EXPIRED, 400, MESSAGE_CODE.BAD_REQUEST)
     }
 
@@ -166,5 +172,6 @@ export const validateOtpService = async ({ key, otp }: ValidateOtpDTO) => {
         key: verified.id,
         isVerified: verified.isVerified
     }
+
     return data
 }

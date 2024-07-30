@@ -6,7 +6,7 @@ import { ErrorApp } from "../../utils/HttpError"
 import { MESSAGES } from "../../utils/Messages"
 import { AnggotaSosmedDTO } from "../anggota/anggotaDTO"
 import { getAnggotaById, getAnggotaByNIM, updateSosmedAnggota } from "../anggota/anggotaRepository"
-import { getOtp, getUserByEmail, getUserById, getUserByNIM } from "../authentication/authRepository"
+import { getUserByEmail, getUserById, getUserByNIM } from "../authentication/authRepository"
 import { ChangePasswordDTO, ProfileDTO } from "./profileDTO"
 import { getProfile, updatePassword, updateProfile } from "./profileRepository"
 
@@ -117,22 +117,12 @@ export const updateProfileService = async (token: string, { email, name, nim, fa
 
 }
 
-export const updatePasswordService = async (token: string, { newPassword, oldPassword, otpId }: ChangePasswordDTO) => {
+export const updatePasswordService = async (token: string, { newPassword, oldPassword, }: ChangePasswordDTO) => {
     const decodeToken = decode(token) as TokenDecodeInterface
     const id = decodeToken.id
     const user = await getUserById(id)
     if (!user) {
         return new ErrorApp(MESSAGES.ERROR.NOT_FOUND.USER.ACCOUNT, 404, MESSAGE_CODE.NOT_FOUND)
-    }
-
-    const otp = await getOtp(otpId as string)
-
-    if (!otp) {
-        return new ErrorApp(MESSAGES.ERROR.INVALID.OTP_ID, 400, MESSAGE_CODE.BAD_REQUEST)
-    }
-
-    if (!otp.isVerified) {
-        return new ErrorApp(MESSAGES.ERROR.INVALID.OTP_VERIFIED, 400, MESSAGE_CODE.BAD_REQUEST)
     }
 
     const match = await bcrypt.compare(oldPassword as string, user.password)
