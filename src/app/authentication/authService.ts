@@ -1,8 +1,7 @@
 import { Role } from '@prisma/client'
 import * as bcrypt from 'bcrypt'
 import dotenv from 'dotenv'
-import jwt, { decode } from 'jsonwebtoken'
-import { TokenDecodeInterface } from '../../interface'
+import jwt from 'jsonwebtoken'
 import { environment } from '../../libs'
 import { MESSAGE_CODE } from '../../utils/ErrorCode'
 import { random } from '../../utils/GeneratedRandomOTP'
@@ -10,8 +9,8 @@ import { ErrorApp } from '../../utils/HttpError'
 import { SendEmail } from '../../utils/MailerConfig'
 import { MESSAGES } from '../../utils/Messages'
 import { getAnggotaByNIM } from '../anggota/anggotaRepository'
-import { LoginAuthBodyDTO, RegisterAuthBodyDTO, ValidateOtpDTO } from './authDTO'
-import { createOtp, createUser, getOtp, getUserByEmail, getUserById, getUserByNIM, verifiedOtp } from './authRepository'
+import { ForgotPasswordDTO, LoginAuthBodyDTO, RegisterAuthBodyDTO, ValidateOtpDTO } from './authDTO'
+import { changePassword, createOtp, createUser, getOtp, getUserByEmail, getUserByNIM, verifiedOtp } from './authRepository'
 
 dotenv.config()
 
@@ -119,11 +118,9 @@ export const loginAdminService = async ({ email, password }: LoginAuthBodyDTO) =
     return { access_token: token }
 }
 
-export const requestOtpService = async (token: string) => {
+export const requestOtpService = async (email: string) => {
 
-    const decodeToken = decode(token) as TokenDecodeInterface
-    const id = decodeToken?.id
-    const user = await getUserById(id)
+    const user = await getUserByEmail(email)
     if (!user) {
         return new ErrorApp(MESSAGES.ERROR.NOT_FOUND.USER.ACCOUNT, 404, MESSAGE_CODE.NOT_FOUND)
     }
@@ -133,7 +130,7 @@ export const requestOtpService = async (token: string) => {
 
     const randomOtp = random()
     const hashOtp = await bcrypt.hash(randomOtp.toString(), 10)
-    const otp = await createOtp(hashOtp, expired)
+    const otp = await createOtp(hashOtp, email, expired)
 
 
     await SendEmail(user.email, user.name, randomOtp)
@@ -152,7 +149,7 @@ export const validateOtpService = async ({ key, otp }: ValidateOtpDTO) => {
     const findOtp = await getOtp(key)
 
     if (!findOtp) {
-        return new ErrorApp(MESSAGES.ERROR.INVALID.OTP_ID, 400, MESSAGE_CODE.BAD_REQUEST)
+        return new ErrorApp(MESSAGES.ERROR.INVALID.OTP_KEY, 400, MESSAGE_CODE.BAD_REQUEST)
     }
 
     const matchOtp = await bcrypt.compare(otp.toString(), findOtp.otp)
@@ -174,4 +171,26 @@ export const validateOtpService = async ({ key, otp }: ValidateOtpDTO) => {
     }
 
     return data
+}
+
+export const forgotPasswordService = async ({ key, password, email }: ForgotPasswordDTO) => {
+
+    const user = await getUserByEmail(email)
+    const otp = await getOtp(key)
+
+    if (!user) {
+        return new ErrorApp(MESSAGES.ERROR.NOT_FOUND.USER.ACCOUNT, 404, MESSAGE_CODE.NOT_FOUND)
+    }
+
+    if (!otp) {
+        return new ErrorApp(MESSAGES.ERROR.INVALID.OTP_KEY, 400, MESSAGE_CODE.BAD_REQUEST)
+    }
+
+    if (otp && !otp.isVerified) {
+        return new ErrorApp(MESSAGES.ERROR.INVALID.OTP_VERIFIED, 400, MESSAGE_CODE.BAD_REQUEST)
+    }
+
+    const hashPassword = await bcrypt.hash(password, 10)
+    const response = await changePassword(user.id, hashPassword)
+    return response
 }

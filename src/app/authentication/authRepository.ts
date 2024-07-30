@@ -38,12 +38,13 @@ export const getUserByNIM = async (nim: string) => {
     })
 }
 
-export const createOtp = async (otp: string, expired: Date) => {
+export const createOtp = async (otp: string, email: string, expired: Date) => {
     return await prisma.oTP.create({
         data: {
             otp,
             isVerified: false,
-            expired
+            expired,
+            email
         }
     })
 }
@@ -71,6 +72,17 @@ export const deleteOtp = async (id: string) => {
     return await prisma.oTP.delete({
         where: {
             id
+        }
+    })
+}
+
+export const changePassword = (id: string, password: string) => {
+    return prisma.user.update({
+        where: {
+            id
+        },
+        data: {
+            password
         }
     })
 }

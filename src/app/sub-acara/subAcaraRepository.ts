@@ -19,27 +19,36 @@ export const createSubAcara = async ({ description, endTime, image, isOpen, name
 
 export const getSubAcara = async ({ page, perPage, search, acaraId }: IFilterSubAcara) => {
 
-    const filter = {} as Prisma.SubAcaraWhereInput
+    const filter = { OR: [], AND: {} } as { OR: Prisma.SubAcaraWhereInput[], AND: Prisma.SubAcaraWhereInput }
 
     if (search) {
-        {
-            filter.OR = [...(filter.OR as Prisma.SubAcaraWhereInput[]), {
-                name: {
-                    contains: search,
-                    mode: 'insensitive'
-                }
-            }]
-        }
+
+        filter.OR.push({
+            name: {
+                contains: search,
+                mode: 'insensitive'
+            }
+        })
     }
 
     if (acaraId) {
-        filter.OR = [...(filter.OR as Prisma.SubAcaraWhereInput[]), {
+        filter.AND = {
             acaraId
-        }]
+        }
     }
 
     return await prisma.subAcara.findMany({
-        where: filter,
+        where: (search || acaraId) ? filter : undefined,
+        include: {
+            acara: {
+                select: {
+                    id: true,
+                    name: true,
+                    isOpen: true,
+                    isOpenAbsen: true
+                }
+            }
+        },
         orderBy: {
             createdAt: 'desc'
         },
@@ -49,26 +58,26 @@ export const getSubAcara = async ({ page, perPage, search, acaraId }: IFilterSub
 }
 
 export const getSubAcaraCount = async ({ search, acaraId }: IFilterSubAcara) => {
-    const filter = {} as Prisma.SubAcaraWhereInput
+    const filter = { OR: [] } as { OR: Prisma.SubAcaraWhereInput[] }
 
     if (search) {
-        {
-            filter.OR = [...(filter.OR as Prisma.SubAcaraWhereInput[]), {
-                name: {
-                    contains: search,
-                    mode: 'insensitive'
-                }
-            }]
-        }
+
+        filter.OR.push({
+            name: {
+                contains: search,
+                mode: 'insensitive'
+            }
+        })
     }
 
     if (acaraId) {
-        filter.OR = [...(filter.OR as Prisma.SubAcaraWhereInput[]), {
+        filter.OR.push({
             acaraId
-        }]
+        })
     }
+
     return await prisma.subAcara.count({
-        where: filter
+        where: (search || acaraId) ? filter : undefined
     })
 }
 

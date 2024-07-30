@@ -41,4 +41,22 @@ export const validateOtpSchema = Joi.object({
 })
 
 
-export const requestOtpSchema = Joi.object()
+export const requestOtpSchema = Joi.object({
+    email: Joi.string().required().email().messages({
+        "any.required": MESSAGES.ERROR.REQUIRED.EMAIL,
+        "string.email": MESSAGES.ERROR.INVALID.GLOBAL.EMAIL
+    })
+})
+export const forgotPasswordSchema = Joi.object({
+    email: Joi.string().required().email().messages({
+        "any.required": MESSAGES.ERROR.REQUIRED.EMAIL,
+        "string.email": MESSAGES.ERROR.INVALID.GLOBAL.EMAIL
+    }),
+    key: Joi.string().required().messages({
+        "any.required": MESSAGES.ERROR.REQUIRED.OTP_KEY,
+    }),
+    password: Joi.string().required().min(8).messages({
+        "any.required": MESSAGES.ERROR.REQUIRED.PASSWORD,
+        "string.min": MESSAGES.ERROR.INVALID.USER.PASSWORD_LENGTH
+    }),
+})

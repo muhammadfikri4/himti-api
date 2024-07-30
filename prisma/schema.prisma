@@ -126,8 +126,8 @@ model SubAcara {
   endTime     DateTime? @default(now()) @map("end_time")
   startTime   DateTime? @default(now()) @map("start_time")
   acaraId     String
-  Acara       Acara     @relation(fields: [acaraId], references: [id], onDelete: Restrict)
-  Absensi     Absensi[]
+  acara       Acara     @relation(fields: [acaraId], references: [id], onDelete: Restrict)
+  absensi     Absensi[]
   createdAt   DateTime  @default(now()) @map("created_at")
   updatedAt   DateTime  @default(now()) @updatedAt @map("updated_at")
 
@@ -174,6 +174,7 @@ model Bussiness {
 
 model OTP {
   id         String    @id @unique @default(uuid())
+  email      String
   otp        String
   isVerified Boolean   @default(false) @map("is_verified")
   expired    DateTime?

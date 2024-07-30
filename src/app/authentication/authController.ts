@@ -4,7 +4,7 @@ import { HandleResponse } from "../../utils/HandleResponse";
 import { ErrorApp } from "../../utils/HttpError";
 import { MESSAGES } from "../../utils/Messages";
 import { LoginAuthResponse } from "./authDTO";
-import { loginAdminService, loginService, registerService, requestOtpService, validateOtpService } from "./authService";
+import { forgotPasswordService, loginAdminService, loginService, registerService, requestOtpService, validateOtpService } from "./authService";
 
 export const registerController = async (req: Request, res: Response, next: NextFunction) => {
 
@@ -48,9 +48,8 @@ export const loginAdminController = async (req: Request, res: Response, next: Ne
 
 export const requestOtpController = async (req: Request, res: Response, next: NextFunction) => {
 
-    const token = req.headers.authorization?.replace("Bearer ", "")
-
-    const otp = await requestOtpService(token as string)
+    const { email } = req.body
+    const otp = await requestOtpService(email as string)
 
     if (otp instanceof ErrorApp) {
         next(otp)
@@ -72,4 +71,17 @@ export const validateOtpController = async (req: Request, res: Response, next: N
     }
 
     HandleResponse(res, 200, MESSAGE_CODE.SUCCESS, MESSAGES.SUCCESS.OTP.VERIFY, otps)
+}
+
+export const forgotPasswordController = async (req: Request, res: Response, next: NextFunction) => {
+
+    const { email, key, password } = req.body
+    const forgot = await forgotPasswordService({ email, key, password })
+
+    if (forgot instanceof ErrorApp) {
+        next(forgot)
+        return
+    }
+
+    HandleResponse(res, 200, MESSAGE_CODE.SUCCESS, MESSAGES.SUCCESS.PASSWORD.CHANGE)
 }

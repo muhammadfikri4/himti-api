@@ -83,7 +83,7 @@ export const MESSAGES = {
             ROLE_ADMIN: "You're not admin",
             CODE_USER: "User is not allowed to use Code",
             FILE_TYPE: "Invalid Image Type",
-            OTP_ID: "Invalid OTP ID",
+            OTP_KEY: "Invalid OTP Key",
             OTP_NUMBER: "OTP is invalid, check your email to get a valid OTP",
             OTP_VERIFIED: "Your otp has not been verified",
             OTP_EXPIRED: "OTP has been expired",
@@ -189,6 +189,9 @@ export const MESSAGES = {
             GET: "Success to fetch user data",
             UPDATE: "Success to update user data",
             DELETE: "Success to delete user data"
+        },
+        PASSWORD: {
+            CHANGE: "Success to change password"
         },
         OTP: {
             SEND: "Success to send otp",
