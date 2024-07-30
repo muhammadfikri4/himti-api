@@ -62,9 +62,9 @@ export const requestOtpController = async (req: Request, res: Response, next: Ne
 
 export const validateOtpController = async (req: Request, res: Response, next: NextFunction) => {
 
-    const { id, otp } = req.body
+    const { otpId, otp } = req.body
 
-    const otps = await validateOtpService({ id, otp })
+    const otps = await validateOtpService({ otpId, otp })
 
     if (otps instanceof ErrorApp) {
         next(otps)

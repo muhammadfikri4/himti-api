@@ -85,6 +85,8 @@ export const MESSAGES = {
             FILE_TYPE: "Invalid Image Type",
             OTP_ID: "Invalid OTP ID",
             OTP_NUMBER: "OTP is invalid, check your email to get a valid OTP",
+            OTP_VERIFIED: "Your otp has not been verified",
+            OTP_EXPIRED: "OTP has been expired",
         },
         UNAUTHORIZED: {
             AUTH: "If you are not logged in, please log in first",

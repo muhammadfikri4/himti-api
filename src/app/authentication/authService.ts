@@ -128,20 +128,25 @@ export const requestOtpService = async (token: string) => {
         return new ErrorApp(MESSAGES.ERROR.NOT_FOUND.USER.ACCOUNT, 404, MESSAGE_CODE.NOT_FOUND)
     }
 
-    const otp = await createOtp(random)
-    await SendEmail(user.email, user.name, random)
+    // exp 3 min
+    const expired = new Date(Date.now() + 3 * 60 * 1000)
 
+    const randomOtp = random()
+    const otp = await createOtp(randomOtp, expired)
+    await SendEmail(user.email, user.name, randomOtp)
     const data = {
-        id: otp.id,
+        otpId: otp.id,
         otp: otp.otp,
-        isVerified: otp.isVerified
+        isVerified: otp.isVerified,
+        expired
     }
+
     return data
 }
 
-export const validateOtpService = async ({ id, otp }: ValidateOtpDTO) => {
+export const validateOtpService = async ({ otpId, otp }: ValidateOtpDTO) => {
 
-    const findOtp = await getOtp(id)
+    const findOtp = await getOtp(otpId)
 
     if (!findOtp) {
         return new ErrorApp(MESSAGES.ERROR.INVALID.OTP_ID, 400, MESSAGE_CODE.BAD_REQUEST)
@@ -151,10 +156,14 @@ export const validateOtpService = async ({ id, otp }: ValidateOtpDTO) => {
         return new ErrorApp(MESSAGES.ERROR.INVALID.OTP_NUMBER, 400, MESSAGE_CODE.BAD_REQUEST)
     }
 
-    const verified = await verifiedOtp(id)
+    if (new Date(findOtp.expired as Date) < new Date(Date.now())) {
+        return new ErrorApp(MESSAGES.ERROR.INVALID.OTP_EXPIRED, 400, MESSAGE_CODE.BAD_REQUEST)
+    }
+
+    const verified = await verifiedOtp(otpId)
 
     const data = {
-        id: verified.id,
+        otpId: verified.id,
         isVerified: verified.isVerified
     }
     return data

@@ -35,8 +35,8 @@ export const updateProfileController = async (req: Request, res: Response, next:
 export const updatePasswordController = async (req: Request, res: Response, next: NextFunction) => {
 
     const bearerToken = req.headers.authorization?.replace("Bearer ", "")
-    const { newPassword, oldPassword } = req.body
-    const profile = await updatePasswordService(bearerToken as string, { newPassword, oldPassword })
+    const { newPassword, oldPassword, otpId } = req.body
+    const profile = await updatePasswordService(bearerToken as string, { newPassword, oldPassword, otpId })
     if (profile instanceof ErrorApp) {
         next(profile)
         return

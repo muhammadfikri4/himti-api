@@ -30,6 +30,6 @@ export interface RequestOtpDTO {
 }
 
 export interface ValidateOtpDTO {
-    id: string,
+    otpId: string,
     otp: number
 }

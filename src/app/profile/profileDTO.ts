@@ -11,6 +11,7 @@ export interface ProfileDTO {
 
 export interface ChangePasswordDTO {
     id?: string
+    otpId?: string
     oldPassword?: string
     newPassword: string
 }
