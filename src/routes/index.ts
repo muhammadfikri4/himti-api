@@ -31,7 +31,7 @@ route.get("/", (req: Request, res: Response) => {
 })
 
 route.use("*", (req: Request, res: Response) => {
-    return res.json({ message: MESSAGES.ERROR.NOT_FOUND.ROUTE })
+    return res.status(404).json({ message: MESSAGES.ERROR.NOT_FOUND.ROUTE })
 })
 
 export default route
