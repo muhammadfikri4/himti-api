@@ -1,6 +1,7 @@
 import { createCanvas, loadImage, registerFont } from 'canvas';
 import { Router, type Request, type Response } from "express";
 import path from "path";
+import PDFDocument from 'pdfkit';
 import QRCode, { QRCodeToDataURLOptions } from 'qrcode';
 import absensiRoute from '../app/absensi/absensiRoute';
 import acaraRoute from '../app/acara/acaraRoute';
@@ -76,11 +77,29 @@ route.get('/generate', async (req: Request, res: Response) => {
         const qrCodeSize = 80;
         ctx.drawImage(qrCodeImage, canvas.width - qrCodeSize - 60, canvas.height - qrCodeSize - 20, qrCodeSize, qrCodeSize);
 
-        // Set header respons sebagai gambar PNG
-        res.setHeader('Content-Type', 'image/png');
+        // Set header respons sebagai PDF
+        res.setHeader('Content-Type', 'application/pdf');
+        res.setHeader('Content-Disposition', 'attachment; filename="certificate.pdf"');
+
 
         // Stream gambar ke respons
-        canvas.createPNGStream().pipe(res);
+        // canvas.createPNGStream().pipe(res);
+
+        // Buat dokumen PDF
+        const doc = new PDFDocument({
+            size: [canvas.width, canvas.height],
+            margin: 0
+        });
+
+        // Stream PDF ke respons
+        doc.pipe(res);
+
+        // Tambahkan gambar canvas ke PDF
+        const imageData = canvas.toBuffer();
+        doc.image(imageData, 0, 0, { width: canvas.width, height: canvas.height });
+
+        // Akhiri dokumen PDF
+        doc.end();
     } catch (error) {
         console.error('Error generating certificate:', error);
         res.status(500).send('Error generating certificate');
