@@ -152,6 +152,10 @@ export const validateOtpService = async ({ key, otp }: ValidateOtpDTO) => {
         return new ErrorApp(MESSAGES.ERROR.INVALID.OTP_KEY, 400, MESSAGE_CODE.BAD_REQUEST)
     }
 
+    if (findOtp.isVerified) {
+        return new ErrorApp(MESSAGES.ERROR.ALREADY.OTP_VERIFIED, 400, MESSAGE_CODE.BAD_REQUEST)
+    }
+
     const matchOtp = await bcrypt.compare(otp.toString(), findOtp.otp)
 
     if (!matchOtp) {

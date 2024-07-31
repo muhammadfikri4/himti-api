@@ -54,7 +54,8 @@ export const MESSAGES = {
             ANGGOTA_STRUKTURAL: "Anggota cannot join more than 1 struktural",
             JABATAN: "Jabatan is already exists in the struktural",
             USER_NIM: "User cannot use anggota NIM",
-            MERCHANDISE: "Merchandise is already exist"
+            MERCHANDISE: "Merchandise is already exist",
+            OTP_VERIFIED: "OTP is already verified, please request otp again to forget password"
         },
         INVALID: {
             GLOBAL: {
