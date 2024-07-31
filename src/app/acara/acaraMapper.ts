@@ -1,5 +1,5 @@
 import { SubAcara } from "@prisma/client";
-import { getSingleAbsensiByUserId } from "app/absensi/absensiRepository";
+import { getSingleAbsensiByUserId } from "../absensi/absensiRepository";
 import { AcaraModelTypes } from "./acaraTypes";
 
 export const acaraMapper = (acaras: AcaraModelTypes[]) => {
