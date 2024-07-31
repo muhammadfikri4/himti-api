@@ -4,7 +4,8 @@ export interface AcaraBodyDTO {
     name?: string
     description?: string,
     image?: string,
-    isOpen?: boolean,
+    isOpenRegister?: boolean,
+    isOpenAbsen?: boolean,
     startTime?: Date,
     endTime?: Date
 }

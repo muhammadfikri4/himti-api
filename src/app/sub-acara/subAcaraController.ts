@@ -48,9 +48,9 @@ export const deleteSubAcaraController = async (req: Request, res: Response) => {
 
 export const updateSubAcaraController = async (req: Request, res: Response) => {
     const { id } = req.params;
-    const { name, description, endTime, isOpen, startTime, acaraId } = req.body as SubAcaraBodyDTO
+    const { name, description, endTime, isOpenAbsen, isOpenRegister, startTime, acaraId } = req.body as SubAcaraBodyDTO
 
-    const updateStruktural = await updateSubAcaraService({ id, name, description, endTime, isOpen, startTime, image: req.file?.path, acaraId });
+    const updateStruktural = await updateSubAcaraService({ id, name, description, endTime, isOpenAbsen, isOpenRegister, startTime, image: req.file?.path, acaraId });
     if ((updateStruktural as HttpError)?.message) {
         return HandleResponse(res, (updateStruktural as HttpError).statusCode, (updateStruktural as HttpError).code, (updateStruktural as HttpError).message)
     }

@@ -8,7 +8,8 @@ export const createAcaraSchema = Joi.object({
     description: Joi.string().required().messages({
         "any.string": MESSAGES.ERROR.REQUIRED.DESCRIPTION
     }),
-    isOpen: Joi.optional(),
+    isOpenRegister: Joi.optional(),
+    isOpenAbsen: Joi.optional(),
     startTime: Joi.optional(),
     endTime: Joi.optional()
 })

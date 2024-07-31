@@ -19,7 +19,8 @@ export const createSubAcaraSchema = Joi.object({
 export const updateSubAcaraSchema = Joi.object({
     name: Joi.optional(),
     description: Joi.string().optional(),
-    isOpen: Joi.optional(),
+    isOpenRegister: Joi.optional(),
+    isOpenAbsen: Joi.optional(),
     startTime: Joi.optional(),
     endTime: Joi.optional()
 })

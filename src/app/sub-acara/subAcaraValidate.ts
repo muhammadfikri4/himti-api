@@ -3,7 +3,7 @@ import { ErrorApp } from '../../utils/HttpError'
 import { MESSAGES } from '../../utils/Messages'
 import { SubAcaraBodyDTO } from './subAcaraDTO'
 
-export const acaraValidate = async ({ name, image, endTime, isOpen, startTime, acaraId }: SubAcaraBodyDTO) => {
+export const acaraValidate = async ({ name, image, endTime, isOpenRegister, startTime, acaraId }: SubAcaraBodyDTO) => {
 
     if (!name) {
 
@@ -14,11 +14,11 @@ export const acaraValidate = async ({ name, image, endTime, isOpen, startTime, a
         return new ErrorApp(MESSAGES.ERROR.REQUIRED.ACARA_ID, 400, MESSAGE_CODE.BAD_REQUEST)
     }
 
-    if (isOpen && !startTime) {
+    if (isOpenRegister && !startTime) {
         return new ErrorApp(MESSAGES.ERROR.REQUIRED.START_DATE, 400, MESSAGE_CODE.BAD_REQUEST)
     }
 
-    if (isOpen && !endTime) {
+    if (isOpenRegister && !endTime) {
         return new ErrorApp(MESSAGES.ERROR.REQUIRED.END_DATE, 400, MESSAGE_CODE.BAD_REQUEST)
     }
 

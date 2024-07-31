@@ -48,9 +48,9 @@ export const deleteAcaraController = async (req: Request, res: Response) => {
 
 export const updateAcaraController = async (req: Request, res: Response) => {
     const { id } = req.params;
-    const { name, description, endTime, isOpen, startTime, } = req.body as AcaraBodyDTO
+    const { name, description, endTime, isOpenAbsen, isOpenRegister, startTime, } = req.body as AcaraBodyDTO
 
-    const acara = await updateAcaraService({ id, name, description, endTime, isOpen, startTime, image: req.file?.path });
+    const acara = await updateAcaraService({ id, name, description, endTime, isOpenAbsen, isOpenRegister, startTime, image: req.file?.path });
     if (acara instanceof ErrorApp) {
         return HandleResponse(res, acara.statusCode, acara.code, acara.message)
     }

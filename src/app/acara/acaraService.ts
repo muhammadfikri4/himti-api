@@ -16,22 +16,24 @@ import { acaraValidate } from './acaraValidate'
 dotenv.config();
 
 export const isAbsenValue = (open?: string) => {
-    if (open === 'true') {
+    if (open?.toLowerCase() === 'true') {
         return true
-    } else if (open === 'false') {
+    } else if (open?.toLowerCase() === 'false') {
         return false
     }
     return undefined
 }
 
-export const createAcaraService = async ({ name, description, endTime, image, isOpen, startTime }: AcaraBodyDTO) => {
-    const open = typeof isOpen !== 'undefined' ? JSON.parse(String(isOpen)) : undefined
-    const validate = await acaraValidate({ name: name as string, image, endTime, startTime, isOpen: open })
+export const createAcaraService = async ({ name, description, endTime, image, isOpenAbsen, isOpenRegister, startTime }: AcaraBodyDTO) => {
+    const openRegist = typeof isOpenRegister !== 'undefined' ? JSON.parse(String(isOpenRegister)) : undefined
+    const openAbsen = typeof isOpenAbsen !== 'undefined' ? JSON.parse(String(isOpenRegister)) : undefined
+
+    const validate = await acaraValidate({ name: name as string, image, endTime, startTime, isOpenRegister: openRegist, isOpenAbsen: openAbsen })
     if (validate instanceof ErrorApp) {
         return new ErrorApp(validate.message, validate.statusCode, validate.code)
     }
     const path = (image as unknown as Express.Multer.File).path
-    const response = await createAcara({ name, image: path, description, isOpen: open, endTime, startTime })
+    const response = await createAcara({ name, image: path, description, isOpenRegister: openRegist, endTime, startTime, isOpenAbsen: openAbsen })
     return response
 }
 
@@ -62,7 +64,7 @@ export const deleteAcaraService = async ({ id }: AcaraBodyDTO) => {
     const response = await deleteAcara(id as string)
     return response;
 }
-export const updateAcaraService = async ({ id, name, image, description, endTime, isOpen, startTime, }: AcaraBodyDTO) => {
+export const updateAcaraService = async ({ id, name, image, description, endTime, isOpenAbsen, isOpenRegister, startTime, }: AcaraBodyDTO) => {
 
     const matchAcara = await getAcaraById(id as string)
 
@@ -74,7 +76,8 @@ export const updateAcaraService = async ({ id, name, image, description, endTime
     if (name) updateFields.name = name;
     if (description) updateFields.description = description;
     if (image) updateFields.image = image;
-    if (isOpen) updateFields.isOpen = JSON.parse(String(isOpen));
+    if (typeof isOpenRegister === 'boolean') updateFields.isOpen = JSON.parse(String(isOpenRegister));
+    if (typeof isOpenAbsen === 'boolean') updateFields.isOpen = JSON.parse(String(isOpenAbsen));
     if (startTime) updateFields.startTime = startTime;
     if (endTime) updateFields.endTime = endTime;
 

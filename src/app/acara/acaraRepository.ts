@@ -2,26 +2,28 @@ import { prisma } from "../../config";
 import { AcaraBodyDTO, SubAcaraBodyDTO } from "./acaraDTO";
 import { IFilterAcara } from "./acaraTypes";
 
-export const createAcara = async ({ description, endTime, image, isOpen, name, startTime }: AcaraBodyDTO) => {
+export const createAcara = async ({ description, endTime, image, isOpenAbsen, isOpenRegister, name, startTime }: AcaraBodyDTO) => {
     return await prisma.acara.create({
         data: {
             name: name as string,
             description,
             endTime,
-            isOpen,
+            isOpen: isOpenRegister,
+            isOpenAbsen,
             startTime,
             image: image as string
         }
     })
 }
 
-export const createSubAcara = async ({ description, endTime, image, isOpen, name, startTime, acaraId }: SubAcaraBodyDTO) => {
+export const createSubAcara = async ({ description, endTime, image, isOpenAbsen, isOpenRegister, name, startTime, acaraId }: SubAcaraBodyDTO) => {
     return await prisma.subAcara.create({
         data: {
             name: name as string,
             description,
             endTime,
-            isOpen,
+            isOpen: isOpenRegister,
+            isOpenAbsen,
             startTime,
             image: image as string,
             acaraId

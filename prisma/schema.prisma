@@ -100,18 +100,19 @@ model Struktural {
 }
 
 model Acara {
-  id          String     @id @unique @default(uuid())
+  id          String        @id @unique @default(uuid())
   name        String
   description String?
   image       String
-  isOpen      Boolean    @default(true) @map("is_open")
-  isOpenAbsen Boolean?   @default(true) @map("is_open_absen")
-  endTime     DateTime?  @default(now()) @map("end_time")
-  startTime   DateTime?  @default(now()) @map("start_time")
+  isOpen      Boolean       @default(true) @map("is_open")
+  isOpenAbsen Boolean?      @default(true) @map("is_open_absen")
+  endTime     DateTime?     @default(now()) @map("end_time")
+  startTime   DateTime?     @default(now()) @map("start_time")
   Absensi     Absensi[]
-  createdAt   DateTime   @default(now()) @map("created_at")
-  updatedAt   DateTime   @default(now()) @updatedAt @map("updated_at")
+  createdAt   DateTime      @default(now()) @map("created_at")
+  updatedAt   DateTime      @default(now()) @updatedAt @map("updated_at")
   SubAcara    SubAcara[]
+  Certificate Certificate[]
 
   @@index([name, startTime, endTime])
 }
@@ -180,6 +181,16 @@ model OTP {
   expired    DateTime?
   createdAt  DateTime  @default(now()) @map("created_at")
   updateAt   DateTime  @default(now()) @updatedAt @map("updated_at")
+}
+
+model Certificate {
+  id        String   @id @unique @default(uuid())
+  name      String
+  image     String
+  acaraId   String
+  acara     Acara    @relation(fields: [acaraId], references: [id])
+  createdAt DateTime @default(now()) @map("created_at")
+  updateAt  DateTime @default(now()) @updatedAt @map("updated_at")
 }
 
 enum Jabatan {
