@@ -2,6 +2,7 @@ import { v2 as cloudinary } from 'cloudinary';
 import multer from 'multer';
 import { CloudinaryStorage } from 'multer-storage-cloudinary';
 import { environment } from '../../libs';
+import { fileFilter } from '../../utils/FileFilter';
 
 cloudinary.config({
     cloud_name: environment.CLOUDINARY_CLOUD_NAME,
@@ -17,5 +18,5 @@ const storage = new CloudinaryStorage({
     },
 });
 
-const upload = multer({ storage });
+const upload = multer({ storage, fileFilter });
 export { upload };
