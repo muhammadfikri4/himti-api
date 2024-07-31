@@ -48,10 +48,6 @@ export const requestOtpSchema = Joi.object({
     })
 })
 export const forgotPasswordSchema = Joi.object({
-    email: Joi.string().required().email().messages({
-        "any.required": MESSAGES.ERROR.REQUIRED.EMAIL,
-        "string.email": MESSAGES.ERROR.INVALID.GLOBAL.EMAIL
-    }),
     key: Joi.string().required().messages({
         "any.required": MESSAGES.ERROR.REQUIRED.OTP_KEY,
     }),

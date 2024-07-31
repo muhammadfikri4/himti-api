@@ -75,8 +75,8 @@ export const validateOtpController = async (req: Request, res: Response, next: N
 
 export const forgotPasswordController = async (req: Request, res: Response, next: NextFunction) => {
 
-    const { email, key, password } = req.body
-    const forgot = await forgotPasswordService({ email, key, password })
+    const { key, password } = req.body
+    const forgot = await forgotPasswordService({ key, password })
 
     if (forgot instanceof ErrorApp) {
         next(forgot)

@@ -35,7 +35,7 @@ export interface ValidateOtpDTO {
 }
 
 export interface ForgotPasswordDTO {
-    email: string
+
     key: string
     password: string
 }

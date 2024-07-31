@@ -173,17 +173,17 @@ export const validateOtpService = async ({ key, otp }: ValidateOtpDTO) => {
     return data
 }
 
-export const forgotPasswordService = async ({ key, password, email }: ForgotPasswordDTO) => {
+export const forgotPasswordService = async ({ key, password }: ForgotPasswordDTO) => {
 
-    const user = await getUserByEmail(email)
     const otp = await getOtp(key)
-
-    if (!user) {
-        return new ErrorApp(MESSAGES.ERROR.NOT_FOUND.USER.ACCOUNT, 404, MESSAGE_CODE.NOT_FOUND)
-    }
 
     if (!otp) {
         return new ErrorApp(MESSAGES.ERROR.INVALID.OTP_KEY, 400, MESSAGE_CODE.BAD_REQUEST)
+    }
+    const user = await getUserByEmail(otp.email)
+
+    if (!user) {
+        return new ErrorApp(MESSAGES.ERROR.NOT_FOUND.USER.ACCOUNT, 404, MESSAGE_CODE.NOT_FOUND)
     }
 
     if (otp && !otp.isVerified) {
