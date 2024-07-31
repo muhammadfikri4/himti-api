@@ -1,4 +1,4 @@
-import { createCanvas, loadImage } from 'canvas';
+import { createCanvas, loadImage, registerFont } from 'canvas';
 import { Router, type Request, type Response } from "express";
 import path from "path";
 import QRCode, { QRCodeToDataURLOptions } from 'qrcode';
@@ -30,6 +30,7 @@ route.use("/sub-acara", subAcaraRoute)
 route.use('/business', businessRoute)
 route.use('/user', userRoute)
 
+registerFont(path.join(__dirname, '../../public/times-new-roman.ttf'), { family: 'Times New Roman' });
 route.get('/generate', async (req: Request, res: Response) => {
     const { name, id } = req.query; // Ambil nama dan id dari query parameter
 
