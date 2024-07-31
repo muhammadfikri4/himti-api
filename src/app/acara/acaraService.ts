@@ -8,7 +8,7 @@ import { MESSAGES } from '../../utils/Messages'
 import { Meta } from '../../utils/Meta'
 import { getUserById } from '../authentication/authRepository'
 import { AcaraBodyDTO } from './acaraDTO'
-import { acaraMapper } from './acaraMapper'
+import { acaraMapper, subAcaraMapper } from './acaraMapper'
 import { createAcara, deleteAcara, getAcara, getAcaraById, getAcaraCount, getSubAcaraByAcaraId, updateAcara } from './acaraRepository'
 import { AcaraModelTypes, IFilterAcara } from './acaraTypes'
 import { acaraValidate } from './acaraValidate'
@@ -85,7 +85,7 @@ export const updateAcaraService = async ({ id, name, image, description, endTime
 export const getDetailAcaraService = async (id: string, isAbsen?: string, token?: string) => {
 
     const absen = isAbsenValue(isAbsen)
-    let subAcara: Array<Acara | null> = []
+    let subAcara: Array<Acara | null | Promise<Acara>> = []
 
     if (!token) {
         subAcara = []
@@ -98,7 +98,9 @@ export const getDetailAcaraService = async (id: string, isAbsen?: string, token?
         if (user?.role === 'USER' && !user.anggotaId) {
             subAcara = []
         } else if (user?.role === 'ANGGOTA' || user?.role === 'ADMIN') {
-            subAcara = await getSubAcaraByAcaraId(id, absen) || []
+            const sub = await getSubAcaraByAcaraId(id, absen) || []
+            subAcara = await subAcaraMapper(sub, userId)
+
         }
     }
 

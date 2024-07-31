@@ -61,3 +61,14 @@ export const getAbsensiByUserId = async (userId: string, acaraId?: string, subAc
         skip: (Number(page) - 1) * Number(perPage)
     })
 }
+
+export const getSingleAbsensiByUserId = async (userId: string, subAcaraId: string) => {
+    return await prisma.absensi.findFirst({
+        where: {
+            userId,
+            AND: {
+                subAcaraId
+            }
+        }
+    })
+}
