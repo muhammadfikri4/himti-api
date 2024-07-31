@@ -23,7 +23,7 @@ export const createAbsensiAcaraService = async ({ acaraId, image, address, coord
 }
 export const createAbsensiSubAcaraService = async ({ subAcaraId, image, coordinate, address }: AbsensiDTO, token: string) => {
     const decodeToken = decode(token)
-
+    console.log(image)
     const validate = await createAbsensiSubAcaraValidate({ subAcaraId, image, userId: (decodeToken as TokenTypes)?.id as string, coordinate })
 
     if (validate instanceof ErrorApp) {
