@@ -141,7 +141,7 @@ model Absensi {
   userId     String    @map("user_id")
   subAcaraId String?   @map("sub_acara_id")
   acara      Acara     @relation(fields: [acaraId], references: [id])
-  user       User      @relation(fields: [userId], references: [id])
+  user       User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   coordinate String
   address    String?
   createdAt  DateTime  @default(now()) @map("created_at")
