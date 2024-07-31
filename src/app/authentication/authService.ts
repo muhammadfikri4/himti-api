@@ -42,9 +42,9 @@ export const registerService = async ({ email, name, password, nim, code }: Regi
     }
 
     if (nim) {
-        if (nim === isAnggota?.nim) {
-            return new ErrorApp(MESSAGES.ERROR.ALREADY.GLOBAL.NIM, 400, MESSAGE_CODE.BAD_REQUEST)
-        }
+        // if (nim === isAnggota?.nim) {
+        //     return new ErrorApp(MESSAGES.ERROR.ALREADY.GLOBAL.NIM, 400, MESSAGE_CODE.BAD_REQUEST)
+        // }
         if (nim === alreadyUser?.nim) {
             return new ErrorApp(MESSAGES.ERROR.ALREADY.GLOBAL.NIM, 400, MESSAGE_CODE.BAD_REQUEST)
         }
