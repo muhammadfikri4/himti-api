@@ -23,6 +23,7 @@ export const validateRequest = (body: Joi.ObjectSchema, file?: Joi.ObjectSchema)
 
             return HandleResponse(res, 400, MESSAGE_CODE.BAD_REQUEST, errors[0]);
         }
+
         next();
     };
 };
