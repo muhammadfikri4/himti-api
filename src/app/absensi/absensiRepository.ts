@@ -72,3 +72,12 @@ export const getSingleAbsensiByUserId = async (userId: string, subAcaraId: strin
         }
     })
 }
+
+export const getAbsensiBySubAcaraId = async (subAcaraId: string, userId: string) => {
+    return await prisma.absensi.findFirst({
+        where: {
+            subAcaraId,
+            userId
+        }
+    })
+}

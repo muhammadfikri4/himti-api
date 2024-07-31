@@ -1,11 +1,12 @@
 import { decode } from "jsonwebtoken"
+import { TokenDecodeInterface } from "../../interface"
 import { MESSAGE_CODE } from "../../utils/ErrorCode"
 import { ErrorApp } from "../../utils/HttpError"
 import { MESSAGES } from "../../utils/Messages"
 import { getSubAcaraById } from "../acara/acaraRepository"
 import { AbsensiDTO, IFilterAbsensi, TokenTypes } from "./absensiDTO"
 import { absensiMapper } from "./absensiMapper"
-import { createAbsensi, getAbsensiByUserId } from "./absensiRepository"
+import { createAbsensi, getAbsensiBySubAcaraId, getAbsensiByUserId } from "./absensiRepository"
 import { createAbsensiAcaraValidate, createAbsensiSubAcaraValidate } from "./absensiValidate"
 
 export const createAbsensiAcaraService = async ({ acaraId, image, address, coordinate }: AbsensiDTO, token: string) => {
@@ -27,6 +28,14 @@ export const createAbsensiSubAcaraService = async ({ subAcaraId, image, coordina
 
     if (validate instanceof ErrorApp) {
         return validate
+    }
+
+    const userId = (decodeToken as TokenDecodeInterface)?.id
+
+    const getAbsensi = await getAbsensiBySubAcaraId(subAcaraId as string, userId as string)
+
+    if (getAbsensi) {
+        return new ErrorApp(MESSAGES.ERROR.INVALID.ABSENSI_ONCE, 400, MESSAGE_CODE.BAD_REQUEST)
     }
 
     const getSubAcara = await getSubAcaraById(subAcaraId as string)

@@ -37,6 +37,7 @@ export const MESSAGES = {
             SERVICE: "Service not found",
             ROUTE: "Route not found, Check again your endpoint!",
 
+
         },
         ALREADY: {
             GLOBAL: {
@@ -88,6 +89,7 @@ export const MESSAGES = {
             OTP_NUMBER: "OTP is invalid, check your email to get a valid OTP",
             OTP_VERIFIED: "Your otp has not been verified",
             OTP_EXPIRED: "OTP has been expired",
+            ABSENSI_ONCE: "Absensi can only be one time"
         },
         UNAUTHORIZED: {
             AUTH: "If you are not logged in, please log in first",
