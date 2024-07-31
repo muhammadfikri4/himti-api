@@ -10,7 +10,7 @@ import { createAbsensiAcaraSchema, createAbsensiSubAcaraSchema } from "./absensi
 const route = Router()
 
 route.post("/acara", VerifyToken, validateRequest(createAbsensiAcaraSchema, imageSchema), upload.single("image"), CatchWrapper(createAbsensiAcaraController))
-route.post("/sub-acara", VerifyToken, validateRequest(createAbsensiSubAcaraSchema, imageSchema), upload.single("image"), CatchWrapper(createAbsensiSubAcaraController))
+route.post("/sub-acara", VerifyToken, validateRequest(createAbsensiSubAcaraSchema), CatchWrapper(createAbsensiSubAcaraController))
 route.get("/", VerifyToken, CatchWrapper(getAbsensiController))
 
 export default route
