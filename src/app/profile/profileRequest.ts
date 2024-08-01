@@ -6,7 +6,7 @@ export const updateProfileSchema = Joi.object({
         "any.string": MESSAGES.ERROR.INVALID.NAME,
     }),
     nim: Joi.optional(),
-    email: Joi.string().optional().messages({
+    email: Joi.string().email().optional().messages({
         "string.email": MESSAGES.ERROR.INVALID.GLOBAL.EMAIL
     }),
     instagram: Joi.optional(),
