@@ -5,9 +5,9 @@ export const createAnggotaSchema = Joi.object({
     name: Joi.string().required().messages({
         "any.required": MESSAGES.ERROR.REQUIRED.NAME,
     }),
-    nim: Joi.number().required().max(99999999999999).messages({
+    nim: Joi.string().required().max(14).messages({
         "any.required": MESSAGES.ERROR.REQUIRED.NIM,
-        "number.max": MESSAGES.ERROR.INVALID.NIM.LENGTH
+        "string.max": MESSAGES.ERROR.INVALID.NIM.LENGTH
     }),
     email: Joi.string().required().email().messages({
         "any.required": MESSAGES.ERROR.REQUIRED.EMAIL,

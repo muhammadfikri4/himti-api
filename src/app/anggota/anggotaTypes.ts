@@ -7,7 +7,7 @@ export interface AnggotaModelTypes {
     angkatanId?: string,
     angkatan: {
         id: string
-        year: number
+        year: string
         isActive: boolean
     }
     instagram?: string,

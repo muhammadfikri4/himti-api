@@ -12,7 +12,7 @@ export const anggotaMapper = async (anggotas: AnggotaModelTypes[]) => {
             email: email,
             angkatan: {
                 id: anggota.angkatan.id,
-                year: Number(anggota.angkatan.year)
+                year: anggota.angkatan.year
             },
             ...sosmed,
             isActive: isActive,
