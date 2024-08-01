@@ -33,13 +33,15 @@ export const createSubAcara = async ({ description, endTime, image, isOpenAbsen,
 
 
 
-export const getAcara = async ({ page, perPage, name }: IFilterAcara) => {
+export const getAcara = async ({ page, perPage, search, openAbsen, openRegister }: IFilterAcara) => {
     return await prisma.acara.findMany({
         where: {
             name: {
-                contains: name,
+                contains: search,
                 mode: 'insensitive'
-            }
+            },
+            isOpen: openRegister as boolean,
+            isOpenAbsen: openAbsen as boolean
         },
         orderBy: {
             createdAt: 'desc'
@@ -49,13 +51,15 @@ export const getAcara = async ({ page, perPage, name }: IFilterAcara) => {
     })
 }
 
-export const getAcaraCount = async ({ name }: IFilterAcara) => {
+export const getAcaraCount = async ({ search, openAbsen, openRegister }: IFilterAcara) => {
     return await prisma.acara.count({
         where: {
             name: {
-                contains: name,
+                contains: search,
                 mode: 'insensitive'
-            }
+            },
+            isOpen: openRegister as boolean,
+            isOpenAbsen: openAbsen as boolean
         },
     })
 }

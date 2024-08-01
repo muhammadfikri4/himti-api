@@ -23,9 +23,15 @@ export const createAcaraController = async (req: Request, res: Response, next: N
 
 export const getAcaraController = async (req: Request, res: Response, next: NextFunction) => {
 
-    const { name, page, perPage } = req.query
+    const { search, openAbsen, openRegister, page, perPage } = req.query
 
-    const acara = await getAcaraService({ name: name as string, page: page ? Number(page) : undefined, perPage: perPage ? Number(perPage) : undefined });
+    const acara = await getAcaraService({
+        search: search as string,
+        page: page ? Number(page) : undefined,
+        perPage: perPage ? Number(perPage) : undefined,
+        openAbsen: openAbsen as string,
+        openRegister: openRegister as string
+    });
 
     if (acara instanceof ErrorApp) {
         next(acara)
@@ -59,10 +65,10 @@ export const updateAcaraController = async (req: Request, res: Response) => {
 
 export const getDetailAcaraController = async (req: Request, res: Response, next: NextFunction) => {
     const { id } = req.params
-    const { isAbsen } = req.query
+    const { openAbsen } = req.query
     const token = req.headers.authorization?.replace("Bearer ", "")
 
-    const acara = await getDetailAcaraService(id as string, isAbsen ? isAbsen as string : undefined, token)
+    const acara = await getDetailAcaraService(id as string, openAbsen ? openAbsen as string : undefined, token)
     if (acara instanceof ErrorApp) {
         next(acara)
         return

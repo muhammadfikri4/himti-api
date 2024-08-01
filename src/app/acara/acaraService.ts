@@ -15,7 +15,7 @@ import { acaraValidate } from './acaraValidate'
 
 dotenv.config();
 
-export const isAbsenValue = (open?: string) => {
+export const openValue = (open?: string) => {
     if (open?.toLowerCase() === 'true') {
         return true
     } else if (open?.toLowerCase() === 'false') {
@@ -37,11 +37,14 @@ export const createAcaraService = async ({ name, description, endTime, image, is
     return response
 }
 
-export const getAcaraService = async ({ name, page = 1, perPage = 10 }: IFilterAcara) => {
+export const getAcaraService = async ({ search, page = 1, perPage = 10, openAbsen = undefined, openRegister = undefined }: IFilterAcara) => {
+
+    const absen = openValue(openAbsen as string)
+    const regist = openValue(openRegister as string)
 
     const [acara, totalData] = await Promise.all([
-        getAcara({ name, page, perPage }),
-        getAcaraCount({ name })
+        getAcara({ search, page, perPage, openAbsen: absen, openRegister: regist }),
+        getAcaraCount({ search, openAbsen: absen, openRegister: regist })
     ])
 
     const data = await acaraMapper(acara as unknown as AcaraModelTypes[])
@@ -85,9 +88,9 @@ export const updateAcaraService = async ({ id, name, image, description, endTime
     return response;
 }
 
-export const getDetailAcaraService = async (id: string, isAbsen?: string, token?: string) => {
+export const getDetailAcaraService = async (id: string, openAbsen?: string, token?: string) => {
 
-    const absen = isAbsenValue(isAbsen)
+    const absen = openValue(openAbsen)
     let subAcara: Array<Acara | null | Promise<Acara>> = []
 
     if (!token) {
