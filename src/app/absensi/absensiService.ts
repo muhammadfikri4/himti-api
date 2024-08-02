@@ -40,6 +40,10 @@ export const createAbsensiSubAcaraService = async ({ subAcaraId, image, coordina
 
     const getSubAcara = await getSubAcaraById(subAcaraId as string)
 
+    if (!getSubAcara?.isOpenAbsen) {
+        return new ErrorApp(MESSAGES.ERROR.INVALID.ABSENSI, 400, MESSAGE_CODE.BAD_REQUEST)
+    }
+
     const absensi = await createAbsensi({ acaraId: getSubAcara?.acaraId, subAcaraId, image, userId: (decodeToken as TokenTypes)?.id as string, coordinate, address })
     return absensi
 }

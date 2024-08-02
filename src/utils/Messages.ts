@@ -89,7 +89,9 @@ export const MESSAGES = {
             OTP_NUMBER: "OTP is invalid, check your email to get a valid OTP",
             OTP_VERIFIED: "Your otp has not been verified",
             OTP_EXPIRED: "OTP has been expired",
-            ABSENSI_ONCE: "Absensi can only be one time"
+            ABSENSI_ONCE: "Absensi can only be one time",
+            ABSENSI: "Absensi is closed",
+            ACARA_REGISTER: 'Acara is closed to register',
         },
         UNAUTHORIZED: {
             AUTH: "If you are not logged in, please log in first",
