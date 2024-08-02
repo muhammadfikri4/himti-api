@@ -47,6 +47,7 @@
     "firebase": "^10.12.4",
     "firebase-functions": "^5.0.1",
     "global": "^4.4.0",
+    "googleapis": "^140.0.1",
     "joi": "^17.13.3",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.4.1",
