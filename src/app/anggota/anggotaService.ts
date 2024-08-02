@@ -1,5 +1,6 @@
 import dotenv from 'dotenv'
 import { MESSAGE_CODE } from '../../utils/ErrorCode'
+import { statusValue } from '../../utils/FilterStatus'
 import { ErrorApp } from '../../utils/HttpError'
 import { MESSAGES } from '../../utils/Messages'
 import { Meta } from '../../utils/Meta'
@@ -10,16 +11,6 @@ import { AnggotaModelTypes, IFilterAnggota } from './anggotaTypes'
 import { anggotaValidate } from './anggotaValidate'
 
 dotenv.config();
-
-export const statusValue = (status: string) => {
-    if (status?.toLowerCase() === 'active') {
-        return true
-    } else if (status?.toLowerCase() === 'nonactive') {
-        return false
-    }
-    return undefined
-}
-
 
 export const createAnggotaService = async ({ name, nim, email, angkatanId, isActive }: AnggotaBodyDTO) => {
 
@@ -43,7 +34,7 @@ export const getAnggotaService = async ({ search, page = 1, perPage = 10, year, 
             year,
 
         }, st),
-        getAnggotaCount({ search, year, status: st as unknown as string })])
+        getAnggotaCount({ search, year, status: st as unknown as string }, st)])
 
     const data = await anggotaMapper(anggota as unknown as AnggotaModelTypes[])
     const meta = Meta(page, perPage, totalData)

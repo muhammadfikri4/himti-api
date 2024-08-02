@@ -1,5 +1,6 @@
 import dotenv from 'dotenv'
 import { MESSAGE_CODE } from '../../utils/ErrorCode'
+import { statusValue } from '../../utils/FilterStatus'
 import { ErrorApp } from '../../utils/HttpError'
 import { MESSAGES } from '../../utils/Messages'
 import { Meta } from '../../utils/Meta'
@@ -19,9 +20,9 @@ export const createAngkatanService = async ({ year, isActive }: AngkatanBodyDTO)
         return new ErrorApp(MESSAGES.ERROR.REQUIRED.ANGKATAN_YEAR, 400, MESSAGE_CODE.BAD_REQUEST)
     }
 
-    if (typeof year !== 'number') {
-        return new ErrorApp(MESSAGES.ERROR.INVALID.ANGKATAN, 400, MESSAGE_CODE.BAD_REQUEST)
-    }
+    // if (typeof year !== 'number') {
+    //     return new ErrorApp(MESSAGES.ERROR.INVALID.ANGKATAN, 400, MESSAGE_CODE.BAD_REQUEST)
+    // }
 
     const matchAngkatan = await getAngkatanByYear(year_string as string)
     if (matchAngkatan) {
@@ -33,9 +34,10 @@ export const createAngkatanService = async ({ year, isActive }: AngkatanBodyDTO)
 
 }
 
-export const getAngkatanService = async ({ search, page = 1, perPage = 10, }: IFilterAngkatan) => {
+export const getAngkatanService = async ({ search, page = 1, perPage = 10, status }: IFilterAngkatan) => {
 
-    const [angkatan, totalData] = await Promise.all([getAngkatan({ page, perPage, search }), getAngkatanCount({ search })])
+    const st = statusValue(status as string)
+    const [angkatan, totalData] = await Promise.all([getAngkatan({ page, perPage, search }, st), getAngkatanCount({ search }, st)])
 
     const data = angkatanMapper(angkatan)
     const meta = Meta(page, perPage, totalData)

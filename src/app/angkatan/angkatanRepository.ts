@@ -11,12 +11,13 @@ export const createAngkatan = async ({ year, isActive }: AngkatanBodyDTO) => {
     })
 }
 
-export const getAngkatan = async ({ page, perPage, search }: IFilterAngkatan) => {
+export const getAngkatan = async ({ page, perPage, search }: IFilterAngkatan, status?: boolean) => {
     return await prisma.angkatan.findMany({
         where: {
             year: {
                 contains: search, mode: 'insensitive'
             },
+            isActive: status
         },
         orderBy: {
             year: 'desc'
@@ -46,13 +47,14 @@ export const getAngkatanByYear = async (id: string) => {
 }
 
 
-export const getAngkatanCount = async ({ search }: IFilterAngkatan) => {
+export const getAngkatanCount = async ({ search }: IFilterAngkatan, status?: boolean) => {
     return await prisma.angkatan.count({
         where: {
             year: {
                 contains: search,
                 mode: 'insensitive'
-            }
+            },
+            isActive: status
         }
     })
 

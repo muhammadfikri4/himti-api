@@ -65,7 +65,7 @@ export const getAnggota = async ({ page, perPage, search, year }: IFilterAnggota
     })
 }
 
-export const getAnggotaCount = async ({ search, year }: IFilterAnggota) => {
+export const getAnggotaCount = async ({ search, year }: IFilterAnggota, status?: boolean) => {
     const filter = {} as { OR: Prisma.AnggotaWhereInput[], angkatan: Prisma.AngkatanWhereInput }
 
     if (search) {
@@ -100,7 +100,7 @@ export const getAnggotaCount = async ({ search, year }: IFilterAnggota) => {
         }
     }
     return await prisma.anggota.count({
-        where: filter
+        where: { ...filter, isActive: status }
     })
 }
 

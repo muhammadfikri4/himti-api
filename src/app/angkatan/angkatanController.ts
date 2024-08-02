@@ -23,9 +23,14 @@ export const createAngkatanController = async (req: Request, res: Response, next
 
 export const getAngkatanController = async (req: Request, res: Response, next: NextFunction) => {
 
-    const { search, page, perPage } = req.query as IFilterAngkatan
+    const { search, page, perPage, status } = req.query as IFilterAngkatan
 
-    const angkatan = await getAngkatanService({ search: search as string, page: Number(page) || undefined, perPage: Number(perPage) || undefined })
+    const angkatan = await getAngkatanService({
+        search: search as string,
+        page: Number(page) || undefined,
+        perPage: Number(perPage) || undefined,
+        status
+    })
 
     if (angkatan instanceof ErrorApp) {
         next(angkatan)
