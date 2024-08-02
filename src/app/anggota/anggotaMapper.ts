@@ -7,17 +7,17 @@ export const anggotaMapper = async (anggotas: AnggotaModelTypes[]) => {
 
         return {
             id,
-            nim: Number(nim),
-            name: name,
-            email: email,
+            nim,
+            name,
+            email,
             angkatan: {
                 id: anggota.angkatan.id,
                 year: anggota.angkatan.year
             },
             ...sosmed,
-            isActive: isActive,
-            createdAt: createdAt,
-            updatedAt: updatedAt
+            isActive,
+            createdAt,
+            updatedAt
 
         }
     }))
