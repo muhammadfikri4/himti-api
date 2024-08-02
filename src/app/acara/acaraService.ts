@@ -24,6 +24,15 @@ export const openValue = (open?: string) => {
     return undefined
 }
 
+export const statusValue = (status: string) => {
+    if (status?.toLowerCase() === 'active') {
+        return true
+    } else if (status?.toLowerCase() === 'nonactive') {
+        return false
+    }
+    return undefined
+}
+
 export const createAcaraService = async ({ name, description, endTime, image, isOpenAbsen, isOpenRegister, startTime }: AcaraBodyDTO) => {
     const openRegist = typeof isOpenRegister !== 'undefined' ? JSON.parse(String(isOpenRegister)) : undefined
     const openAbsen = typeof isOpenAbsen !== 'undefined' ? JSON.parse(String(isOpenAbsen)) : undefined

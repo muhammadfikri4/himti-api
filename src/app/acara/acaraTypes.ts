@@ -14,6 +14,7 @@ export interface AcaraModelTypes {
 
 export interface IFilterAcara {
     search?: string,
+    status?: string
     page?: number,
     perPage?: number
     openAbsen?: string | boolean

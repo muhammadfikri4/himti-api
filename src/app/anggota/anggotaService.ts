@@ -11,6 +11,16 @@ import { anggotaValidate } from './anggotaValidate'
 
 dotenv.config();
 
+export const statusValue = (status: string) => {
+    if (status?.toLowerCase() === 'active') {
+        return true
+    } else if (status?.toLowerCase() === 'nonactive') {
+        return false
+    }
+    return undefined
+}
+
+
 export const createAnggotaService = async ({ name, nim, email, angkatanId, isActive }: AnggotaBodyDTO) => {
 
     const validate = await anggotaValidate({ name: name as string, email: email as string, nim, angkatanId })
@@ -22,9 +32,18 @@ export const createAnggotaService = async ({ name, nim, email, angkatanId, isAct
     return anggota
 }
 
-export const getAnggotaService = async ({ search, page = 1, perPage = 10, year }: IFilterAnggota) => {
+export const getAnggotaService = async ({ search, page = 1, perPage = 10, year, status }: IFilterAnggota) => {
+    const st = statusValue(status as string)
 
-    const [anggota, totalData] = await Promise.all([getAnggota({ search, page, perPage, year }), getAnggotaCount({ search, year })])
+    const [anggota, totalData] = await Promise.all([
+        getAnggota({
+            search,
+            page,
+            perPage,
+            year,
+
+        }, st),
+        getAnggotaCount({ search, year, status: st as unknown as string })])
 
     const data = await anggotaMapper(anggota as unknown as AnggotaModelTypes[])
     const meta = Meta(page, perPage, totalData)
