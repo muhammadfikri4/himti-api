@@ -30,8 +30,7 @@ export const SendEmail = async (to: string, name: string, otp: number) => {
 
     return await transporter.sendMail({
         to,
-        // from: environment.EMAIL_SENDER,
-        from: 'muhfikriantoaji@gmail.com',
+        from: environment.EMAIL_SENDER,
         subject: 'HIMTI UMT Code Verification',
         text: `Your OTP Code Verification is ${otp}`,
         html: message(name, otp),
