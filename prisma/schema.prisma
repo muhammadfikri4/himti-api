@@ -18,6 +18,7 @@ model User {
   Absensi   Absensi[]
   createdAt DateTime  @default(now()) @map("created_at")
   updatedAt DateTime  @default(now()) @updatedAt @map("updated_at")
+  Point     Point[]
 
   @@index([email, anggotaId])
 }
@@ -149,6 +150,7 @@ model Absensi {
   createdAt   DateTime  @default(now()) @map("created_at")
   updatedAt   DateTime  @updatedAt @map("updated_at")
   subAcara    SubAcara? @relation(fields: [subAcaraId], references: [id])
+  Point       Point[]
 
   @@index([userId, acaraId, createdAt])
 }
@@ -190,6 +192,17 @@ model Certificate {
   image     String
   acaraId   String
   acara     Acara    @relation(fields: [acaraId], references: [id])
+  createdAt DateTime @default(now()) @map("created_at")
+  updateAt  DateTime @default(now()) @updatedAt @map("updated_at")
+}
+
+model Point {
+  id        Int      @id @unique @default(autoincrement())
+  point     Int
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  absensiId Int
+  absensi   Absensi  @relation(fields: [absensiId], references: [id])
   createdAt DateTime @default(now()) @map("created_at")
   updateAt  DateTime @default(now()) @updatedAt @map("updated_at")
 }

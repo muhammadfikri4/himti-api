@@ -1,4 +1,5 @@
 import { Absensi } from "@prisma/client";
+import { getPointByAbsensi } from "app/point/pointRepository";
 import { getAllAbsensiByAcaraId } from "./absensiRepository";
 
 interface HistoryAbsensiResponse {
@@ -49,15 +50,16 @@ export const historyAbsensiMapper = async (absensi: Absensi[], userId: string) =
                 id: item.acara.id,
                 name: item.acara.name
             },
-            absensi: subAcara.map((subItem) => ({
+            absensi: await Promise.all(subAcara.map(async (subItem) => ({
                 id: subItem.id as number,
                 image: subItem.image,
                 absensiTime: subItem.absensiTime as string,
                 subAcara: {
                     id: subItem?.subAcara?.id as string,
                     name: subItem?.subAcara?.name as string
-                }
-            }))
+                },
+                point: await getPointByAbsensi(subItem.id, userId) || 0
+            })))
         }
     }))
     return absens
