@@ -115,3 +115,11 @@ export const getSingleSubAcaraById = async (id: string) => {
         }
     })
 }
+
+export const getAllSubAcaraById = async (id: string) => {
+    return await prisma.subAcara.findMany({
+        where: {
+            id
+        }
+    })
+}

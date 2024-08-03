@@ -2,7 +2,7 @@ import { Prisma } from "@prisma/client"
 import { prisma } from "../../config"
 import { AbsensiDTO } from "./absensiDTO"
 
-export const createAbsensi = async ({ acaraId, image, userId, coordinate, subAcaraId, address }: AbsensiDTO) => {
+export const createAbsensi = async ({ acaraId, image, userId, coordinate, subAcaraId, address }: AbsensiDTO, createdAt: Date) => {
     return await prisma.absensi.create({
         data: {
             image,
@@ -10,12 +10,13 @@ export const createAbsensi = async ({ acaraId, image, userId, coordinate, subAca
             subAcaraId: subAcaraId ? subAcaraId : null,
             userId: userId as string,
             coordinate,
-            address
+            address,
+            createdAt
         }
     })
 }
 
-export const getAbsensiByUserId = async (userId: string, acaraId?: string, subAcaraId?: string, page?: number, perPage?: number) => {
+export const getHistoryAbsensiByUserId = async (userId: string, acaraId?: string, subAcaraId?: string, page?: number, perPage?: number) => {
 
     const filter = {
         OR: [
@@ -78,6 +79,18 @@ export const getAbsensiBySubAcaraId = async (subAcaraId: string, userId: string)
         where: {
             subAcaraId,
             userId
+        }
+    })
+}
+
+export const getAbsensiByUserId = (userId: string) => {
+    return prisma.absensi.findMany({
+        where: {
+            userId
+        },
+        include: {
+            acara: true,
+            subAcara: true
         }
     })
 }
