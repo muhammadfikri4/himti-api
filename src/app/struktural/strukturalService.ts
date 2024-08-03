@@ -27,7 +27,9 @@ export const createStrukturalService = async ({ anggotaId, jabatan, isActive }: 
 
     const { path } = req.file as Express.Multer.File
 
-    const response = await createStruktural({ isActive, anggotaId, image: path, jabatan: replaceJabatan as Jabatan })
+    const status = typeof isActive !== 'undefined' ? JSON.parse(String(isActive)) : undefined
+
+    const response = await createStruktural({ isActive: status, anggotaId, image: path, jabatan: replaceJabatan as Jabatan })
     return response
 }
 
@@ -83,7 +85,7 @@ export const updateStrukturalService = async ({ id, isActive, jabatan, image, an
 
     const updateFields: Partial<StrukturalBodyDTO> = { id };
 
-    if (isActive !== undefined) updateFields.isActive = isActive;
+    if (isActive !== undefined) updateFields.isActive = JSON.parse(String(isActive));
     if (anggotaId !== undefined) updateFields.anggotaId = anggotaId;
     if (jabatan !== undefined) updateFields.jabatan = replaceJabatan;
     if (image !== undefined) updateFields.image = image;
