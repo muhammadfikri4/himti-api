@@ -98,10 +98,50 @@ export const getAbsensiByUserId = (userId: string) => {
             subAcara: {
                 select: {
                     id: true,
-                    name: true
+                    name: true,
+                    acaraId: true
                 }
             },
             user: {
+                select: {
+                    id: true,
+                    name: true
+                }
+            }
+        }
+    })
+}
+
+export const getAllAbsensiBySubAcaraId = async (subAcaraId: string, userId: string) => {
+    return await prisma.absensi.findMany({
+        where: {
+            subAcaraId,
+            userId
+        },
+        include: {
+            user: {
+                select: {
+                    id: true,
+                    name: true
+                }
+            }
+        }
+    })
+}
+export const getAllAbsensiByAcaraId = async (acaraId: string, userId: string) => {
+    return await prisma.absensi.findMany({
+        where: {
+            acaraId,
+            userId
+        },
+        include: {
+            user: {
+                select: {
+                    id: true,
+                    name: true
+                }
+            },
+            subAcara: {
                 select: {
                     id: true,
                     name: true
