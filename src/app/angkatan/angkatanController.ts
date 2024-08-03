@@ -3,7 +3,7 @@ import { MESSAGE_CODE } from "../../utils/ErrorCode";
 import { HandleResponse } from "../../utils/HandleResponse";
 import { ErrorApp } from "../../utils/HttpError";
 import { MESSAGES } from "../../utils/Messages";
-import { createAngkatanService, deleteAngkatanService, getAngkatanService, updateAngkatanService } from "../angkatan/angkatanService";
+import { createAngkatanService, deleteAngkatanService, getAngkatanByIdService, getAngkatanService, updateAngkatanService } from "../angkatan/angkatanService";
 import { AngkatanBodyDTO } from "./angkatanDTO";
 import { IFilterAngkatan } from "./angkatanTypes";
 
@@ -66,3 +66,13 @@ export const updateAngkatanController = async (req: Request, res: Response, next
     HandleResponse(res, 200, MESSAGE_CODE.SUCCESS, MESSAGES.SUCCESS.ANGKATAN.UPDATE)
 }
 
+export const getAngkatanByIdController = async (req: Request, res: Response, next: NextFunction) => {
+
+    const { id } = req.params;
+    const angkatan = await getAngkatanByIdService(id as string);
+    if (angkatan instanceof ErrorApp) {
+        next(angkatan)
+        return
+    }
+    HandleResponse(res, 200, MESSAGE_CODE.SUCCESS, MESSAGES.SUCCESS.ANGKATAN.GET, angkatan)
+}

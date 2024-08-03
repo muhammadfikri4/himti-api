@@ -98,3 +98,11 @@ export const updateAngkatanService = async ({ id, year, isActive }: AngkatanBody
     const response = await updateAngkatan(updateFields)
     return response
 }
+
+export const getAngkatanByIdService = async (id: string) => {
+    const angkatan = await getAngkatanById(id)
+    if (!angkatan) {
+        return new ErrorApp(MESSAGES.ERROR.NOT_FOUND.ANGKATAN.NAME, 404, MESSAGE_CODE.NOT_FOUND)
+    }
+    return angkatan
+}
