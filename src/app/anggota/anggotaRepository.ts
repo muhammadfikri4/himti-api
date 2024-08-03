@@ -116,6 +116,14 @@ export const getAnggotaById = async (id: string) => {
     return await prisma.anggota.findUnique({
         where: {
             id
+        },
+        include: {
+            angkatan: {
+                select: {
+                    id: true,
+                    year: true
+                }
+            }
         }
     })
 }

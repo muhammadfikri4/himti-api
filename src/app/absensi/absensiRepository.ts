@@ -150,3 +150,31 @@ export const getAllAbsensiByAcaraId = async (acaraId: string, userId: string) =>
         }
     })
 }
+
+export const getAbsensiById = async (id: number) => {
+    return await prisma.absensi.findUnique({
+        where: {
+            id
+        },
+        include: {
+            acara: {
+                select: {
+                    id: true,
+                    name: true
+                }
+            },
+            subAcara: {
+                select: {
+                    id: true,
+                    name: true
+                }
+            },
+            user: {
+                select: {
+                    id: true,
+                    name: true
+                }
+            }
+        }
+    })
+} 

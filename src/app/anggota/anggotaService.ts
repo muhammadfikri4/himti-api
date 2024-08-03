@@ -80,3 +80,12 @@ export const updateAnggotaService = async ({ id, name, isActive, email, angkatan
 
     return anggota;
 }
+
+export const getAnggotaByIdService = async (id: string) => {
+
+    const anggota = await getAnggotaById(id as string)
+    if (!anggota) {
+        return new ErrorApp(MESSAGES.ERROR.NOT_FOUND.ANGGOTA, 404, MESSAGE_CODE.NOT_FOUND)
+    }
+    return anggota
+}

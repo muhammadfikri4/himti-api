@@ -4,7 +4,7 @@ import { MESSAGE_CODE } from "../../utils/ErrorCode";
 import { HandleResponse } from "../../utils/HandleResponse";
 import { ErrorApp } from "../../utils/HttpError";
 import { MESSAGES } from "../../utils/Messages";
-import { createAnggotaService, deleteAnggotaService, getAnggotaService, updateAnggotaService } from "./anggotaService";
+import { createAnggotaService, deleteAnggotaService, getAnggotaByIdService, getAnggotaService, updateAnggotaService } from "./anggotaService";
 import { AnggotaModelTypes } from "./anggotaTypes";
 
 
@@ -70,3 +70,12 @@ export const updateAnggotaController = async (req: Request, res: Response, next:
     HandleResponse(res, 200, MESSAGE_CODE.SUCCESS, MESSAGES.SUCCESS.ANGGOTA.UPDATE)
 }
 
+export const getAnggotaByIdController = async (req: Request, res: Response, next: NextFunction) => {
+    const { id } = req.params;
+    const anggota = await getAnggotaByIdService(id as string);
+    if (anggota instanceof ErrorApp) {
+        next(anggota)
+        return
+    }
+    HandleResponse(res, 200, MESSAGE_CODE.SUCCESS, MESSAGES.SUCCESS.ANGGOTA.GET, anggota)
+}

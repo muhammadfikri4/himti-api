@@ -3,7 +3,7 @@ import { MESSAGE_CODE } from '../../utils/ErrorCode'
 import { HandleResponse } from '../../utils/HandleResponse'
 import { ErrorApp } from '../../utils/HttpError'
 import { MESSAGES } from '../../utils/Messages'
-import { createAbsensiAcaraService, createAbsensiSubAcaraService, getAbsensiService } from "./absensiService"
+import { createAbsensiAcaraService, createAbsensiSubAcaraService, getAbsensiByIdService, getAbsensiService } from "./absensiService"
 
 export const createAbsensiAcaraController = async (req: Request, res: Response, next: NextFunction) => {
     const { acaraId, coordinate, address } = req.body
@@ -47,6 +47,17 @@ export const getAbsensiController = async (req: Request, res: Response, next: Ne
         next(absensi)
         return
         // return HandleResponse(res, absensi.statusCode, absensi.code, absensi.message)
+    }
+    HandleResponse(res, 200, MESSAGE_CODE.SUCCESS, MESSAGES.SUCCESS.ABSENSI.GET, absensi)
+}
+
+export const getAbsensiByIdController = async (req: Request, res: Response, next: NextFunction) => {
+
+    const { id } = req.params
+    const absensi = await getAbsensiByIdService(Number(id))
+    if (absensi instanceof ErrorApp) {
+        next(absensi)
+        return
     }
     HandleResponse(res, 200, MESSAGE_CODE.SUCCESS, MESSAGES.SUCCESS.ABSENSI.GET, absensi)
 }
