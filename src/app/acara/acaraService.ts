@@ -81,7 +81,7 @@ export const updateAcaraService = async ({ id, name, image, description, endTime
     if (description) updateFields.description = description;
     if (image) updateFields.image = image;
     if (typeof isOpenRegister !== 'undefined') updateFields.isOpen = JSON.parse(String(isOpenRegister));
-    if (typeof isOpenAbsen === 'undefined') updateFields.isOpenAbsen = JSON.parse(String(isOpenAbsen));
+    if (typeof isOpenAbsen !== 'undefined') updateFields.isOpenAbsen = JSON.parse(String(isOpenAbsen));
     if (startTime) updateFields.startTime = startTime;
     if (endTime) updateFields.endTime = endTime;
     console.log(updateFields)
