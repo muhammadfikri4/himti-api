@@ -17,7 +17,7 @@ export const createAbsensiAcaraService = async ({ acaraId, image, address, coord
         return validate
     }
 
-    const absensi = await createAbsensi({ acaraId, image, userId: (decodeToken as TokenTypes)?.id as string, coordinate, address }, new Date())
+    const absensi = await createAbsensi({ acaraId, image, userId: (decodeToken as TokenTypes)?.id as string, coordinate, address })
     return absensi
 }
 export const createAbsensiSubAcaraService = async ({ subAcaraId, image, coordinate, address }: AbsensiDTO, token: string) => {
@@ -43,7 +43,7 @@ export const createAbsensiSubAcaraService = async ({ subAcaraId, image, coordina
         return new ErrorApp(MESSAGES.ERROR.INVALID.ABSENSI, 400, MESSAGE_CODE.BAD_REQUEST)
     }
 
-    const absensi = await createAbsensi({ acaraId: getSubAcara?.acaraId, subAcaraId, image, userId: (decodeToken as TokenTypes)?.id as string, coordinate, address }, new Date())
+    const absensi = await createAbsensi({ acaraId: getSubAcara?.acaraId, subAcaraId, image, userId: (decodeToken as TokenTypes)?.id as string, coordinate, address })
     return absensi
 }
 

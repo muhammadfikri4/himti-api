@@ -130,7 +130,7 @@ model SubAcara {
   acara       Acara     @relation(fields: [acaraId], references: [id], onDelete: Restrict)
   absensi     Absensi[]
   createdAt   DateTime  @default(now()) @map("created_at")
-  updatedAt   DateTime  @default(now()) @updatedAt @map("updated_at")
+  updatedAt   DateTime  @updatedAt @map("updated_at")
 
   @@index([name, startTime, endTime])
 }
@@ -146,7 +146,7 @@ model Absensi {
   coordinate String
   address    String?
   createdAt  DateTime  @default(now()) @map("created_at")
-  updatedAt  DateTime  @default(now()) @updatedAt @map("updated_at")
+  updatedAt  DateTime  @updatedAt @map("updated_at")
   subAcara   SubAcara? @relation(fields: [subAcaraId], references: [id])
 
   @@index([userId, acaraId, createdAt])
