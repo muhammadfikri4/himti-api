@@ -1,3 +1,4 @@
+import { getPointByUserId } from 'app/point/pointRepository'
 import bcrypt from 'bcrypt'
 import { decode } from "jsonwebtoken"
 import { TokenDecodeInterface } from "../../interface"
@@ -33,6 +34,7 @@ export const getProfileService = async (token: string) => {
         facebook: anggota?.facebook,
     }
 
+    const point = await getPointByUserId((decodeToken as TokenDecodeInterface).id)
     const { email, id, name, nim, role, updatedAt, createdAt } = profile
     const response = {
         id,
@@ -41,6 +43,7 @@ export const getProfileService = async (token: string) => {
         nim,
         role,
         ...sosmed,
+        totalPoint: point._sum.point,
         createdAt,
         updatedAt
     }

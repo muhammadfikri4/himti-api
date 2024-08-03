@@ -21,3 +21,15 @@ export const getPointByAbsensi = async (absensiId: number, userId: string) => {
 
     return point?.point
 }
+
+export const getPointByUserId = async (userId: string) => {
+    const point = await prisma.point.aggregate({
+        _sum: {
+            point: true
+        },
+        where: {
+            userId
+        }
+    })
+    return point
+}
