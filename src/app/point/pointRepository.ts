@@ -9,10 +9,15 @@ export const addPoint = async (absensiId: number, userId: string, point: number)
 }
 
 export const getPointByAbsensi = async (absensiId: number, userId: string) => {
-    return await prisma.point.findFirst({
+    const point = await prisma.point.findFirst({
         where: {
             absensiId,
             userId
+        },
+        select: {
+            point: true
         }
     })
+
+    return point?.point
 }
