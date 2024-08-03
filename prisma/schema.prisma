@@ -136,18 +136,19 @@ model SubAcara {
 }
 
 model Absensi {
-  id         Int       @id @unique @default(autoincrement())
-  image      String
-  acaraId    String    @map("acara_id")
-  userId     String    @map("user_id")
-  subAcaraId String?   @map("sub_acara_id")
-  acara      Acara     @relation(fields: [acaraId], references: [id])
-  user       User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  coordinate String
-  address    String?
-  createdAt  DateTime  @default(now()) @map("created_at")
-  updatedAt  DateTime  @updatedAt @map("updated_at")
-  subAcara   SubAcara? @relation(fields: [subAcaraId], references: [id])
+  id          Int       @id @unique @default(autoincrement())
+  image       String
+  acaraId     String    @map("acara_id")
+  userId      String    @map("user_id")
+  subAcaraId  String?   @map("sub_acara_id")
+  acara       Acara     @relation(fields: [acaraId], references: [id])
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  coordinate  String
+  address     String?
+  absensiTime String?
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @updatedAt @map("updated_at")
+  subAcara    SubAcara? @relation(fields: [subAcaraId], references: [id])
 
   @@index([userId, acaraId, createdAt])
 }

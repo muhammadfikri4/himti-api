@@ -5,6 +5,7 @@ export interface AbsensiDTO {
     image: string,
     coordinate: string
     address?: string
+    absensiTime?: string
 }
 
 export interface TokenTypes {

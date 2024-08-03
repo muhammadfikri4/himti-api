@@ -19,11 +19,11 @@ export const createAbsensiAcaraController = async (req: Request, res: Response, 
     HandleResponse(res, 201, MESSAGE_CODE.SUCCESS, MESSAGES.CREATED.ABSENSI)
 }
 export const createAbsensiSubAcaraController = async (req: Request, res: Response, next: NextFunction) => {
-    const { subAcaraId, coordinate, address } = req.body
+    const { subAcaraId, coordinate, address, absensiTime } = req.body
     const image = req.file?.path as string
     const token = req.headers.authorization?.replace("Bearer ", "")
 
-    const absensi = await createAbsensiSubAcaraService({ subAcaraId, image, coordinate, address }, token as string)
+    const absensi = await createAbsensiSubAcaraService({ subAcaraId, image, coordinate, address, absensiTime }, token as string)
 
     if (absensi instanceof ErrorApp) {
         next(absensi)

@@ -2,7 +2,7 @@ import { Prisma } from "@prisma/client"
 import { prisma } from "../../config"
 import { AbsensiDTO } from "./absensiDTO"
 
-export const createAbsensi = async ({ acaraId, image, userId, coordinate, subAcaraId, address }: AbsensiDTO) => {
+export const createAbsensi = async ({ acaraId, image, userId, coordinate, subAcaraId, address, absensiTime }: AbsensiDTO) => {
     return await prisma.absensi.create({
         data: {
             image,
@@ -10,7 +10,8 @@ export const createAbsensi = async ({ acaraId, image, userId, coordinate, subAca
             subAcaraId: subAcaraId ? subAcaraId : null,
             userId: userId as string,
             coordinate,
-            address
+            address,
+            absensiTime
         }
     })
 }
