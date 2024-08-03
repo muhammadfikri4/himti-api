@@ -1,5 +1,5 @@
 import { Absensi } from "@prisma/client";
-import { getPointByAbsensi } from "app/point/pointRepository";
+import { getPointByAbsensi } from "../point/pointRepository";
 import { getAllAbsensiByAcaraId } from "./absensiRepository";
 
 interface HistoryAbsensiResponse {
