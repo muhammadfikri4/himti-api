@@ -1,4 +1,3 @@
-import { getPointByUserId } from 'app/point/pointRepository'
 import bcrypt from 'bcrypt'
 import { decode } from "jsonwebtoken"
 import { TokenDecodeInterface } from "../../interface"
@@ -8,6 +7,7 @@ import { MESSAGES } from "../../utils/Messages"
 import { AnggotaSosmedDTO } from "../anggota/anggotaDTO"
 import { getAnggotaById, getAnggotaByNIM, updateSosmedAnggota } from "../anggota/anggotaRepository"
 import { getUserByEmail, getUserById, getUserByNIM } from "../authentication/authRepository"
+import { getPointByUserId } from '../point/pointRepository'
 import { ChangePasswordDTO, ProfileDTO } from "./profileDTO"
 import { getProfile, updatePassword, updateProfile } from "./profileRepository"
 
