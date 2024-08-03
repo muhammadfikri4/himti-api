@@ -5,8 +5,7 @@ import { MESSAGES } from '../../utils/Messages'
 import { Meta } from '../../utils/Meta'
 import { DosenBodyDTO } from './dosenDTO'
 import { createDosen, deleteDosen, getDosen, getDosenById, getDosenCount, updateDosen } from './dosenRepository'
-import { dosenMapper } from './dosenResponse'
-import { DosenModelTypes, IFilterDosen } from './dosenTypes'
+import { IFilterDosen } from './dosenTypes'
 import { dosenValidate } from './dosenValidate'
 
 dotenv.config();
@@ -29,14 +28,13 @@ export const getDosenService = async ({ search, page = 1, perPage = 10 }: IFilte
         getDosen({ search, page, perPage }),
         getDosenCount({ search })])
 
-    const data = dosenMapper(dosens as unknown as DosenModelTypes[])
     const meta = Meta(page, perPage, totalData)
 
-    if (!data.length && !meta.totalPages && !meta.totalData) {
+    if (!dosens.length && !meta.totalPages && !meta.totalData) {
         return new ErrorApp(MESSAGES.ERROR.NOT_FOUND.DOSEN, 404, MESSAGE_CODE.NOT_FOUND)
     }
-    const response = { data, meta }
-    return response
+
+    return { data: dosens, meta }
 }
 
 export const deleteDosenService = async ({ id }: DosenBodyDTO) => {

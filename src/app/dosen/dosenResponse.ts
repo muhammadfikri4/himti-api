@@ -5,7 +5,7 @@ export const dosenMapper = (dosens: DosenModelTypes[]): DosenModelTypes[] => {
         const { nidn, numberPhone } = dosen
         return {
             ...dosen,
-            nidn,
+            nidn: Number(nidn),
             numberPhone
 
         }

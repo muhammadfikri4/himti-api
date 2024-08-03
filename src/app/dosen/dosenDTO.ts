@@ -3,7 +3,7 @@ export interface DosenBodyDTO {
     nidn?: string
     name?: string,
     email?: string,
-    numberPhone?: number,
+    numberPhone?: string,
     lesson?: string
     isActive?: boolean
 }

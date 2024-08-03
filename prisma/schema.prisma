@@ -27,7 +27,7 @@ model Dosen {
   nidn        String   @unique
   name        String
   email       String?  @unique
-  numberPhone BigInt?  @map("number_phone")
+  numberPhone String?  @map("number_phone")
   lesson      String?
   isActive    Boolean  @default(true) @map("is_active")
   createdAt   DateTime @default(now()) @map("created_at")

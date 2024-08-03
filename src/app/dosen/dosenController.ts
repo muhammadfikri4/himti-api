@@ -25,7 +25,10 @@ export const getDosenController = async (req: Request, res: Response, next: Next
 
     const { search, page, perPage } = req.query as IFilterDosen
 
-    const dosen = await getDosenService({ search, page: page ? Number(page) : undefined, perPage: perPage ? Number(perPage) : undefined });
+    const dosen = await getDosenService({
+        search, page: page ? Number(page) : undefined,
+        perPage: perPage ? Number(perPage) : undefined
+    });
     if (dosen instanceof ErrorApp) {
         next(dosen)
         return
