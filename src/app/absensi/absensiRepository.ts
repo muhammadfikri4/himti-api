@@ -89,8 +89,24 @@ export const getAbsensiByUserId = (userId: string) => {
             userId
         },
         include: {
-            acara: true,
-            subAcara: true
+            acara: {
+                select: {
+                    id: true,
+                    name: true
+                }
+            },
+            subAcara: {
+                select: {
+                    id: true,
+                    name: true
+                }
+            },
+            user: {
+                select: {
+                    id: true,
+                    name: true
+                }
+            }
         }
     })
 }

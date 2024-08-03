@@ -51,23 +51,18 @@ export const getAbsensiService = async ({ acaraId, page = 1, perPage = 10, subAc
     const decodeToken = decode(token) as TokenDecodeInterface
     const acara = await getAbsensiByUserId(decodeToken.id)
     const splitAcara = await Promise.all(acara.map(async (item) => {
-        const { acara, subAcara, acaraId, subAcaraId, ...rest } = item
+        const { acara, subAcara, acaraId, subAcaraId, user, createdAt, ...rest } = item
         return {
             ...rest,
             name: acara.name,
-            subAcara: {
-                id: subAcara?.id,
-                name: subAcara?.name
-            },
-            user: {
-
-            }
+            subAcara: subAcara ? subAcara : null,
+            user
             // subItem: await getAllSubAcaraById(item.subAcaraId as string)
         }
     }))
     const groupedData = splitAcara.reduce((acc: any, current: any) => {
         const { acaraId, name } = current;
-        console.log(current)
+
         if (!acc[acaraId]) {
             acc[acaraId] = {
                 acaraId: acaraId,
