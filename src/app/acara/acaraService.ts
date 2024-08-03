@@ -84,7 +84,7 @@ export const updateAcaraService = async ({ id, name, image, description, endTime
     if (typeof isOpenAbsen === 'boolean') updateFields.isOpenAbsen = JSON.parse(String(isOpenAbsen));
     if (startTime) updateFields.startTime = startTime;
     if (endTime) updateFields.endTime = endTime;
-
+    console.log(updateFields)
     const response = await updateAcara(updateFields, id as string)
     return response;
 }
