@@ -33,7 +33,7 @@ export const absensiMapper = (data: Absensi[]) => {
     })
 }
 
-export const historyAbsensiMapper = (absensi: Absensi[], userId: string) => {
+export const historyAbsensiMapper = async (absensi: Absensi[], userId: string) => {
     const data: AbsensiAcara[] = []
     absensi.map(async (item) => {
         if (data.find((i: any) => i.acaraId === item.acaraId)) {
@@ -41,10 +41,10 @@ export const historyAbsensiMapper = (absensi: Absensi[], userId: string) => {
         }
         data.push(item as unknown as AbsensiAcara)
     })
-    const newData: HistoryAbsensiResponse[] = []
-    data.map(async (item: AbsensiAcara) => {
+    const absens = await Promise.all(data.map(async (item: AbsensiAcara) => {
         const subAcara = await getAllAbsensiByAcaraId(item.acaraId, userId)
-        newData.push({
+
+        return {
             acara: {
                 id: item.acara.id,
                 name: item.acara.name
@@ -58,8 +58,7 @@ export const historyAbsensiMapper = (absensi: Absensi[], userId: string) => {
                     name: subItem?.subAcara?.name as string
                 }
             }))
-        })
-    })
-
-    return newData
+        }
+    }))
+    return absens
 }

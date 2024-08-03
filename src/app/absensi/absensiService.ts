@@ -52,9 +52,9 @@ export const getAbsensiService = async ({ acaraId, page = 1, perPage = 10, subAc
     const decodeToken = decode(token) as TokenDecodeInterface
     const acara = await getAbsensiByUserId(decodeToken.id)
 
-    const data = historyAbsensiMapper(acara, decodeToken.id)
-
+    const data = await historyAbsensiMapper(acara, decodeToken.id)
     // const absensi = await getHistoryAbsensiByUserId((decodeToken as TokenTypes)?.id as string, acaraId, subAcaraId, page, perPage)
+    console.log(data)
     if (!data.length) {
         return new ErrorApp(MESSAGES.ERROR.NOT_FOUND.ABSENSI, 404, MESSAGE_CODE.NOT_FOUND)
     }
