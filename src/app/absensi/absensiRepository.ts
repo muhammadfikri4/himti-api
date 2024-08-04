@@ -150,7 +150,10 @@ export const getAllAbsensiByAcaraId = async (acaraId: string, userId: string) =>
                     id: true,
                     name: true
                 }
-            }
+            },
+        },
+        orderBy: {
+            createdAt: 'desc'
         }
     })
 }
