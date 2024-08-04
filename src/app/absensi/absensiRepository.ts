@@ -83,10 +83,11 @@ export const getAbsensiBySubAcaraId = async (subAcaraId: string, userId: string)
     })
 }
 
-export const getAbsensiByUserId = (userId: string) => {
+export const getAbsensiByUserId = (userId: string, acaraId?: string) => {
     return prisma.absensi.findMany({
         where: {
-            userId
+            userId,
+            acaraId
         },
         include: {
             acara: {
@@ -108,6 +109,9 @@ export const getAbsensiByUserId = (userId: string) => {
                     name: true
                 }
             }
+        },
+        orderBy: {
+            createdAt: 'desc'
         }
     })
 }

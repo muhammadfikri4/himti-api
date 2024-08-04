@@ -50,9 +50,9 @@ export const createAbsensiSubAcaraService = async ({ subAcaraId, image, coordina
     return absensi
 }
 
-export const getAbsensiService = async ({ acaraId, page = 1, perPage = 10, subAcaraId }: IFilterAbsensi, token: string) => {
+export const getAbsensiService = async ({ acaraId }: IFilterAbsensi, token: string) => {
     const decodeToken = decode(token) as TokenDecodeInterface
-    const acara = await getAbsensiByUserId(decodeToken.id)
+    const acara = await getAbsensiByUserId(decodeToken.id, acaraId)
 
     const data = await historyAbsensiMapper(acara, decodeToken.id)
     // const absensi = await getHistoryAbsensiByUserId((decodeToken as TokenTypes)?.id as string, acaraId, subAcaraId, page, perPage)

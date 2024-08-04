@@ -34,14 +34,13 @@ export const createAbsensiSubAcaraController = async (req: Request, res: Respons
 
 export const getAbsensiController = async (req: Request, res: Response, next: NextFunction) => {
 
-    const { acaraId, subAcaraId, page, perPage } = req.query
+    const { acaraId, page, perPage } = req.query
 
     const token = req.headers.authorization?.replace("Bearer ", "")
     const absensi = await getAbsensiService({
         acaraId: acaraId ? acaraId as string : undefined,
         page: page ? Number(page) : undefined,
-        perPage: perPage ? Number(perPage) : undefined,
-        subAcaraId: subAcaraId ? subAcaraId as string : undefined
+        perPage: perPage ? Number(perPage) : undefined
     }, token as string)
     if (absensi instanceof ErrorApp) {
         next(absensi)
