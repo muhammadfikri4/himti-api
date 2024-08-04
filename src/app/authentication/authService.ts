@@ -82,6 +82,10 @@ export const loginService = async (
         return new ErrorApp(MESSAGES.ERROR.INVALID.USER.PASSWORD, 401, MESSAGE_CODE.UNAUTHORIZED)
     }
 
+    if (user.role === 'ADMIN') {
+        return new ErrorApp(MESSAGES.ERROR.UNAUTHORIZED.ADMIN, 401, MESSAGE_CODE.UNAUTHORIZED)
+    }
+
     const token = jwt.sign({
         id: user.id,
     }, environment.JWT_SECRET as string, { expiresIn: '3d' })
@@ -132,7 +136,6 @@ export const requestOtpService = async (email: string) => {
     const hashOtp = await bcrypt.hash(randomOtp.toString(), 10)
     const otp = await createOtp(hashOtp, email, expired)
 
-    console.log({ email: user.email, name: user.name })
     await SendEmail(user.email, user.name, randomOtp)
     const data = {
         key: otp.id,

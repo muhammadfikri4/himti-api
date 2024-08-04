@@ -97,7 +97,8 @@ export const MESSAGES = {
             AUTH: "If you are not logged in, please log in first",
             FORBIDDEN: "You are not Authorized",
             EXPIRED: "Token Expired, please log in again",
-            RECOGNIZED: "Token not recognized"
+            RECOGNIZED: "Token not recognized",
+            ADMIN: "Admin can't access this app"
         },
         REQUIRED: {
             EMAIL: "Email is required",
