@@ -10,7 +10,7 @@ import { SendEmail } from '../../utils/MailerConfig'
 import { MESSAGES } from '../../utils/Messages'
 import { getAnggotaByNIM } from '../anggota/anggotaRepository'
 import { ForgotPasswordDTO, LoginAuthBodyDTO, RegisterAuthBodyDTO, ValidateOtpDTO } from './authDTO'
-import { changePassword, createOtp, createUser, getOtp, getUserByEmail, getUserByNIM, verifiedOtp } from './authRepository'
+import { changePassword, createOtp, createUser, getOtp, getUserByEmail, getUserByNIM, userLogin, verifiedOtp } from './authRepository'
 
 dotenv.config()
 
@@ -85,6 +85,11 @@ export const loginService = async (
     if (user.role === 'ADMIN') {
         return new ErrorApp(MESSAGES.ERROR.UNAUTHORIZED.ADMIN, 401, MESSAGE_CODE.UNAUTHORIZED)
     }
+
+    if (user.isLogin) {
+        return new ErrorApp(MESSAGES.ERROR.ALREADY.LOGIN, 401, MESSAGE_CODE.UNAUTHORIZED)
+    }
+    await userLogin(user.id, true)
 
     const token = jwt.sign({
         id: user.id,

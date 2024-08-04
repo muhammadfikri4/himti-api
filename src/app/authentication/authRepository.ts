@@ -86,3 +86,14 @@ export const changePassword = (id: string, password: string) => {
         }
     })
 }
+
+export const userLogin = async (id: string, isLogin: boolean) => {
+    return await prisma.user.update({
+        where: {
+            id
+        },
+        data: {
+            isLogin
+        }
+    })
+}

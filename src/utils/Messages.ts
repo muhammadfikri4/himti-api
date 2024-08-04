@@ -56,7 +56,8 @@ export const MESSAGES = {
             JABATAN: "Jabatan is already exists in the struktural",
             USER_NIM: "User cannot use anggota NIM",
             MERCHANDISE: "Merchandise is already exist",
-            OTP_VERIFIED: "OTP is already verified, please request otp again to forget password"
+            OTP_VERIFIED: "OTP is already verified, please request otp again to forget password",
+            LOGIN: "Please log out on other device and login again"
         },
         INVALID: {
             GLOBAL: {
