@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { validateRequest } from "../../middleware/validateRequest";
 import { CatchWrapper } from "../../utils/CatchWrapper";
-import { forgotPasswordController, loginAdminController, loginController, registerController, requestOtpController, validateOtpController } from "./authController";
+import { forgotPasswordController, loginAdminController, loginController, logoutController, registerController, requestOtpController, validateOtpController } from "./authController";
 import { forgotPasswordSchema, loginSchema, registerSchema, requestOtpSchema, validateOtpSchema } from "./authRequest";
 
 const route = Router()
@@ -12,5 +12,6 @@ route.post("/admin/login", validateRequest(loginSchema), CatchWrapper(loginAdmin
 route.post('/otp', validateRequest(requestOtpSchema), CatchWrapper(requestOtpController))
 route.post('/otp/validate', validateRequest(validateOtpSchema), CatchWrapper(validateOtpController))
 route.put('/forgot-password', validateRequest(forgotPasswordSchema), CatchWrapper(forgotPasswordController))
+route.get('/logout', CatchWrapper(logoutController))
 
 export default route

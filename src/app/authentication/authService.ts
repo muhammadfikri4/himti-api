@@ -1,7 +1,8 @@
 import { Role } from '@prisma/client'
 import * as bcrypt from 'bcrypt'
 import dotenv from 'dotenv'
-import jwt from 'jsonwebtoken'
+import { TokenDecodeInterface } from 'interface'
+import jwt, { decode } from 'jsonwebtoken'
 import { environment } from '../../libs'
 import { MESSAGE_CODE } from '../../utils/ErrorCode'
 import { random } from '../../utils/GeneratedRandomOTP'
@@ -10,7 +11,7 @@ import { SendEmail } from '../../utils/MailerConfig'
 import { MESSAGES } from '../../utils/Messages'
 import { getAnggotaByNIM } from '../anggota/anggotaRepository'
 import { ForgotPasswordDTO, LoginAuthBodyDTO, RegisterAuthBodyDTO, ValidateOtpDTO } from './authDTO'
-import { changePassword, createOtp, createUser, getOtp, getUserByEmail, getUserByNIM, userLogin, verifiedOtp } from './authRepository'
+import { changePassword, createOtp, createUser, getOtp, getUserByEmail, getUserById, getUserByNIM, userLogin, verifiedOtp } from './authRepository'
 
 dotenv.config()
 
@@ -204,5 +205,16 @@ export const forgotPasswordService = async ({ key, password }: ForgotPasswordDTO
 
     const hashPassword = await bcrypt.hash(password, 10)
     const response = await changePassword(user.id, hashPassword)
+    return response
+}
+
+export const logoutService = async (token: string) => {
+    const decodeToken = decode(token) as TokenDecodeInterface
+    const id = decodeToken.id
+    const user = await getUserById(id)
+    if (!user) {
+        return new ErrorApp(MESSAGES.ERROR.NOT_FOUND.USER.ACCOUNT, 404, MESSAGE_CODE.NOT_FOUND)
+    }
+    const response = await userLogin(user.id, false)
     return response
 }

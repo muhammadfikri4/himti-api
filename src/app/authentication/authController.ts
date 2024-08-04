@@ -4,7 +4,7 @@ import { HandleResponse } from "../../utils/HandleResponse";
 import { ErrorApp } from "../../utils/HttpError";
 import { MESSAGES } from "../../utils/Messages";
 import { LoginAuthResponse } from "./authDTO";
-import { forgotPasswordService, loginAdminService, loginService, registerService, requestOtpService, validateOtpService } from "./authService";
+import { forgotPasswordService, loginAdminService, loginService, logoutService, registerService, requestOtpService, validateOtpService } from "./authService";
 
 export const registerController = async (req: Request, res: Response, next: NextFunction) => {
 
@@ -84,4 +84,16 @@ export const forgotPasswordController = async (req: Request, res: Response, next
     }
 
     HandleResponse(res, 200, MESSAGE_CODE.SUCCESS, MESSAGES.SUCCESS.PASSWORD.CHANGE)
+}
+
+export const logoutController = async (req: Request, res: Response, next: NextFunction) => {
+    const token = req.headers.authorization?.replace("Bearer ", "")
+    const logout = await logoutService(token as string)
+
+    if (logout instanceof ErrorApp) {
+        next(logout)
+        return
+    }
+
+    HandleResponse(res, 200, MESSAGE_CODE.SUCCESS, MESSAGES.SUCCESS.LOGOUT)
 }

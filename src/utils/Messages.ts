@@ -204,6 +204,7 @@ export const MESSAGES = {
             SEND: "Success to send otp",
             VERIFY: "Success to verify otp",
             RESEND: "Success to resend otp"
-        }
+        },
+        LOGOUT: "Success to logout"
     }
 }
