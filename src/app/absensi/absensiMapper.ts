@@ -1,5 +1,5 @@
 import { Absensi } from "@prisma/client";
-import { getPointByAbsensi } from "../point/pointRepository";
+import { getPointByAbsensiUserId } from "../point/pointRepository";
 import { getAllAbsensiByAcaraId } from "./absensiRepository";
 
 interface HistoryAbsensiResponse {
@@ -58,7 +58,7 @@ export const historyAbsensiMapper = async (absensi: Absensi[], userId: string) =
                     id: subItem?.subAcara?.id as string,
                     name: subItem?.subAcara?.name as string
                 },
-                point: await getPointByAbsensi(subItem.id, userId) || 0
+                point: await getPointByAbsensiUserId(subItem.id, userId) || 0
             })))
         }
     }))

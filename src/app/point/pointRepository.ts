@@ -8,7 +8,7 @@ export const addPoint = async (absensiId: number, userId: string, point: number)
     })
 }
 
-export const getPointByAbsensi = async (absensiId: number, userId: string) => {
+export const getPointByAbsensiUserId = async (absensiId: number, userId: string) => {
     const point = await prisma.point.findFirst({
         where: {
             absensiId,
@@ -29,6 +29,15 @@ export const getPointByUserId = async (userId: string) => {
         },
         where: {
             userId
+        }
+    })
+    return point
+}
+
+export const getPointByAbsensi = async (absensiId: number) => {
+    const point = await prisma.point.findFirst({
+        where: {
+            absensiId
         }
     })
     return point

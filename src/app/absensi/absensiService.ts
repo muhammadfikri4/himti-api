@@ -4,7 +4,7 @@ import { MESSAGE_CODE } from "../../utils/ErrorCode"
 import { ErrorApp } from "../../utils/HttpError"
 import { MESSAGES } from "../../utils/Messages"
 import { getSubAcaraById } from "../acara/acaraRepository"
-import { addPoint } from "../point/pointRepository"
+import { addPoint, getPointByAbsensi } from "../point/pointRepository"
 import { AbsensiDTO, IFilterAbsensi, TokenTypes } from "./absensiDTO"
 import { historyAbsensiMapper } from "./absensiMapper"
 import { createAbsensi, getAbsensiById, getAbsensiBySubAcaraId, getAbsensiByUserId } from "./absensiRepository"
@@ -66,11 +66,14 @@ export const getAbsensiService = async ({ acaraId, page = 1, perPage = 10, subAc
 export const getAbsensiByIdService = async (id: number) => {
     const absensi = await getAbsensiById(id)
     const { userId, acaraId, subAcaraId, acara, user, subAcara, createdAt, updatedAt, ...rest } = absensi ?? {}
+
+    const points = await getPointByAbsensi(absensi?.id as number)
     const response = {
         ...rest,
         acara: acara?.name,
         subAcara: subAcara?.name,
-        user: user?.name
+        user: user?.name,
+        points: points?.point || 0
     }
 
     if (!response) {
