@@ -80,10 +80,6 @@ export const updateAngkatanService = async ({ id, year, isActive }: AngkatanBody
     }
     if (year) {
 
-        if (typeof year !== 'number') {
-            return new ErrorApp(MESSAGES.ERROR.INVALID.ANGKATAN, 400, MESSAGE_CODE.BAD_REQUEST)
-        }
-
         const isAlreadyUse = await getMatchAngkatanExceptSameId(year_string as string)
 
         if (isAlreadyUse && isAlreadyUse.id !== id) {
