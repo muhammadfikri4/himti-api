@@ -10,6 +10,7 @@ import angkatanRoute from '../app/angkatan/angkatanRoute';
 import authRoute from '../app/authentication/authRoute';
 import businessRoute from '../app/business/businessRoute';
 import dosenRoute from '../app/dosen/dosenRoute';
+import prestasiRoute from '../app/prestasi/prestasiRoute';
 import profileRoute from '../app/profile/profileRoute';
 import strukturalRoute from '../app/struktural/strukturalRoute';
 import subAcaraRoute from '../app/sub-acara/subAcaraRoute';
@@ -29,6 +30,7 @@ route.use("/anggota", anggotaRoute)
 route.use("/acara", acaraRoute)
 route.use("/sub-acara", subAcaraRoute)
 route.use('/business', businessRoute)
+route.use('/prestasi', prestasiRoute)
 route.use('/user', userRoute)
 
 registerFont(path.join(__dirname, '../../public/times-new-roman.ttf'), { family: 'Times New Roman' });

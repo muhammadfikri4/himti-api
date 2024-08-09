@@ -205,6 +205,11 @@ export const MESSAGES = {
             VERIFY: "Success to verify otp",
             RESEND: "Success to resend otp"
         },
-        LOGOUT: "Success to logout"
+        LOGOUT: "Success to logout",
+        PRESTASI: {
+            GET: "Success to fetch Prestasi",
+            DELETE: "Success to delete Prestasi",
+            UPDATE: "Success to update Prestasi"
+        }
     }
 }

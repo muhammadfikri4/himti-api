@@ -50,21 +50,22 @@ model Angkatan {
 }
 
 model Anggota {
-  id         String       @id @default(uuid())
-  name       String
-  email      String?
-  nim        String       @unique
-  angkatanId String       @map("angkatan_id")
-  isActive   Boolean?     @default(true) @map("is_active")
-  instagram  String?
-  facebook   String?
-  twitter    String?
-  linkedin   String?
-  Alumni     Alumni[]
-  angkatan   Angkatan     @relation(fields: [angkatanId], references: [id])
-  Struktural Struktural[]
-  createdAt  DateTime     @default(now()) @map("created_at")
-  updatedAt  DateTime     @default(now()) @updatedAt @map("updated_at")
+  id              String            @id @default(uuid())
+  name            String
+  email           String?
+  nim             String            @unique
+  angkatanId      String            @map("angkatan_id")
+  isActive        Boolean?          @default(true) @map("is_active")
+  instagram       String?
+  facebook        String?
+  twitter         String?
+  linkedin        String?
+  Alumni          Alumni[]
+  angkatan        Angkatan          @relation(fields: [angkatanId], references: [id])
+  Struktural      Struktural[]
+  createdAt       DateTime          @default(now()) @map("created_at")
+  updatedAt       DateTime          @default(now()) @updatedAt @map("updated_at")
+  PrestasiAnggota PrestasiAnggota[]
 
   @@index([angkatanId, name, nim, createdAt])
 }
@@ -157,13 +158,15 @@ model Absensi {
 }
 
 model Prestasi {
-  id          Int      @id @unique @default(autoincrement())
-  image       String
-  title       String
-  description String?
-  time        DateTime
-  createdAt   DateTime @default(now()) @map("created_at")
-  updateAt    DateTime @default(now()) @updatedAt @map("updated_at")
+  id              Int               @id @unique @default(autoincrement())
+  image           String
+  title           String
+  description     String?
+  timeDate        DateTime?
+  timeString      String?
+  createdAt       DateTime          @default(now()) @map("created_at")
+  updateAt        DateTime          @default(now()) @updatedAt @map("updated_at")
+  PrestasiAnggota PrestasiAnggota[]
 }
 
 model Bussiness {
@@ -195,6 +198,20 @@ model Certificate {
   acara     Acara    @relation(fields: [acaraId], references: [id])
   createdAt DateTime @default(now()) @map("created_at")
   updateAt  DateTime @default(now()) @updatedAt @map("updated_at")
+}
+
+model PrestasiAnggota {
+  id         Int      @id @unique @default(autoincrement())
+  anggotaId  String   @map("anggota_id")
+  prestasiId Int      @map("prestasi_id")
+  anggota    Anggota  @relation(fields: [anggotaId], references: [id])
+  prestasi   Prestasi @relation(fields: [prestasiId], references: [id])
+  createdAt  DateTime @default(now()) @map("created_at")
+  updatedAt  DateTime @default(now()) @updatedAt @map("updated_at")
+
+  @@index([anggotaId])
+  @@index([prestasiId])
+  @@map("prestasi_anggota")
 }
 
 model Point {
