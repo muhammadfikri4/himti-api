@@ -12,7 +12,7 @@ export const VerifyAdmin = (req: Request, res: Response, next: NextFunction) => 
         return HandleResponse(res, 401, MESSAGE_CODE.UNAUTHORIZED, MESSAGES.ERROR.UNAUTHORIZED.FORBIDDEN)
     }
     const token = req.headers.authorization.replace("Bearer ", "")
-    verify(token, environment.JWT_SECRET as string, async (err) => {
+    verify(token, environment.JWT_SECRET as string, async (err: any) => {
         if (err) {
             if (err instanceof TokenExpiredError) {
 
