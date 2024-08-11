@@ -1,4 +1,3 @@
-import bodyParser from 'body-parser'
 // import { dbconnect } from 'config'
 import cookieParser from 'cookie-parser'
 import cors from 'cors'
@@ -20,7 +19,7 @@ app.use(cors({
     preflightContinue: false
 }));
 app.use(cookieParser())
-app.use(bodyParser.json())
+// app.use(bodyParser.json())
 app.use(express.json())
 app.use(routes);
 app.use(HandlingError)
