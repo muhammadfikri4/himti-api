@@ -22,5 +22,6 @@ export const updateSubAcaraSchema = Joi.object({
     isOpenRegister: Joi.optional(),
     isOpenAbsen: Joi.optional(),
     startTime: Joi.optional(),
-    endTime: Joi.optional()
+    endTime: Joi.optional(),
+    image: Joi.optional()
 })
