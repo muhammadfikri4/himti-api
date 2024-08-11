@@ -1,17 +1,17 @@
 import { Prisma } from "@prisma/client"
 import { prisma } from "../../config"
-import { AbsensiDTO, IFilterUser } from "./userDTO"
+import { IFilterUser, UserRequestBodyDTO } from "./userDTO"
 
-export const createAbsensi = async ({ acaraId, image, userId, coordinate }: AbsensiDTO) => {
-    return await prisma.absensi.create({
-        data: {
-            image,
-            acaraId,
-            userId: userId as string,
-            coordinate
-        }
-    })
-}
+// export const createAbsensi = async ({ acaraId, image, userId, coordinate }: AbsensiDTO) => {
+//     return await prisma.absensi.create({
+//         data: {
+//             image,
+//             acaraId,
+//             userId: userId as string,
+//             coordinate
+//         }
+//     })
+// }
 
 export const getAbsensiByUserId = async (userId: string) => {
     return await prisma.absensi.findMany({
@@ -112,5 +112,24 @@ export const getUsersCount = async ({ search }: IFilterUser) => {
         where: filter,
 
 
+    })
+}
+
+export const getUserByEmail = async (email: string) => {
+    return await prisma.user.findFirst({
+        where: {
+            email
+        }
+    })
+}
+
+export const createUser = async (data: UserRequestBodyDTO) => {
+    return await prisma.user.create({
+        data: {
+            name: data.name,
+            email: data.email,
+            password: data.password,
+            role: data.role
+        }
     })
 }

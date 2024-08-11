@@ -1,12 +1,14 @@
 import { Router } from "express";
+import { VerifySuperAdmin } from "middleware/verifySuperAdmin";
 import { VerifyAdmin } from "../../middleware/verifyAdmin";
 import { CatchWrapper } from "../../utils/CatchWrapper";
-import { getUsersController } from "./userController";
+import { createUserController, getUsersController } from "./userController";
 
 const route = Router()
 
 // route.post("/", VerifyToken, upload.single("image"), CatchWrapper(createAbsensiController))
 // route.get("/", VerifyToken, CatchWrapper(getAbsensiController))
 route.get('/', VerifyAdmin, CatchWrapper(getUsersController))
+route.post('/admin', VerifySuperAdmin, CatchWrapper(createUserController))
 
 export default route

@@ -13,7 +13,7 @@ model User {
   email     String    @unique
   password  String
   role      Role?     @default(ADMIN)
-  nim       String
+  nim       String?
   anggotaId String?   @map("anggota_id")
   Absensi   Absensi[]
   createdAt DateTime  @default(now()) @map("created_at")
@@ -234,6 +234,7 @@ enum Jabatan {
 }
 
 enum Role {
+  SUPER_ADMIN
   ADMIN
   USER
   ANGGOTA
