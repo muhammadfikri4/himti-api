@@ -1,6 +1,6 @@
 import { Router } from "express";
-import { VerifySuperAdmin } from "middleware/verifySuperAdmin";
 import { VerifyAdmin } from "../../middleware/verifyAdmin";
+import { VerifySuperAdmin } from "../../middleware/verifySuperAdmin";
 import { CatchWrapper } from "../../utils/CatchWrapper";
 import { createUserController, getUsersController } from "./userController";
 
