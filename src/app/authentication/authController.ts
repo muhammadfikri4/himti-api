@@ -97,3 +97,10 @@ export const logoutController = async (req: Request, res: Response, next: NextFu
 
     HandleResponse(res, 200, MESSAGE_CODE.SUCCESS, MESSAGES.SUCCESS.LOGOUT)
 }
+
+export const checkToken = async (
+    req: Request,
+    res: Response,
+) => {
+    HandleResponse(res, 200, MESSAGE_CODE.SUCCESS, MESSAGES.SUCCESS.TOKEN)
+}

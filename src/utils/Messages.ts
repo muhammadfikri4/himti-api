@@ -210,6 +210,7 @@ export const MESSAGES = {
             GET: "Success to fetch Prestasi",
             DELETE: "Success to delete Prestasi",
             UPDATE: "Success to update Prestasi"
-        }
+        },
+        TOKEN: "Token is valid"
     }
 }
