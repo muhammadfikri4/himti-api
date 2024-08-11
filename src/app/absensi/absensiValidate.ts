@@ -21,7 +21,7 @@ export const createAbsensiAcaraValidate = async ({ acaraId, image, userId, coord
     if (!getUser) {
         return new ErrorApp(MESSAGES.ERROR.NOT_FOUND.USER.ACCOUNT, 404, MESSAGE_CODE.NOT_FOUND)
     }
-    const getAnggota = await getAnggotaByNIM(getUser.nim)
+    const getAnggota = await getAnggotaByNIM(getUser.nim as string)
     if (getUser && !getAnggota) {
         return new ErrorApp(MESSAGES.ERROR.INVALID.ANGGOTA, 400, MESSAGE_CODE.BAD_REQUEST);
 
@@ -46,7 +46,7 @@ export const createAbsensiSubAcaraValidate = async ({ subAcaraId, image, userId,
     if (!getUser) {
         return new ErrorApp(MESSAGES.ERROR.NOT_FOUND.USER.ACCOUNT, 404, MESSAGE_CODE.NOT_FOUND)
     }
-    const getAnggota = await getAnggotaByNIM(getUser.nim)
+    const getAnggota = await getAnggotaByNIM(getUser.nim as string)
     if (getUser && !getAnggota) {
         return new ErrorApp(MESSAGES.ERROR.INVALID.ANGGOTA, 400, MESSAGE_CODE.BAD_REQUEST);
 
