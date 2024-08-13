@@ -36,22 +36,25 @@ route.use('/user', userRoute)
 route.get('/bell/:fcm', async (req: Request, res: Response) => {
     // const token = environment.TESTING_FCM
     const token = req.params.fcm
+    const title = req.query.title as string || 'testing title notification'
+    const body = req.query.body as string || 'testing body notification'
+
     try {
         if (!token || typeof token !== 'string') {
             throw new Error('Invalid FCM token provided');
         }
         const message = {
             notification: {
-                title: "TESTING",
-                body: "INI NOTIF",
+                title,
+                body,
             },
             android: {
                 notification: {
                     sound: "default",
                 },
                 data: {
-                    title: "NOTIF NIH WOY",
-                    body: "APA AJALAH",
+                    title,
+                    body,
                 },
             },
             token: token,
