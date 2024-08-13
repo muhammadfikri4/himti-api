@@ -24,3 +24,7 @@ export const getUserFCMByUserId = async (userId: string) => {
         }
     })
 }
+
+export const getAllFCMUser = async () => {
+    return await prisma.userFCM.findMany()
+}
