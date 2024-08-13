@@ -1,8 +1,8 @@
 import { Role } from '@prisma/client'
 import * as bcrypt from 'bcrypt'
 import dotenv from 'dotenv'
-import { TokenDecodeInterface } from 'interface'
 import jwt, { decode } from 'jsonwebtoken'
+import { TokenDecodeInterface } from '../../interface'
 import { environment } from '../../libs'
 import { MESSAGE_CODE } from '../../utils/ErrorCode'
 import { random } from '../../utils/GeneratedRandomOTP'
@@ -10,6 +10,7 @@ import { ErrorApp } from '../../utils/HttpError'
 import { SendEmail } from '../../utils/MailerConfig'
 import { MESSAGES } from '../../utils/Messages'
 import { getAnggotaByNIM } from '../anggota/anggotaRepository'
+import { createUserFCM, deleteUserFCM, getUserFCMByUserId } from '../user-fcm/user-fcm.repository'
 import { ForgotPasswordDTO, LoginAuthBodyDTO, RegisterAuthBodyDTO, ValidateOtpDTO } from './authDTO'
 import { changePassword, createOtp, createUser, getOtp, getUserByEmail, getUserById, getUserByNIM, userLogin, verifiedOtp } from './authRepository'
 
@@ -70,7 +71,7 @@ export const registerService = async ({ email, name, password, nim, code }: Regi
 }
 
 export const loginService = async (
-    { email, password }: LoginAuthBodyDTO
+    { email, password, fcmToken }: LoginAuthBodyDTO
 ) => {
 
     const user = await getUserByEmail(email)
@@ -90,6 +91,7 @@ export const loginService = async (
     if (user.isLogin) {
         return new ErrorApp(MESSAGES.ERROR.ALREADY.LOGIN, 401, MESSAGE_CODE.UNAUTHORIZED)
     }
+    await createUserFCM(user.id, fcmToken as string)
     await userLogin(user.id, true)
 
     const token = jwt.sign({
@@ -215,6 +217,11 @@ export const logoutService = async (token: string) => {
     if (!user) {
         return new ErrorApp(MESSAGES.ERROR.NOT_FOUND.USER.ACCOUNT, 404, MESSAGE_CODE.NOT_FOUND)
     }
+    const fcm = await getUserFCMByUserId(user.id)
+    if (!fcm) {
+        return new ErrorApp(MESSAGES.ERROR.NOT_FOUND.USER.FCM, 404, MESSAGE_CODE.NOT_FOUND)
+    }
+    await deleteUserFCM(fcm.id)
     const response = await userLogin(user.id, false)
     return response
 }

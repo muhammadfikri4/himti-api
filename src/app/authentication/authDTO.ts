@@ -13,6 +13,7 @@ export interface RegisterAuthBodyDTO {
 export interface LoginAuthBodyDTO {
     email: string
     password: string
+    fcmToken?: string
 }
 
 export interface LoginAuthResponse {

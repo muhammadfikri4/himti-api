@@ -29,6 +29,9 @@ export const loginSchema = Joi.object({
         "any.required": MESSAGES.ERROR.REQUIRED.PASSWORD,
         "string.min": MESSAGES.ERROR.INVALID.USER.PASSWORD_LENGTH
     }),
+    fcmToken: Joi.string().required().messages({
+        "any.required": MESSAGES.ERROR.REQUIRED.FCM_TOKEN
+    })
 })
 export const validateOtpSchema = Joi.object({
 

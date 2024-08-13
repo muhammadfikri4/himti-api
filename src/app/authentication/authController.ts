@@ -20,9 +20,10 @@ export const registerController = async (req: Request, res: Response, next: Next
 }
 
 export const loginController = async (req: Request, res: Response, next: NextFunction) => {
-    const { email, password } = req.body
+    // const { email, password } = req.body
+    const { body } = req
 
-    const login = await loginService({ email, password });
+    const login = await loginService(body);
     if (login instanceof ErrorApp) {
         next(login)
         return

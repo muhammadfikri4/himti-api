@@ -20,8 +20,19 @@ model User {
   updatedAt DateTime  @default(now()) @updatedAt @map("updated_at")
   isLogin   Boolean   @default(false) @map("is_login")
   Point     Point[]
+  UserFCM   UserFCM[]
 
   @@index([email, anggotaId])
+}
+
+model UserFCM {
+  id       String @id @unique @default(uuid())
+  userId   String @map("user_id")
+  fcmToken String @map("fcm_token")
+  user     User   @relation(fields: [userId], references: [id])
+
+  @@index([userId], map: "user_id")
+  @@map("user_fcm")
 }
 
 model Dosen {

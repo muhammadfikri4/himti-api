@@ -32,6 +32,37 @@ route.use("/sub-acara", subAcaraRoute)
 route.use('/business', businessRoute)
 route.use('/prestasi', prestasiRoute)
 route.use('/user', userRoute)
+// route.get('/bell', async (req: Request, res: Response) => {
+//     const token = 'cl_lyYYuSJOkHMzjnJmleh:APA91bFl3jV2Xs66C-FSjpj5L8-2xxwbXFpChUzFpFXKphaDdCH2Tu8aNoIq5_h76teJmvOWyH1UFXhzNxXZ8cKPflnfbP52lOPn4WuS-SpDjnm0S5oII5AVgdH--B-QP9D3-wfjITxE'
+//     try {
+//         if (!token || typeof token !== 'string') {
+//             throw new Error('Invalid FCM token provided');
+//         }
+//         const message = {
+//             notification: {
+//                 title: "TESTING",
+//                 body: "INI NOTIF",
+//             },
+//             android: {
+//                 notification: {
+//                     sound: "default",
+//                 },
+//                 data: {
+//                     title: "NOTIF NIH WOY",
+//                     body: "APA AJALAH",
+//                 },
+//             },
+//             token: token,
+//         };
+//         const response = await firebase.messaging().send(message);
+//         console.log("Successfully sent message:", response);
+//         res.json({ response, message })
+//     } catch (error: any) {
+//         console.error("Error sending message:", error.message);
+//         res.status(500).json({ error: error.message });
+//         // throw error;
+//     }
+// })
 
 registerFont(path.join(__dirname, '../../public/times-new-roman.ttf'), { family: 'Times New Roman' });
 route.get('/generate', async (req: Request, res: Response) => {

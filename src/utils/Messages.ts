@@ -18,6 +18,7 @@ export const MESSAGES = {
         NOT_FOUND: {
             USER: {
                 ACCOUNT: "User not found",
+                FCM: "FCM Token not found"
 
             },
             ANGKATAN: {
@@ -128,6 +129,7 @@ export const MESSAGES = {
             SUB_ACARA_ID: "Sub Acara Id is required",
             OTP_KEY: "OTP Key is required",
             OTP: "OTP is required",
+            FCM_TOKEN: "FCM Token is required"
         },
         RELATION: {
             ANGKATAN: "Angkatan cannot be deleted because it has a relationship"
