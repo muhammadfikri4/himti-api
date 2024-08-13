@@ -1,11 +1,11 @@
 import admin from 'firebase-admin'
-import pk from '../key/pk.json'
+import { environment } from '../libs'
 
 export const firebase = admin.initializeApp({
     credential: admin.credential.cert({
-        clientEmail: pk.client_email,
-        privateKey: pk.private_key,
-        projectId: pk.project_id
+        clientEmail: environment.FIREBASE.CLIENT_EMAIL,
+        privateKey: environment.FIREBASE.PRIVATE_KEY,
+        projectId: environment.FIREBASE.PROJECT_ID
     })
 })
 

@@ -18,5 +18,11 @@ export const environment = {
     SMTP_HOST: process.env.SMTP_HOST,
     SMTP_PORT: process.env.SMTP_PORT,
     SMTP_LOGIN: process.env.SMTP_LOGIN,
-    EMAIL_SENDER: process.env.EMAIL_SENDER
+    EMAIL_SENDER: process.env.EMAIL_SENDER,
+    FIREBASE: {
+        CLIENT_EMAIL: process.env.FIREBASE_CLIENT_EMAIL,
+        PRIVATE_KEY: process.env.FIREBASE_PRIVATE_KEY,
+        PROJECT_ID: process.env.FIREBASE_PROJECT_ID
+    },
+    TESTING_FCM: process.env.TESTING_FCM
 }
