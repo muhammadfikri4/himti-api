@@ -15,7 +15,6 @@ import profileRoute from '../app/profile/profileRoute';
 import strukturalRoute from '../app/struktural/strukturalRoute';
 import subAcaraRoute from '../app/sub-acara/subAcaraRoute';
 import userRoute from '../app/user/userRoute';
-import { environment } from '../libs';
 import { MESSAGE_CODE } from "../utils/ErrorCode";
 import { firebase } from '../utils/FirebaseConfig';
 import { MESSAGES } from "../utils/Messages";
@@ -34,8 +33,9 @@ route.use("/sub-acara", subAcaraRoute)
 route.use('/business', businessRoute)
 route.use('/prestasi', prestasiRoute)
 route.use('/user', userRoute)
-route.get('/bell', async (req: Request, res: Response) => {
-    const token = environment.TESTING_FCM
+route.get('/bell/:fcm', async (req: Request, res: Response) => {
+    // const token = environment.TESTING_FCM
+    const token = req.params.fcm
     try {
         if (!token || typeof token !== 'string') {
             throw new Error('Invalid FCM token provided');
