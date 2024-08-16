@@ -218,10 +218,13 @@ export const logoutService = async (token: string) => {
         return new ErrorApp(MESSAGES.ERROR.NOT_FOUND.USER.ACCOUNT, 404, MESSAGE_CODE.NOT_FOUND)
     }
     const fcm = await getUserFCMByUserId(user.id)
-    if (!fcm) {
-        return new ErrorApp(MESSAGES.ERROR.NOT_FOUND.USER.FCM, 404, MESSAGE_CODE.NOT_FOUND)
+    // if (!fcm) {
+    //     return new ErrorApp(MESSAGES.ERROR.NOT_FOUND.USER.FCM, 404, MESSAGE_CODE.NOT_FOUND)
+    // }
+    if (fcm) {
+
+        await deleteUserFCM(fcm.id)
     }
-    await deleteUserFCM(fcm.id)
     const response = await userLogin(user.id, false)
     return response
 }
