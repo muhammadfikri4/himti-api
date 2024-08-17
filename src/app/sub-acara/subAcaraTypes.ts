@@ -5,8 +5,6 @@ export interface SubAcaraModelTypes {
     description?: string,
     acaraId?: string
     image?: string,
-    isOpen?: boolean,
-    isOpenAbsen?: boolean
     startTime?: Date,
     endTime?: Date
     createdAt: Date,

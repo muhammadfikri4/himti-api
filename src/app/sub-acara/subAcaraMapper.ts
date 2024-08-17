@@ -2,11 +2,12 @@ import { SubAcaraModelTypes } from "./subAcaraTypes";
 
 export const subAcaraMapper = (subAcaras: SubAcaraModelTypes[]) => {
     const mapper = subAcaras.map((subAcara) => {
-        const { isOpen, isOpenAbsen, createdAt, updatedAt, ...rest } = subAcara
+        const { createdAt, updatedAt, ...rest } = subAcara
+        const isExpired = new Date(rest.endTime as Date) < new Date(Date.now())
+
         return {
             ...rest,
-            isOpenRegister: subAcara.isOpen,
-            isOpenAbsen,
+            isOpenAbsen: isExpired,
             createdAt,
             updatedAt
 
