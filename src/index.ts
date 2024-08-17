@@ -1,5 +1,4 @@
 // import { dbconnect } from 'config'
-import compression from 'compression'
 import cookieParser from 'cookie-parser'
 import cors from 'cors'
 import dotenv from 'dotenv'
@@ -26,7 +25,7 @@ app.use((req, res, next) => {
         next();
     }
 });
-app.use(compression())
+// app.use(compression())
 
 app.use(cookieParser())
 // app.use(bodyParser.json())
