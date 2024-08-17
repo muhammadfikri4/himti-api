@@ -1,8 +1,10 @@
+import { Role } from "@prisma/client"
 import { MESSAGE_CODE } from "../../utils/ErrorCode"
 import { firebase } from "../../utils/FirebaseConfig"
 import { ErrorApp } from "../../utils/HttpError"
 import { MESSAGES } from "../../utils/Messages"
 import { getSubAcaraById } from "../acara/acaraRepository"
+import { getUserById } from "../authentication/authRepository"
 import { getAllFCMUser } from "../user-fcm/user-fcm.repository"
 import { NotificationData, getNotificationDTOMapper } from "./notificationMapper"
 import { createNotification, getNotifications } from "./notificationRepository"
@@ -108,8 +110,13 @@ export const sendSingleNotificationService = async (
     }
 }
 
-export const getNotificationService = async () => {
+export const getNotificationService = async (userId: string) => {
+    const user = await getUserById(userId)
+    if (!user) {
+        return new ErrorApp(MESSAGES.ERROR.NOT_FOUND.USER.ACCOUNT, 404, MESSAGE_CODE.NOT_FOUND)
+    }
+
     const notification = await getNotifications()
-    const data = getNotificationDTOMapper(notification as NotificationData[])
+    const data = getNotificationDTOMapper(notification as NotificationData[], user.role as Role)
     return data
 }

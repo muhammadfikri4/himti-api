@@ -1,6 +1,7 @@
 import { NextFunction, type Request, type Response } from "express";
 import { TokenDecodeInterface } from "interface";
 import { TokenExpiredError, decode, verify } from 'jsonwebtoken';
+import { RequestWithAccessToken } from "../interface/Request";
 import { environment } from "../libs";
 import { MESSAGE_CODE } from "../utils/ErrorCode";
 import { HandleResponse } from "../utils/HandleResponse";
@@ -23,6 +24,7 @@ export const VerifyToken = (req: Request, res: Response, next: NextFunction) => 
             }
             return HandleResponse(res, 401, MESSAGE_CODE.UNAUTHORIZED, MESSAGES.ERROR.INVALID.AUTH)
         }
+        (req as RequestWithAccessToken).userId = (decode(token) as TokenDecodeInterface)?.id
         next()
     })
 

@@ -1,17 +1,17 @@
-import { Acara, NotificationHistory, SubAcara } from "@prisma/client";
-import { FormatIDTime } from "utils/FormatIDTime";
+import { Acara, NotificationHistory, Role, SubAcara } from "@prisma/client";
+import { FormatIDTime } from "../../utils/FormatIDTime";
 
 export interface NotificationData extends NotificationHistory {
     acara: Acara,
     subAcara: SubAcara
 }
 
-export const getNotificationDTOMapper = async (data: NotificationData[]) => {
+export const getNotificationDTOMapper = async (data: NotificationData[], role: Role) => {
 
     return data.map((item) => {
         let type
 
-        if (item.subAcaraId) {
+        if (item.subAcaraId && role === 'ANGGOTA') {
             type = "ABSENSI"
         } else {
             type = "NEWS"
