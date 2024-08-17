@@ -12,10 +12,9 @@ import { acaraValidate } from './subAcaraValidate'
 
 dotenv.config();
 
-export const createSubAcaraService = async ({ name, description, endTime, image, isOpenAbsen, isOpenRegister, startTime, acaraId }: SubAcaraBodyDTO) => {
-    const openRegist = typeof isOpenRegister !== 'undefined' ? JSON.parse(String(isOpenRegister)) : undefined
-    const openAbsen = typeof isOpenAbsen !== 'undefined' ? JSON.parse(String(isOpenAbsen)) : undefined
-    const validate = await acaraValidate({ name: name as string, image, endTime, startTime, isOpenRegister: openRegist, isOpenAbsen: openAbsen, acaraId })
+export const createSubAcaraService = async ({ name, description, endTime, image, startTime, acaraId }: SubAcaraBodyDTO) => {
+
+    const validate = await acaraValidate({ name: name as string, image, endTime, startTime, acaraId })
     if (validate instanceof ErrorApp) {
         return new ErrorApp(validate.message, validate.statusCode, validate.code)
     }
@@ -27,7 +26,7 @@ export const createSubAcaraService = async ({ name, description, endTime, image,
         return new ErrorApp(MESSAGES.ERROR.NOT_FOUND.ACARA, 404, MESSAGE_CODE.NOT_FOUND)
     }
 
-    const response = await createSubAcara({ name, image: path, description, isOpenAbsen: openAbsen, isOpenRegister: openRegist, endTime, startTime, acaraId })
+    const response = await createSubAcara({ name, image: path, description, endTime, startTime, acaraId })
     return response
 }
 
@@ -58,7 +57,7 @@ export const deleteSubAcaraService = async ({ id }: SubAcaraBodyDTO) => {
     const response = await deleteSubAcara(id as string)
     return response;
 }
-export const updateSubAcaraService = async ({ id, name, image, description, endTime, isOpenAbsen, isOpenRegister, startTime, acaraId }: SubAcaraBodyDTO) => {
+export const updateSubAcaraService = async ({ id, name, image, description, endTime, startTime, acaraId }: SubAcaraBodyDTO) => {
 
     const matchSubAcara = await getSubAcaraById(id as string)
 
@@ -78,8 +77,6 @@ export const updateSubAcaraService = async ({ id, name, image, description, endT
     if (name) updateFields.name = name;
     if (description) updateFields.description = description;
     if (image) updateFields.image = image;
-    if (typeof isOpenRegister === 'boolean') updateFields.isOpen = JSON.parse(String(isOpenRegister));
-    if (typeof isOpenAbsen === 'boolean') updateFields.isOpenAbsen = JSON.parse(String(isOpenAbsen));
     if (startTime) updateFields.startTime = startTime;
     if (endTime) updateFields.endTime = endTime;
 

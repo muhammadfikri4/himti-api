@@ -10,6 +10,12 @@ export interface AcaraBodyDTO {
     endTime?: Date
 }
 
-export interface SubAcaraBodyDTO extends AcaraBodyDTO {
+export interface SubAcaraBodyDTO {
+    id?: string
+    name?: string
+    description?: string,
+    image?: string,
+    startTime?: Date,
+    endTime?: Date
     acaraId: string
 }

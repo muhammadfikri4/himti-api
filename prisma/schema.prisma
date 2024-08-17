@@ -137,8 +137,6 @@ model SubAcara {
   name                String
   description         String?
   image               String
-  isOpen              Boolean               @default(true) @map("is_open")
-  isOpenAbsen         Boolean?              @default(true) @map("is_open_absen")
   endTime             DateTime?             @default(now()) @map("end_time")
   startTime           DateTime?             @default(now()) @map("start_time")
   acaraId             String

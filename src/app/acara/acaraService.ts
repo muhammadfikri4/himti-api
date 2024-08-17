@@ -1,4 +1,4 @@
-import { Acara } from '@prisma/client'
+import { SubAcara } from '@prisma/client'
 import dotenv from 'dotenv'
 import { TokenDecodeInterface } from 'interface'
 import { decode } from 'jsonwebtoken'
@@ -92,7 +92,7 @@ export const updateAcaraService = async ({ id, name, image, description, endTime
 export const getDetailAcaraService = async (id: string, openAbsen?: string, token?: string) => {
 
     const absen = openValue(openAbsen)
-    let subAcara: Array<Acara | null | Promise<Acara>> = []
+    let subAcara: Array<SubAcara | null | Promise<SubAcara>> = []
 
     if (!token) {
         subAcara = []
@@ -105,8 +105,15 @@ export const getDetailAcaraService = async (id: string, openAbsen?: string, toke
         if (user?.role === 'USER' && !user.anggotaId) {
             subAcara = []
         } else if (user?.role === 'ANGGOTA' || user?.role === 'ADMIN') {
-            const sub = await getSubAcaraByAcaraId(id, absen) || []
-            subAcara = await subAcaraMapper(sub, userId)
+            const sub = await getSubAcaraByAcaraId(id) || []
+            const filterSub = sub.map(s => {
+                const isExpired = new Date(s.endTime as Date) < new Date(Date.now())
+                if (isExpired && absen) {
+                    return
+                }
+                return s
+            })
+            subAcara = await subAcaraMapper(filterSub as SubAcara[], userId)
 
         }
     }

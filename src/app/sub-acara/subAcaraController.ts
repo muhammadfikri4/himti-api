@@ -4,7 +4,6 @@ import { HandleResponse } from "../../utils/HandleResponse";
 import { ErrorApp, HttpError } from "../../utils/HttpError";
 import { MESSAGES } from "../../utils/Messages";
 import { SubAcaraBodyDTO } from "./subAcaraDTO";
-import { createSubAcaraSchema } from "./subAcaraRequest";
 import { createSubAcaraService, deleteSubAcaraService, getDetailSubAcaraService, getSubAcaraService, updateSubAcaraService } from "./subAcaraService";
 
 
@@ -13,14 +12,15 @@ export const createSubAcaraController = async (req: Request, res: Response, next
 
     const body = req.body as SubAcaraBodyDTO
     const file = req.file
-    const combineBodyFile = { ...body, image: file as unknown as File }
-    const bv = createSubAcaraSchema.validate(combineBodyFile)
-    console.log(combineBodyFile)
-    if (bv.error) {
-        const err = new ErrorApp(bv.error.details[0].message.replace(/"/g, ''), 400, MESSAGE_CODE.BAD_REQUEST)
-        next(err)
-        return
-    }
+    // const combineBodyFile = { ...body, image: file as unknown as File }
+    // const bv = createSubAcaraSchema.validate(combineBodyFile)
+    // console.log(combineBodyFile)
+    // console.log(bv.error)
+    // if (bv.error) {
+    //     const err = new ErrorApp(bv.error.details[0].message.replace(/"/g, ''), 400, MESSAGE_CODE.BAD_REQUEST)
+    //     next(err)
+    //     return
+    // }
     console.log(body)
     const acara = await createSubAcaraService({ ...body, image: file as unknown as string });
     if (acara instanceof ErrorApp) {
@@ -57,9 +57,9 @@ export const deleteSubAcaraController = async (req: Request, res: Response) => {
 
 export const updateSubAcaraController = async (req: Request, res: Response) => {
     const { id } = req.params;
-    const { name, description, endTime, isOpenAbsen, isOpenRegister, startTime, acaraId } = req.body as SubAcaraBodyDTO
+    const { name, description, endTime, startTime, acaraId } = req.body as SubAcaraBodyDTO
 
-    const updateStruktural = await updateSubAcaraService({ id, name, description, endTime, isOpenAbsen, isOpenRegister, startTime, image: req.file?.path, acaraId });
+    const updateStruktural = await updateSubAcaraService({ id, name, description, endTime, startTime, image: req.file?.path, acaraId });
     if ((updateStruktural as HttpError)?.message) {
         return HandleResponse(res, (updateStruktural as HttpError).statusCode, (updateStruktural as HttpError).code, (updateStruktural as HttpError).message)
     }

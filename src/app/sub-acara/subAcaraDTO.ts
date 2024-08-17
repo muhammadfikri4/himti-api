@@ -5,8 +5,6 @@ export interface SubAcaraBodyDTO {
     acaraId?: string
     description?: string,
     image?: string,
-    isOpenRegister?: boolean,
-    isOpenAbsen?: boolean,
     startTime?: Date,
     endTime?: Date
 }

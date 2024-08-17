@@ -16,14 +16,12 @@ export const createAcara = async ({ description, endTime, image, isOpenAbsen, is
     })
 }
 
-export const createSubAcara = async ({ description, endTime, image, isOpenAbsen, isOpenRegister, name, startTime, acaraId }: SubAcaraBodyDTO) => {
+export const createSubAcara = async ({ description, endTime, image, name, startTime, acaraId }: SubAcaraBodyDTO) => {
     return await prisma.subAcara.create({
         data: {
             name: name as string,
             description,
             endTime,
-            isOpen: isOpenRegister,
-            isOpenAbsen,
             startTime,
             image: image as string,
             acaraId
@@ -96,11 +94,10 @@ export const updateAcara = async (data: AcaraBodyDTO, id: string) => {
     })
 }
 
-export const getSubAcaraByAcaraId = async (acaraId: string, isOpenAbsen?: boolean) => {
+export const getSubAcaraByAcaraId = async (acaraId: string) => {
     return await prisma.subAcara.findMany({
         where: {
             acaraId,
-            isOpenAbsen
         },
         orderBy: {
             createdAt: 'desc'
