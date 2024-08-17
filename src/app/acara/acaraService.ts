@@ -16,9 +16,9 @@ import { acaraValidate } from './acaraValidate'
 dotenv.config();
 
 export const openValue = (open?: string) => {
-    if (open?.toLowerCase() === 'true') {
+    if (open?.toLowerCase().includes('true')) {
         return true
-    } else if (open?.toLowerCase() === 'false') {
+    } else if (open?.toLowerCase().includes('false')) {
         return false
     }
     return undefined
@@ -80,8 +80,8 @@ export const updateAcaraService = async ({ id, name, image, description, endTime
     if (name) updateFields.name = name;
     if (description) updateFields.description = description;
     if (image) updateFields.image = image;
-    if (typeof isOpenRegister !== 'undefined') updateFields.isOpen = JSON.parse(String(isOpenRegister));
-    if (typeof isOpenAbsen !== 'undefined') updateFields.isOpenAbsen = JSON.parse(String(isOpenAbsen));
+    if (typeof isOpenRegister !== 'undefined') updateFields.isOpen = openValue(String(isOpenRegister));
+    if (typeof isOpenAbsen !== 'undefined') updateFields.isOpenAbsen = openValue(String(isOpenAbsen));
     if (startTime) updateFields.startTime = startTime;
     if (endTime) updateFields.endTime = endTime;
     console.log(updateFields)
