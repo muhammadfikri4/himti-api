@@ -42,6 +42,7 @@ export const getSubAcaraService = async ({ search, page = 1, perPage = 10, acara
         return new ErrorApp(MESSAGES.ERROR.NOT_FOUND.SUB_ACARA, 404, MESSAGE_CODE.NOT_FOUND)
 
     }
+    console.log(data)
     const response = { data, meta: Meta(page, perPage, totalData) }
     return response
 }
@@ -74,6 +75,7 @@ export const updateSubAcaraService = async ({ id, name, image, description, endT
 
     const updateFields: Partial<SubAcaraModelTypes> = {};
 
+    // if (!acaraId) updateFields.acaraId = matchSubAcara.acaraId;
     if (name) updateFields.name = name;
     if (description) updateFields.description = description;
     if (image) updateFields.image = image;

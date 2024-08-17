@@ -18,18 +18,21 @@ export const acaraMapper = (acaras: AcaraModelTypes[]) => {
 }
 
 export const subAcaraMapper = async (subAcaras: SubAcara[], userId: string) => {
-    return await Promise.all(subAcaras.map(async (item) => {
-        const { createdAt, updatedAt, ...rest } = item
+    return await Promise.all(subAcaras.map(async (item: SubAcara) => {
+        // const { createdAt, updatedAt, ...rest } = item
         let isAlreadyAbsen = false
         const absensi = await getSingleAbsensiByUserId(userId, item.id as string)
         if (absensi) {
             isAlreadyAbsen = true
         }
+        const isExpired = new Date(item.endTime as Date) < new Date(Date.now())
+
         return {
-            ...rest,
+            ...item,
+            isOpenAbsen: !isExpired,
             isAlreadyAbsen,
-            createdAt,
-            updatedAt
+            createdAt: item.createdAt,
+            updatedAt: item.updatedAt
         }
     }))
 }

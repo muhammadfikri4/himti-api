@@ -109,7 +109,7 @@ export const deleteSubAcara = async (id: string) => {
 }
 
 export const updateSubAcara = async (data: SubAcaraBodyDTO, id: string) => {
-    return await prisma.acara.update({
+    return await prisma.subAcara.update({
         where: {
             id
         },

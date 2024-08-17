@@ -21,7 +21,7 @@ export const createSubAcaraController = async (req: Request, res: Response, next
     //     next(err)
     //     return
     // }
-    console.log(body)
+    // console.log(body)
     const acara = await createSubAcaraService({ ...body, image: file as unknown as string });
     if (acara instanceof ErrorApp) {
         next(acara)
