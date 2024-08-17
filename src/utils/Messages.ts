@@ -94,6 +94,7 @@ export const MESSAGES = {
             ABSENSI_ONCE: "Absensi can only be one time",
             ABSENSI: "Absensi is closed",
             ACARA_REGISTER: 'Acara is closed to register',
+            ABSENSI_SUBACARA_EXPIRED: "Absensi telah melewati batas waktu, silahkan absensi pada acara selanjutnya! (makanya jangan telat jing)"
         },
         UNAUTHORIZED: {
             AUTH: "If you are not logged in, please log in first",

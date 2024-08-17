@@ -39,6 +39,9 @@ export const createAbsensiSubAcaraValidate = async ({ subAcaraId, image, userId,
     if (!getSubAcara) {
         return new ErrorApp(MESSAGES.ERROR.NOT_FOUND.SUB_ACARA, 404, MESSAGE_CODE.NOT_FOUND)
     }
+    const isExpired = new Date(getSubAcara.endTime as Date) < new Date(Date.now())
+
+
     if (!image) {
         return new ErrorApp(MESSAGES.ERROR.REQUIRED.IMAGE, 400, MESSAGE_CODE.BAD_REQUEST)
     }
@@ -54,5 +57,8 @@ export const createAbsensiSubAcaraValidate = async ({ subAcaraId, image, userId,
     if (!coordinate) {
 
         return new ErrorApp(MESSAGES.ERROR.REQUIRED.COORDINATE, 400, MESSAGE_CODE.BAD_REQUEST)
+    }
+    if (isExpired) {
+        return new ErrorApp(MESSAGES.ERROR.INVALID.ABSENSI_SUBACARA_EXPIRED, 400, MESSAGE_CODE.BAD_REQUEST)
     }
 }

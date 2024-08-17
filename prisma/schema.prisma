@@ -114,37 +114,39 @@ model Struktural {
 }
 
 model Acara {
-  id          String        @id @unique @default(uuid())
-  name        String
-  description String?
-  image       String
-  isOpen      Boolean       @default(true) @map("is_open")
-  isOpenAbsen Boolean?      @default(true) @map("is_open_absen")
-  endTime     DateTime?     @default(now()) @map("end_time")
-  startTime   DateTime?     @default(now()) @map("start_time")
-  Absensi     Absensi[]
-  createdAt   DateTime      @default(now()) @map("created_at")
-  updatedAt   DateTime      @default(now()) @updatedAt @map("updated_at")
-  SubAcara    SubAcara[]
-  Certificate Certificate[]
+  id                  String                @id @unique @default(uuid())
+  name                String
+  description         String?
+  image               String
+  isOpen              Boolean               @default(true) @map("is_open")
+  isOpenAbsen         Boolean?              @default(true) @map("is_open_absen")
+  endTime             DateTime?             @default(now()) @map("end_time")
+  startTime           DateTime?             @default(now()) @map("start_time")
+  Absensi             Absensi[]
+  createdAt           DateTime              @default(now()) @map("created_at")
+  updatedAt           DateTime              @default(now()) @updatedAt @map("updated_at")
+  SubAcara            SubAcara[]
+  Certificate         Certificate[]
+  NotificationHistory NotificationHistory[]
 
   @@index([name, startTime, endTime])
 }
 
 model SubAcara {
-  id          String    @id @unique @default(uuid())
-  name        String
-  description String?
-  image       String
-  isOpen      Boolean   @default(true) @map("is_open")
-  isOpenAbsen Boolean?  @default(true) @map("is_open_absen")
-  endTime     DateTime? @default(now()) @map("end_time")
-  startTime   DateTime? @default(now()) @map("start_time")
-  acaraId     String
-  acara       Acara     @relation(fields: [acaraId], references: [id], onDelete: Restrict)
-  absensi     Absensi[]
-  createdAt   DateTime  @default(now()) @map("created_at")
-  updatedAt   DateTime  @updatedAt @map("updated_at")
+  id                  String                @id @unique @default(uuid())
+  name                String
+  description         String?
+  image               String
+  isOpen              Boolean               @default(true) @map("is_open")
+  isOpenAbsen         Boolean?              @default(true) @map("is_open_absen")
+  endTime             DateTime?             @default(now()) @map("end_time")
+  startTime           DateTime?             @default(now()) @map("start_time")
+  acaraId             String
+  acara               Acara                 @relation(fields: [acaraId], references: [id], onDelete: Restrict)
+  absensi             Absensi[]
+  createdAt           DateTime              @default(now()) @map("created_at")
+  updatedAt           DateTime              @updatedAt @map("updated_at")
+  NotificationHistory NotificationHistory[]
 
   @@index([name, startTime, endTime])
 }
@@ -234,6 +236,18 @@ model Point {
   absensi   Absensi  @relation(fields: [absensiId], references: [id])
   createdAt DateTime @default(now()) @map("created_at")
   updateAt  DateTime @default(now()) @updatedAt @map("updated_at")
+}
+
+model NotificationHistory {
+  id         String    @id @unique @default(uuid())
+  acaraId    String?
+  subAcaraId String?
+  acara      Acara?    @relation(fields: [acaraId], references: [id])
+  subAcara   SubAcara? @relation(fields: [subAcaraId], references: [id])
+  title      String
+  body       String
+  createdAt  DateTime  @default(now()) @map("created_at")
+  updateAt   DateTime  @default(now()) @updatedAt @map("updated_at")
 }
 
 enum Jabatan {
