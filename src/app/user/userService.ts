@@ -1,3 +1,4 @@
+import * as bcrypt from 'bcrypt'
 import { MESSAGE_CODE } from "../../utils/ErrorCode"
 import { ErrorApp } from "../../utils/HttpError"
 import { MESSAGES } from "../../utils/Messages"
@@ -24,7 +25,9 @@ export const createUserService = async (body: UserRequestBodyDTO) => {
         return new ErrorApp(MESSAGES.ERROR.ALREADY.USER, 400, MESSAGE_CODE.BAD_REQUEST)
     }
 
-    const user = await createUser({ ...body, role: 'ADMIN' })
+    const hashPassword = await bcrypt.hash(body.password, 10)
+
+    const user = await createUser({ ...body, role: 'ADMIN', password: hashPassword })
     return user
 
 }
