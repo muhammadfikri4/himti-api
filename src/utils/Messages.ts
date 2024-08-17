@@ -12,13 +12,15 @@ export const MESSAGES = {
         ACARA: "Acara created successfully",
         SUB_ACARA: "Sub Acara created successfully",
         ABSENSI: "Absensi created successfully",
-        MERCHANDISE: "Merchandise created successfully"
+        MERCHANDISE: "Merchandise created successfully",
+
     },
     ERROR: {
         NOT_FOUND: {
             USER: {
                 ACCOUNT: "User not found",
-                FCM: "FCM Token not found"
+                FCM: "FCM Token not found",
+                FCM_USER: "FCM User not found"
 
             },
             ANGKATAN: {
@@ -215,6 +217,10 @@ export const MESSAGES = {
             DELETE: "Success to delete Prestasi",
             UPDATE: "Success to update Prestasi"
         },
-        TOKEN: "Token is valid"
+        TOKEN: "Token is valid",
+        NOTIFICATION: {
+            SEND_ALL: "Success to send notification",
+            GET: "Success to fetch notification"
+        }
     }
 }

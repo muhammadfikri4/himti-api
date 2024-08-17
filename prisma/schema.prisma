@@ -64,7 +64,7 @@ model Anggota {
   id              String            @id @default(uuid())
   name            String
   email           String?
-  nim             String            @unique
+  nim             String?           @unique
   angkatanId      String            @map("angkatan_id")
   isActive        Boolean?          @default(true) @map("is_active")
   instagram       String?
@@ -136,7 +136,7 @@ model SubAcara {
   id                  String                @id @unique @default(uuid())
   name                String
   description         String?
-  image               String
+  image               String?
   endTime             DateTime?             @default(now()) @map("end_time")
   startTime           DateTime?             @default(now()) @map("start_time")
   acaraId             String
@@ -244,6 +244,7 @@ model NotificationHistory {
   subAcara   SubAcara? @relation(fields: [subAcaraId], references: [id])
   title      String
   body       String
+  isRead     Boolean
   createdAt  DateTime  @default(now()) @map("created_at")
   updateAt   DateTime  @default(now()) @updatedAt @map("updated_at")
 }

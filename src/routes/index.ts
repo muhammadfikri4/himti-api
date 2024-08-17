@@ -10,14 +10,13 @@ import angkatanRoute from '../app/angkatan/angkatanRoute';
 import authRoute from '../app/authentication/authRoute';
 import businessRoute from '../app/business/businessRoute';
 import dosenRoute from '../app/dosen/dosenRoute';
+import notificationRoute from '../app/notification/notificationRoute';
 import prestasiRoute from '../app/prestasi/prestasiRoute';
 import profileRoute from '../app/profile/profileRoute';
 import strukturalRoute from '../app/struktural/strukturalRoute';
 import subAcaraRoute from '../app/sub-acara/subAcaraRoute';
-import { getAllFCMUser } from '../app/user-fcm/user-fcm.repository';
 import userRoute from '../app/user/userRoute';
 import { MESSAGE_CODE } from "../utils/ErrorCode";
-import { firebase } from '../utils/FirebaseConfig';
 import { MESSAGES } from "../utils/Messages";
 
 const route = Router();
@@ -34,83 +33,84 @@ route.use("/sub-acara", subAcaraRoute)
 route.use('/business', businessRoute)
 route.use('/prestasi', prestasiRoute)
 route.use('/user', userRoute)
-route.get('/bell/:fcm', async (req: Request, res: Response) => {
-    // const token = environment.TESTING_FCM
-    const token = req.params.fcm
-    const title = req.query.title as string || 'testing title notification'
-    const body = req.query.body as string || 'testing body notification'
+route.use('/notification', notificationRoute)
+// route.get('/bell/:fcm', async (req: Request, res: Response) => {
+//     // const token = environment.TESTING_FCM
+//     const token = req.params.fcm
+//     const title = req.query.title as string || 'testing title notification'
+//     const body = req.query.body as string || 'testing body notification'
 
-    try {
-        if (!token || typeof token !== 'string') {
-            throw new Error('Invalid FCM token provided');
-        }
-        const message = {
-            notification: {
-                title,
-                body,
-            },
-            android: {
-                notification: {
-                    sound: "default",
-                },
-                data: {
-                    title,
-                    body,
-                },
-            },
-            token: token,
-        };
-        const response = await firebase.messaging().send(message);
-        console.log("Successfully sent message:", response);
-        res.json({ response, message })
-    } catch (error: any) {
-        console.error("Error sending message:", error.message);
-        res.status(500).json({ error: error.message });
-        // throw error;
-    }
-})
-route.get('/bell', async (req: Request, res: Response) => {
-    // const token = environment.TESTING_FCM
-    // const token = req.params.fcm
-    const fcm = await getAllFCMUser()
-    const title = req.query.title as string || 'testing title notification'
-    const body = req.query.body as string || 'testing body notification'
-    if (!fcm.length) {
-        return res.json({ message: "No fcm found" })
-    }
-    try {
-        // if (!token || typeof token !== 'string') {
-        //     throw new Error('Invalid FCM token provided');
-        // }
+//     try {
+//         if (!token || typeof token !== 'string') {
+//             throw new Error('Invalid FCM token provided');
+//         }
+//         const message = {
+//             notification: {
+//                 title,
+//                 body,
+//             },
+//             android: {
+//                 notification: {
+//                     sound: "default",
+//                 },
+//                 data: {
+//                     title,
+//                     body,
+//                 },
+//             },
+//             token: token,
+//         };
+//         const response = await firebase.messaging().send(message);
+//         console.log("Successfully sent message:", response);
+//         res.json({ response, message })
+//     } catch (error: any) {
+//         console.error("Error sending message:", error.message);
+//         res.status(500).json({ error: error.message });
+//         // throw error;
+//     }
+// })
+// route.get('/bell', async (req: Request, res: Response) => {
+//     // const token = environment.TESTING_FCM
+//     // const token = req.params.fcm
+//     const fcm = await getAllFCMUser()
+//     const title = req.query.title as string || 'testing title notification'
+//     const body = req.query.body as string || 'testing body notification'
+//     if (!fcm.length) {
+//         return res.json({ message: "No fcm found" })
+//     }
+//     try {
+//         // if (!token || typeof token !== 'string') {
+//         //     throw new Error('Invalid FCM token provided');
+//         // }
 
-        await Promise.all(fcm.map(async (item) => {
-            const message = {
-                notification: {
-                    title,
-                    body,
-                },
-                android: {
-                    notification: {
-                        sound: "default",
-                    },
-                    data: {
-                        title,
-                        body,
-                    },
-                },
-                token: item.fcmToken,
-            };
-            await firebase.messaging().send(message);
+//         await Promise.all(fcm.map(async (item) => {
+//             const message = {
+//                 notification: {
+//                     title,
+//                     body,
+//                 },
+//                 android: {
+//                     notification: {
+//                         sound: "default",
+//                     },
+//                     data: {
+//                         title,
+//                         body,
+//                     },
+//                 },
+//                 token: item.fcmToken,
+//             };
+//             await firebase.messaging().send(message);
 
-        }))
-        console.log("Successfully sent message:");
-        res.json({ message: "Successfully sent message" })
-    } catch (error: any) {
-        console.error("Error sending message:", error.message);
-        res.status(500).json({ error: error.message });
-        // throw error;
-    }
-})
+//         }))
+//         console.log("Successfully sent message:");
+//         res.json({ message: "Successfully sent message" })
+//     } catch (error: any) {
+//         console.error("Error sending message:", error.message);
+//         res.status(500).json({ error: error.message });
+//         // throw error;
+//     }
+// })
 
 registerFont(path.join(__dirname, '../../public/times-new-roman.ttf'), { family: 'Times New Roman' });
 route.get('/generate', async (req: Request, res: Response) => {

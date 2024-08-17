@@ -29,11 +29,11 @@ export const acaraValidate = async ({ name, image, endTime, startTime, acaraId }
     }
 
 
-    if (!image) {
-        return new ErrorApp(MESSAGES.ERROR.REQUIRED.IMAGE, 400, MESSAGE_CODE.BAD_REQUEST)
-    }
+    // if (!image) {
+    //     return new ErrorApp(MESSAGES.ERROR.REQUIRED.IMAGE, 400, MESSAGE_CODE.BAD_REQUEST)
+    // }
 
-    if ((image as unknown as Express.Multer.File)?.size as number > 5242880) {
+    if (image && (image as unknown as Express.Multer.File)?.size as number > 5242880) {
         return new ErrorApp(MESSAGES.ERROR.INVALID.IMAGE_SIZE, 400, MESSAGE_CODE.BAD_REQUEST)
     }
 }
