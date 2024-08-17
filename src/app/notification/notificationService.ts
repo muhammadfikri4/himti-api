@@ -4,6 +4,7 @@ import { ErrorApp } from "../../utils/HttpError"
 import { MESSAGES } from "../../utils/Messages"
 import { getSubAcaraById } from "../acara/acaraRepository"
 import { getAllFCMUser } from "../user-fcm/user-fcm.repository"
+import { NotificationData, getNotificationDTOMapper } from "./notificationMapper"
 import { createNotification, getNotifications } from "./notificationRepository"
 
 export const sendNotificationService = async (
@@ -14,7 +15,7 @@ export const sendNotificationService = async (
 ) => {
 
     const fcm = await getAllFCMUser()
-    let idAcara
+    let idAcara = acaraId
 
     if (!fcm.length) {
         return new ErrorApp(MESSAGES.ERROR.NOT_FOUND.USER.FCM_USER, 404, MESSAGE_CODE.NOT_FOUND)
@@ -109,6 +110,6 @@ export const sendSingleNotificationService = async (
 
 export const getNotificationService = async () => {
     const notification = await getNotifications()
-
-    return notification
+    const data = getNotificationDTOMapper(notification as NotificationData[])
+    return data
 }

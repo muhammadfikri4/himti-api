@@ -245,8 +245,8 @@ model NotificationHistory {
   title      String
   body       String
   isRead     Boolean
-  createdAt  DateTime  @default(now()) @map("created_at")
-  updateAt   DateTime  @default(now()) @updatedAt @map("updated_at")
+  createdAt  DateTime  @default(now()) @map("created_at") @db.Timestamp(0)
+  updateAt   DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamp()
 }
 
 enum Jabatan {

@@ -18,7 +18,7 @@ export const createSubAcaraService = async ({ name, description, endTime, image,
     if (validate instanceof ErrorApp) {
         return new ErrorApp(validate.message, validate.statusCode, validate.code)
     }
-    const path = (image as unknown as Express.Multer.File).path
+    const path = (image as unknown as Express.Multer.File)?.path
 
     const acara = await getAcaraById(acaraId as string)
 

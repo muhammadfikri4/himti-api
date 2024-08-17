@@ -13,5 +13,13 @@ export const createNotification = async (title: string, body: string, acaraId?: 
 }
 
 export const getNotifications = async () => {
-    return await prisma.notificationHistory.findMany()
+    return await prisma.notificationHistory.findMany({
+        include: {
+            acara: true,
+            subAcara: true
+        },
+        orderBy: {
+            createdAt: 'desc'
+        }
+    })
 }
