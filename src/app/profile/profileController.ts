@@ -41,4 +41,6 @@ export const updatePasswordController = async (req: Request, res: Response, next
         next(profile)
         return
     }
+
+    HandleResponse(res, 200, MESSAGE_CODE.SUCCESS, MESSAGES.SUCCESS.PROFILE.UPDATE)
 }

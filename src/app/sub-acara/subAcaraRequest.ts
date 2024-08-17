@@ -11,6 +11,9 @@ export const createSubAcaraSchema = Joi.object({
     description: Joi.string().required().messages({
         "any.required": MESSAGES.ERROR.REQUIRED.DESCRIPTION
     }),
+    image: Joi.any().required().messages({
+        "any.required": MESSAGES.ERROR.REQUIRED.IMAGE
+    }),
     isOpen: Joi.optional(),
     startTime: Joi.optional(),
     endTime: Joi.optional()

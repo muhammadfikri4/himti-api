@@ -91,7 +91,9 @@ export const loginService = async (
     if (user.isLogin) {
         return new ErrorApp(MESSAGES.ERROR.ALREADY.LOGIN, 401, MESSAGE_CODE.UNAUTHORIZED)
     }
-    await createUserFCM(user.id, fcmToken as string)
+    if (fcmToken) {
+        await createUserFCM(user.id, fcmToken as string)
+    }
     await userLogin(user.id, true)
 
     const token = jwt.sign({

@@ -4,6 +4,7 @@ import { HandleResponse } from "../../utils/HandleResponse";
 import { ErrorApp, HttpError } from "../../utils/HttpError";
 import { MESSAGES } from "../../utils/Messages";
 import { SubAcaraBodyDTO } from "./subAcaraDTO";
+import { createSubAcaraSchema } from "./subAcaraRequest";
 import { createSubAcaraService, deleteSubAcaraService, getDetailSubAcaraService, getSubAcaraService, updateSubAcaraService } from "./subAcaraService";
 
 
@@ -12,7 +13,15 @@ export const createSubAcaraController = async (req: Request, res: Response, next
 
     const body = req.body as SubAcaraBodyDTO
     const file = req.file
-
+    const combineBodyFile = { ...body, image: file as unknown as File }
+    const bv = createSubAcaraSchema.validate(combineBodyFile)
+    console.log(combineBodyFile)
+    if (bv.error) {
+        const err = new ErrorApp(bv.error.details[0].message.replace(/"/g, ''), 400, MESSAGE_CODE.BAD_REQUEST)
+        next(err)
+        return
+    }
+    console.log(body)
     const acara = await createSubAcaraService({ ...body, image: file as unknown as string });
     if (acara instanceof ErrorApp) {
         next(acara)
