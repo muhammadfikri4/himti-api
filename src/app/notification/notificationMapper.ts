@@ -1,4 +1,5 @@
 import { Acara, NotificationHistory, SubAcara } from "@prisma/client";
+import { FormatIDTime } from "utils/FormatIDTime";
 
 export interface NotificationData extends NotificationHistory {
     acara: Acara,
@@ -7,7 +8,7 @@ export interface NotificationData extends NotificationHistory {
 
 export const getNotificationDTOMapper = async (data: NotificationData[]) => {
 
-    return data.map(item => {
+    return data.map((item) => {
         let type
 
         if (item.subAcaraId) {
@@ -29,8 +30,8 @@ export const getNotificationDTOMapper = async (data: NotificationData[]) => {
                 id: item.subAcara.id,
                 name: item.subAcara.name
             } : null,
-            createdAt: item.createdAt,
-            updatedAt: item.updateAt
+            createdAt: FormatIDTime(item.createdAt),
+            updatedAt: FormatIDTime(item.updateAt)
         }
     })
 }
