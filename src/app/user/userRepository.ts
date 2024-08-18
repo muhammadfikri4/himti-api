@@ -133,3 +133,7 @@ export const createUser = async (data: UserRequestBodyDTO) => {
         }
     })
 }
+
+export const getAllUsers = async () => {
+    return await prisma.user.findMany()
+}

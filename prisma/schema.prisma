@@ -8,19 +8,20 @@ datasource db {
 }
 
 model User {
-  id        String    @id @unique @default(uuid())
-  name      String
-  email     String    @unique
-  password  String
-  role      Role?     @default(ADMIN)
-  nim       String?
-  anggotaId String?   @map("anggota_id")
-  Absensi   Absensi[]
-  createdAt DateTime  @default(now()) @map("created_at")
-  updatedAt DateTime  @default(now()) @updatedAt @map("updated_at")
-  isLogin   Boolean   @default(false) @map("is_login")
-  Point     Point[]
-  UserFCM   UserFCM[]
+  id                  String                @id @unique @default(uuid())
+  name                String
+  email               String                @unique
+  password            String
+  role                Role?                 @default(ADMIN)
+  nim                 String?
+  anggotaId           String?               @map("anggota_id")
+  Absensi             Absensi[]
+  createdAt           DateTime              @default(now()) @map("created_at")
+  updatedAt           DateTime              @default(now()) @updatedAt @map("updated_at")
+  isLogin             Boolean               @default(false) @map("is_login")
+  Point               Point[]
+  UserFCM             UserFCM[]
+  NotificationHistory NotificationHistory[]
 
   @@index([email, anggotaId])
 }
@@ -238,15 +239,19 @@ model Point {
 
 model NotificationHistory {
   id         String    @id @unique @default(uuid())
-  acaraId    String?
-  subAcaraId String?
+  acaraId    String?   @map("acara_id")
+  subAcaraId String?   @map("sub_acara_id")
+  userId     String    @map("user_id")
   acara      Acara?    @relation(fields: [acaraId], references: [id])
   subAcara   SubAcara? @relation(fields: [subAcaraId], references: [id])
+  user       User      @relation(fields: [userId], references: [id])
   title      String
   body       String
   isRead     Boolean
   createdAt  DateTime  @default(now()) @map("created_at") @db.Timestamp(0)
   updateAt   DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamp()
+
+  @@map("notification_history")
 }
 
 enum Jabatan {
