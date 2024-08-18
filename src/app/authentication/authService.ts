@@ -88,7 +88,8 @@ export const loginService = async (
         return new ErrorApp(MESSAGES.ERROR.UNAUTHORIZED.ADMIN, 401, MESSAGE_CODE.UNAUTHORIZED)
     }
 
-    if (user.isLogin) {
+    const fcm = await getUserFCMByUserId(user.id)
+    if (fcm) {
         return new ErrorApp(MESSAGES.ERROR.ALREADY.LOGIN, 401, MESSAGE_CODE.UNAUTHORIZED)
     }
     if (fcmToken) {

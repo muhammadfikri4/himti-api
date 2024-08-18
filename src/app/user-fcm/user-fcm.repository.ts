@@ -17,6 +17,14 @@ export const deleteUserFCM = async (id: string) => {
     })
 }
 
+export const getFCMUserById = async (fcmId: string) => {
+    return await prisma.userFCM.findUnique({
+        where: {
+            id: fcmId
+        }
+    })
+}
+
 export const getUserFCMByUserId = async (userId: string) => {
     return await prisma.userFCM.findFirst({
         where: {
@@ -25,6 +33,15 @@ export const getUserFCMByUserId = async (userId: string) => {
     })
 }
 
-export const getAllFCMUser = async () => {
-    return await prisma.userFCM.findMany()
+export const getAllFCMUser = async (page?: number, perPage?: number) => {
+    return await prisma.userFCM.findMany({
+        include: {
+            user: true
+        },
+        take: perPage,
+        skip: (Number(page) - 1) * Number(perPage)
+    })
+}
+export const getAllFCMUserCount = async () => {
+    return await prisma.userFCM.count()
 }

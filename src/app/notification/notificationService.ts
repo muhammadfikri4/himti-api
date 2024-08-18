@@ -1,11 +1,14 @@
 import { Role } from "@prisma/client"
+import { FirebaseNotificationMessage } from "../../interface/FirebaseNotificationMessage"
 import { MESSAGE_CODE } from "../../utils/ErrorCode"
-import { firebase } from "../../utils/FirebaseConfig"
+import { SendFirebaseNotification, firebase } from "../../utils/FirebaseConfig"
 import { ErrorApp } from "../../utils/HttpError"
 import { MESSAGES } from "../../utils/Messages"
+import { NotificationMessage } from "../../utils/NotificationMessage"
 import { getSubAcaraById } from "../acara/acaraRepository"
 import { getUserById } from "../authentication/authRepository"
-import { getAllFCMUser } from "../user-fcm/user-fcm.repository"
+import { getAllFCMUser, getFCMUserById } from "../user-fcm/user-fcm.repository"
+import { NotificationBodyRequest } from "./notificationDTO"
 import { NotificationData, getNotificationDTOMapper } from "./notificationMapper"
 import { createNotification, getNotificationById, getNotifications, updateStatusNotification } from "./notificationRepository"
 
@@ -16,7 +19,7 @@ export const sendNotificationService = async (
     subAcaraId?: string
 ) => {
 
-    const fcm = await getAllFCMUser()
+    const fcm = await getAllFCMUser(1, 99999999)
     let idAcara = acaraId
 
     if (!fcm.length) {
@@ -36,31 +39,16 @@ export const sendNotificationService = async (
 
         const result = await Promise.all(fcm.map(async (item) => {
 
-            const message = {
-                notification: {
-                    title,
-                    body,
-                },
-                android: {
-                    notification: {
-                        sound: "default",
-                    },
-                    data: {
-                        title,
-                        body,
-                    },
-                },
-                token: item.fcmToken as string,
-            };
+            const message = NotificationMessage(title, body, item.fcmToken) as FirebaseNotificationMessage
             const user = await getUserById(item.userId)
             if (user?.role === 'USER' && subAcaraId) {
                 return
             }
-            await firebase.messaging().send(message);
+            await SendFirebaseNotification(message)
             await createNotification({
                 body,
                 title,
-                acaraId: acaraId ? acaraId : undefined,
+                acaraId: idAcara ? idAcara : undefined,
                 subAcaraId: subAcaraId ? subAcaraId : undefined,
                 userId: item.userId
             })
@@ -94,22 +82,7 @@ export const sendSingleNotificationService = async (
         if (!token || typeof token !== 'string') {
             return new ErrorApp(MESSAGES.ERROR.REQUIRED.FCM_TOKEN, 400, MESSAGE_CODE.BAD_REQUEST);
         }
-        const message = {
-            notification: {
-                title,
-                body,
-            },
-            android: {
-                notification: {
-                    sound: "default",
-                },
-                data: {
-                    title,
-                    body,
-                },
-            },
-            token: token,
-        };
+        const message = NotificationMessage(title, body, token)
         const response = await firebase.messaging().send(message);
         console.log("Successfully sent message:", response);
         return message
@@ -148,4 +121,31 @@ export const readNotificationService = async (notificationId: string, userId: st
     const result = await updateStatusNotification(notification.id, true)
     return result
 
+}
+
+export const sendNotificationByFcmIdService = async (
+    fcmId: string,
+    { body, title, acaraId, subAcaraId }: NotificationBodyRequest
+) => {
+    let idAcara = acaraId
+    const fcm = await getFCMUserById(fcmId)
+    if (!fcm) {
+        return new ErrorApp(MESSAGES.ERROR.NOT_FOUND.USER.FCM, 404, MESSAGE_CODE.NOT_FOUND)
+    }
+    if (subAcaraId) {
+        const sub = await getSubAcaraById(subAcaraId)
+        if (!sub) {
+            return new ErrorApp(MESSAGES.ERROR.NOT_FOUND.SUB_ACARA, 404, MESSAGE_CODE.NOT_FOUND)
+        }
+
+        idAcara = sub.acaraId
+    }
+    const message = NotificationMessage(title, body, fcm.fcmToken) as FirebaseNotificationMessage
+    await SendFirebaseNotification(message)
+    return await createNotification({
+        body,
+        title,
+        acaraId: idAcara ? idAcara : undefined,
+        subAcaraId: subAcaraId ? subAcaraId : undefined,
+    })
 }

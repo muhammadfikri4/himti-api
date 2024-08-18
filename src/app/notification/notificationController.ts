@@ -4,7 +4,7 @@ import { MESSAGE_CODE } from "../../utils/ErrorCode"
 import { HandleResponse } from "../../utils/HandleResponse"
 import { ErrorApp } from "../../utils/HttpError"
 import { MESSAGES } from "../../utils/Messages"
-import { getNotificationService, readNotificationService, sendNotificationService, sendSingleNotificationService } from "./notificationService"
+import { getNotificationService, readNotificationService, sendNotificationByFcmIdService, sendNotificationService, sendSingleNotificationService } from "./notificationService"
 
 export const sendNotificationController = async (
     req: Request,
@@ -66,4 +66,24 @@ export const readNotificationController = async (
         return
     }
     HandleResponse(res, 200, MESSAGE_CODE.SUCCESS, MESSAGES.SUCCESS.NOTIFICATION.READ)
+}
+
+export const sendNotificationByFcmIdController = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+) => {
+    const { fcmId } = req.params
+    const { title, body, acaraId, subAcaraId } = req.body
+
+    const notification = await sendNotificationByFcmIdService(
+        fcmId,
+        { title, body, acaraId, subAcaraId }
+    )
+    if (notification instanceof ErrorApp) {
+        next(notification)
+        return
+    }
+
+    HandleResponse(res, 200, MESSAGE_CODE.SUCCESS, MESSAGES.SUCCESS.NOTIFICATION.SEND)
 }

@@ -1,5 +1,6 @@
-import admin from 'firebase-admin'
-import { environment } from '../libs'
+import admin from 'firebase-admin';
+import { FirebaseNotificationMessage } from '../interface/FirebaseNotificationMessage';
+import { environment } from '../libs';
 
 export const firebase = admin.initializeApp({
     credential: admin.credential.cert({
@@ -9,3 +10,6 @@ export const firebase = admin.initializeApp({
     })
 })
 
+export const SendFirebaseNotification = async (message: FirebaseNotificationMessage) => {
+    return await firebase.messaging().send(message);
+}

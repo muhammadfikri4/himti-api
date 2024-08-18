@@ -220,9 +220,10 @@ export const MESSAGES = {
         },
         TOKEN: "Token is valid",
         NOTIFICATION: {
-            SEND_ALL: "Success to send notification",
+            SEND_ALL: "Success to send all notification",
             GET: "Success to fetch notification",
-            READ: "Success to read notification"
+            READ: "Success to read notification",
+            SEND: "Success to send notification"
         }
     }
 }
