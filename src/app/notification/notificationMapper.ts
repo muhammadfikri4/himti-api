@@ -6,17 +6,90 @@ export interface NotificationData extends NotificationHistory {
     subAcara: SubAcara
 }
 
+// export const getNotificationDTOMapper = async (data: NotificationData[], role: Role) => {
+
+//     return data.map((item) => {
+//         let type
+
+//         if (item.subAcaraId && role === 'ANGGOTA') {
+//             type = "ABSENSI"
+//         } else {
+//             type = "NEWS"
+//         }
+//         return {
+//             id: item.id,
+//             title: item.title,
+//             body: item.body,
+//             isRead: item.isRead,
+//             type,
+//             acara: item.acaraId ? {
+//                 id: item.acara.id,
+//                 name: item.acara.name
+//             } : null,
+//             subAcara: item.subAcaraId ? {
+//                 id: item.subAcara.id,
+//                 name: item.subAcara.name
+//             } : null,
+//             createdAt: FormatIDTime(item.createdAt),
+//             updatedAt: FormatIDTime(item.updateAt)
+//         }
+//     })
+// }
+
+// export const historyAbsensiMapper = async (absensi: Absensi[], userId: string) => {
+//     const data: AbsensiAcara[] = []
+//     absensi.map(async (item) => {
+//         if (data.find((i: any) => i.acaraId === item.acaraId)) {
+//             return null
+//         }
+//         data.push(item as unknown as AbsensiAcara)
+//     })
+//     const absens = await Promise.all(data.map(async (item: AbsensiAcara) => {
+//         const subAcara = await getAllAbsensiByAcaraId(item.acaraId, userId)
+
+//         return {
+//             acara: {
+//                 id: item.acara.id,
+//                 name: item.acara.name
+//             },
+//             absensi: await Promise.all(subAcara.map(async (subItem) => ({
+//                 id: subItem.id as number,
+//                 image: subItem.image,
+//                 absensiTime: subItem.absensiTime as string,
+//                 subAcara: {
+//                     id: subItem?.subAcara?.id as string,
+//                     name: subItem?.subAcara?.name as string
+//                 },
+//                 point: await getPointByAbsensiUserId(subItem.id, userId) || 0
+//             })))
+//         }
+//     }))
+//     return absens
+// }
+
 export const getNotificationDTOMapper = async (data: NotificationData[], role: Role) => {
+    // Group data by date
+    const groupedByDate = data.reduce((acc, item) => {
+        const dateKey = new Date(item.createdAt).toISOString().split('T')[0]; // Get the date part only (YYYY-MM-DD)
 
-    return data.map((item) => {
-        let type
-
-        if (item.subAcaraId && role === 'ANGGOTA') {
-            type = "ABSENSI"
-        } else {
-            type = "NEWS"
+        // Initialize the date group if it doesn't exist
+        if (!acc[dateKey]) {
+            acc[dateKey] = {
+                date: FormatIDTime(item.createdAt),
+                items: []
+            };
         }
-        return {
+
+        // Determine the notification type
+        let type;
+        if (item.subAcaraId && role === 'ANGGOTA') {
+            type = "ABSENSI";
+        } else {
+            type = "NEWS";
+        }
+
+        // Map the notification item
+        const mappedItem = {
             id: item.id,
             title: item.title,
             body: item.body,
@@ -32,6 +105,63 @@ export const getNotificationDTOMapper = async (data: NotificationData[], role: R
             } : null,
             createdAt: FormatIDTime(item.createdAt),
             updatedAt: FormatIDTime(item.updateAt)
-        }
-    })
-}
+        };
+
+        // Push the mapped item into the correct date group
+        acc[dateKey].items.push(mappedItem);
+
+        return acc;
+    }, {} as Record<string, { date: string; items: any[] }>);
+
+    // Convert the grouped object into an array
+    return Object.values(groupedByDate);
+};
+
+// export const getNotificationDTOMapper = async (data: NotificationData[], role: Role) => {
+//     // Group data by date
+//     const groupedByDate = data.reduce((acc, item) => {
+//         const dateKey = FormatIDTime(item.createdAt).split(' ')[0]; // Get the date part only (YYYY-MM-DD)
+
+//         // Map the notification item
+//         let type;
+//         if (item.subAcaraId && role === 'ANGGOTA') {
+//             type = "ABSENSI";
+//         } else {
+//             type = "NEWS";
+//         }
+
+//         const mappedItem = {
+//             id: item.id,
+//             title: item.title,
+//             body: item.body,
+//             isRead: item.isRead,
+//             type,
+//             acara: item.acaraId ? {
+//                 id: item.acara.id,
+//                 name: item.acara.name
+//             } : null,
+//             subAcara: item.subAcaraId ? {
+//                 id: item.subAcara.id,
+//                 name: item.subAcara.name
+//             } : null,
+//             createdAt: FormatIDTime(item.createdAt),
+//             updatedAt: FormatIDTime(item.updateAt)
+//         };
+
+//         // Check if the date key already exists in the accumulator
+//         if (!acc[dateKey]) {
+//             acc[dateKey] = {
+//                 date: dateKey,
+//                 items: []
+//             };
+//         }
+
+//         // Push the mapped item into the correct date group
+//         acc[dateKey].items.push(mappedItem);
+
+//         return acc;
+//     }, {} as Record<string, { date: string; items: any[] }>);
+
+//     // Convert the object into an array of grouped items
+//     return Object.values(groupedByDate);
+// };

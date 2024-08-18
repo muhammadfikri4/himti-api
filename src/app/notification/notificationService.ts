@@ -6,7 +6,6 @@ import { MESSAGES } from "../../utils/Messages"
 import { getSubAcaraById } from "../acara/acaraRepository"
 import { getUserById } from "../authentication/authRepository"
 import { getAllFCMUser } from "../user-fcm/user-fcm.repository"
-import { getAllUsers } from "../user/userRepository"
 import { NotificationData, getNotificationDTOMapper } from "./notificationMapper"
 import { createNotification, getNotifications } from "./notificationRepository"
 
@@ -61,7 +60,7 @@ export const sendNotificationService = async (
         //         const result = await createNotification({ body, title, acaraId, subAcaraId, userId: user.id })
         //     })
         // }))
-        const users = await getAllUsers()
+        // const users = await getAllUsers()
         const result = await Promise.all(fcm.map(async (item) => {
             // const fcm = await getUserFCMByUserId(item.id)
 
@@ -81,6 +80,10 @@ export const sendNotificationService = async (
                 },
                 token: item.fcmToken as string,
             };
+            const user = await getUserById(item.userId)
+            if (user?.role === 'USER' && subAcaraId) {
+                return
+            }
             await firebase.messaging().send(message);
             await createNotification({
                 body,

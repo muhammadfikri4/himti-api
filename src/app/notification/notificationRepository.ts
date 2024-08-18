@@ -21,7 +21,8 @@ export const getNotifications = async (userId: string) => {
         },
         include: {
             acara: true,
-            subAcara: true
+            subAcara: true,
+
         },
         orderBy: {
             createdAt: 'desc'
