@@ -6,7 +6,7 @@ export interface NotificationData extends NotificationHistory {
     subAcara: SubAcara
 }
 
-export const getNotificationDTOMapper = async (data: NotificationData[], role: Role) => {
+export const getNotificationDTOMapper = (data: NotificationData[], role: Role) => {
     // Group data by date
     const groupedByDate = data.reduce((acc, item) => {
         const dateKey = new Date(item.createdAt).toISOString().split('T')[0]; // Get the date part only (YYYY-MM-DD)
