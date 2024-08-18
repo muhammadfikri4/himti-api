@@ -147,5 +147,6 @@ export const sendNotificationByFcmIdService = async (
         title,
         acaraId: idAcara ? idAcara : undefined,
         subAcaraId: subAcaraId ? subAcaraId : undefined,
+        userId: fcm.userId
     })
 }
