@@ -16,5 +16,5 @@ export const getAllFCMUserController = async (
         next(fcm)
         return
     }
-    HandleResponse(res, 200, MESSAGE_CODE.SUCCESS, MESSAGES.SUCCESS.USER, fcm)
+    HandleResponse(res, 200, MESSAGE_CODE.SUCCESS, MESSAGES.SUCCESS.USER, fcm.data, fcm.meta)
 }
