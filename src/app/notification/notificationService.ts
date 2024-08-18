@@ -7,7 +7,7 @@ import { getSubAcaraById } from "../acara/acaraRepository"
 import { getUserById } from "../authentication/authRepository"
 import { getAllFCMUser } from "../user-fcm/user-fcm.repository"
 import { NotificationData, getNotificationDTOMapper } from "./notificationMapper"
-import { createNotification, getNotifications } from "./notificationRepository"
+import { createNotification, getNotificationById, getNotifications, updateStatusNotification } from "./notificationRepository"
 
 export const sendNotificationService = async (
     title: string = 'testing title notification',
@@ -33,36 +33,8 @@ export const sendNotificationService = async (
     }
 
     try {
-        // if (!token || typeof token !== 'string') {
-        //     throw new Error('Invalid FCM token provided');
-        // }
 
-        // await Promise.all(fcm.map(async (item) => {
-        //     const message = {
-        //         notification: {
-        //             title,
-        //             body,
-        //         },
-        //         android: {
-        //             notification: {
-        //                 sound: "default",
-        //             },
-        //             data: {
-        //                 title,
-        //                 body,
-        //             },
-        //         },
-        //         token: item.fcmToken,
-        //     };
-        //     await firebase.messaging().send(message);
-        //     const users = await getAllUsers()
-        //     users.map(async (user) => {
-        //         const result = await createNotification({ body, title, acaraId, subAcaraId, userId: user.id })
-        //     })
-        // }))
-        // const users = await getAllUsers()
         const result = await Promise.all(fcm.map(async (item) => {
-            // const fcm = await getUserFCMByUserId(item.id)
 
             const message = {
                 notification: {
@@ -157,4 +129,19 @@ export const getNotificationService = async (userId: string) => {
     const notification = await getNotifications(user.id)
     const data = getNotificationDTOMapper(notification as NotificationData[], user.role as Role)
     return data
+}
+
+export const readNotificationService = async (notificationId: string, userId: string) => {
+    const notification = await getNotificationById(notificationId)
+    if (!notification) {
+        return new ErrorApp(MESSAGES.ERROR.NOT_FOUND.NOTIFICATION, 404, MESSAGE_CODE.NOT_FOUND)
+    }
+
+    if (notification.userId !== userId) {
+        return new ErrorApp(MESSAGES.ERROR.INVALID.READ_NOTIFICATION, 400, MESSAGE_CODE.BAD_REQUEST)
+    }
+
+    const result = await updateStatusNotification(notification.id, true)
+    return result
+
 }

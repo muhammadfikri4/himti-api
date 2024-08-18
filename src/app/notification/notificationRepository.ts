@@ -29,3 +29,23 @@ export const getNotifications = async (userId: string) => {
         }
     })
 }
+
+export const getNotificationById = async (notificationId: string) => {
+    return await prisma.notificationHistory.findUnique({
+        where: {
+            id: notificationId
+        }
+    })
+}
+
+export const updateStatusNotification = async (notificationId: string, status: boolean) => {
+    return await prisma.notificationHistory.update({
+        where: {
+            id: notificationId
+        },
+        data: {
+            isRead: status
+        }
+
+    })
+}

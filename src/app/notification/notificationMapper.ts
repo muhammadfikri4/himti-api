@@ -6,67 +6,6 @@ export interface NotificationData extends NotificationHistory {
     subAcara: SubAcara
 }
 
-// export const getNotificationDTOMapper = async (data: NotificationData[], role: Role) => {
-
-//     return data.map((item) => {
-//         let type
-
-//         if (item.subAcaraId && role === 'ANGGOTA') {
-//             type = "ABSENSI"
-//         } else {
-//             type = "NEWS"
-//         }
-//         return {
-//             id: item.id,
-//             title: item.title,
-//             body: item.body,
-//             isRead: item.isRead,
-//             type,
-//             acara: item.acaraId ? {
-//                 id: item.acara.id,
-//                 name: item.acara.name
-//             } : null,
-//             subAcara: item.subAcaraId ? {
-//                 id: item.subAcara.id,
-//                 name: item.subAcara.name
-//             } : null,
-//             createdAt: FormatIDTime(item.createdAt),
-//             updatedAt: FormatIDTime(item.updateAt)
-//         }
-//     })
-// }
-
-// export const historyAbsensiMapper = async (absensi: Absensi[], userId: string) => {
-//     const data: AbsensiAcara[] = []
-//     absensi.map(async (item) => {
-//         if (data.find((i: any) => i.acaraId === item.acaraId)) {
-//             return null
-//         }
-//         data.push(item as unknown as AbsensiAcara)
-//     })
-//     const absens = await Promise.all(data.map(async (item: AbsensiAcara) => {
-//         const subAcara = await getAllAbsensiByAcaraId(item.acaraId, userId)
-
-//         return {
-//             acara: {
-//                 id: item.acara.id,
-//                 name: item.acara.name
-//             },
-//             absensi: await Promise.all(subAcara.map(async (subItem) => ({
-//                 id: subItem.id as number,
-//                 image: subItem.image,
-//                 absensiTime: subItem.absensiTime as string,
-//                 subAcara: {
-//                     id: subItem?.subAcara?.id as string,
-//                     name: subItem?.subAcara?.name as string
-//                 },
-//                 point: await getPointByAbsensiUserId(subItem.id, userId) || 0
-//             })))
-//         }
-//     }))
-//     return absens
-// }
-
 export const getNotificationDTOMapper = async (data: NotificationData[], role: Role) => {
     // Group data by date
     const groupedByDate = data.reduce((acc, item) => {

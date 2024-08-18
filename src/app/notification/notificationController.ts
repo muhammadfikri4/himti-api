@@ -1,10 +1,10 @@
 import { NextFunction, Request, Response } from "express"
-import { RequestWithAccessToken } from "interface/Request"
+import { RequestWithAccessToken } from "../../interface/Request"
 import { MESSAGE_CODE } from "../../utils/ErrorCode"
 import { HandleResponse } from "../../utils/HandleResponse"
 import { ErrorApp } from "../../utils/HttpError"
 import { MESSAGES } from "../../utils/Messages"
-import { getNotificationService, sendNotificationService, sendSingleNotificationService } from "./notificationService"
+import { getNotificationService, readNotificationService, sendNotificationService, sendSingleNotificationService } from "./notificationService"
 
 export const sendNotificationController = async (
     req: Request,
@@ -51,4 +51,19 @@ export const getNotificationController = async (
         return
     }
     HandleResponse(res, 200, MESSAGE_CODE.SUCCESS, MESSAGES.SUCCESS.NOTIFICATION.GET, notification)
+}
+
+export const readNotificationController = async (
+    req: RequestWithAccessToken,
+    res: Response,
+    next: NextFunction
+) => {
+    const { notificationId } = req.params
+    const { userId } = req
+    const notification = await readNotificationService(notificationId as string, userId as string)
+    if (notification instanceof ErrorApp) {
+        next(notification)
+        return
+    }
+    HandleResponse(res, 200, MESSAGE_CODE.SUCCESS, MESSAGES.SUCCESS.NOTIFICATION.READ)
 }

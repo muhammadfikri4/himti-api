@@ -39,7 +39,7 @@ export const MESSAGES = {
             MERCHANDISE: "Merchandise not found",
             SERVICE: "Service not found",
             ROUTE: "Route not found, Check again your endpoint!",
-
+            NOTIFICATION: "Notification not found"
 
         },
         ALREADY: {
@@ -97,7 +97,8 @@ export const MESSAGES = {
             ABSENSI: "Absensi is closed",
             ACARA_REGISTER: 'Acara is closed to register',
             ABSENSI_SUBACARA_EXPIRED: "Absensi telah melewati batas waktu, silahkan absensi pada acara selanjutnya! (makanya jangan telat jing)",
-            TIME: "Start time must be less than end time"
+            TIME: "Start time must be less than end time",
+            READ_NOTIFICATION: "You're not allowed to read this notification"
         },
         UNAUTHORIZED: {
             AUTH: "If you are not logged in, please log in first",
@@ -220,7 +221,8 @@ export const MESSAGES = {
         TOKEN: "Token is valid",
         NOTIFICATION: {
             SEND_ALL: "Success to send notification",
-            GET: "Success to fetch notification"
+            GET: "Success to fetch notification",
+            READ: "Success to read notification"
         }
     }
 }
