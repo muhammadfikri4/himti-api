@@ -128,7 +128,11 @@ export const getNotificationService = async (userId: string) => {
 
     const notification = await getNotifications(user.id)
     const data = getNotificationDTOMapper(notification as NotificationData[], user.role as Role)
-    return data
+    const totalLength = notification.filter(e => e.isRead === false).length
+    return {
+        notification: data,
+        count: totalLength
+    }
 }
 
 export const readNotificationService = async (notificationId: string, userId: string) => {
