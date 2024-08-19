@@ -6,8 +6,8 @@ export const createNotification = async ({ body, title, acaraId, subAcaraId, use
         data: {
             title,
             body,
-            acaraId,
-            subAcaraId,
+            acaraId: acaraId ? acaraId : null,
+            subAcaraId: subAcaraId ? subAcaraId : null,
             isRead: false,
             userId: userId as string
         }
