@@ -98,7 +98,8 @@ export const MESSAGES = {
             ACARA_REGISTER: 'Acara is closed to register',
             ABSENSI_SUBACARA_EXPIRED: "Absensi telah melewati batas waktu, silahkan absensi pada acara selanjutnya! (makanya jangan telat jing)",
             TIME: "Start time must be less than end time",
-            READ_NOTIFICATION: "You're not allowed to read this notification"
+            READ_NOTIFICATION: "You're not allowed to read this notification",
+            MINIMAL_TIME: "Start time and end time has to be at least 1 hour",
         },
         UNAUTHORIZED: {
             AUTH: "If you are not logged in, please log in first",
