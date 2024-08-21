@@ -32,19 +32,30 @@ export const getAnggotaService = async ({ search, page = 1, perPage = 10, year, 
             page,
             perPage,
             year,
-
-        }, st),
+        }),
         getAnggotaCount({ search, year, status: st as unknown as string }, st)])
 
-    const data = await anggotaMapper(anggota as unknown as AnggotaModelTypes[])
+    const data = anggotaMapper(anggota as unknown as AnggotaModelTypes[])
     const meta = Meta(page, perPage, totalData)
 
     if (!data.length && !meta.totalPages && !meta.totalData) {
         return new ErrorApp(MESSAGES.ERROR.NOT_FOUND.ANGGOTA, 404, MESSAGE_CODE.NOT_FOUND)
     }
 
+    let result = data
+    if (typeof st === 'boolean') {
+        const anggota = await getAnggota({
+            search,
+            page: 1,
+            perPage: 9999999,
+            year,
+        })
+        const map = anggotaMapper(anggota as unknown as AnggotaModelTypes[])
+        result = map.filter(i => i.isActive === st)
+    }
+
     return {
-        data,
+        data: result,
         meta
     }
 
