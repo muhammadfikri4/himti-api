@@ -25,7 +25,7 @@ export const createSubAcaraService = async ({ name, description, endTime, image,
     if (!acara) {
         return new ErrorApp(MESSAGES.ERROR.NOT_FOUND.ACARA, 404, MESSAGE_CODE.NOT_FOUND)
     }
-    const diff = ((startTime as Date)?.getTime() - (endTime as Date)?.getTime()) / (1000 * 60 * 60)
+    const diff = (new Date(startTime as Date)?.getTime() - (new Date(endTime as Date)?.getTime())) / (1000 * 60 * 60)
 
     if (diff <= 1) {
         return new ErrorApp(MESSAGES.ERROR.INVALID.MINIMAL_TIME, 400, MESSAGE_CODE.BAD_REQUEST)
