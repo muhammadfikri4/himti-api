@@ -1,6 +1,7 @@
 import { decode } from "jsonwebtoken"
 import { TokenDecodeInterface } from "../../interface"
 import { MESSAGE_CODE } from "../../utils/ErrorCode"
+import { FormatIDTime } from "../../utils/FormatIDTime"
 import { ErrorApp } from "../../utils/HttpError"
 import { MESSAGES } from "../../utils/Messages"
 import { getSubAcaraById } from "../acara/acaraRepository"
@@ -45,8 +46,19 @@ export const createAbsensiSubAcaraService = async ({ subAcaraId, image, coordina
     //     return new ErrorApp(MESSAGES.ERROR.INVALID.ABSENSI, 400, MESSAGE_CODE.BAD_REQUEST)
     // }
 
+
     const absensi = await createAbsensi({ acaraId: getSubAcara?.acaraId, subAcaraId, image, userId: (decodeToken as TokenTypes)?.id as string, coordinate, address, absensiTime })
-    await addPoint(absensi.id, userId, 20)
+    const targetTime = new Date(getSubAcara?.startTime as Date) // Asumsikan startTime adalah waktu target
+    const absensiDate = new Date(FormatIDTime(absensi.createdAt))
+
+    // Periksa jika absensi dilakukan 3 jam lebih awal
+    const timeDifference = (targetTime.getTime() - absensiDate.getTime()) / (1000 * 60 * 60) // Selisih dalam jam
+    let points = 20 // Poin default
+
+    if (timeDifference <= 1) {
+        points = 100 // Poin untuk absen 3 jam lebih awal
+    }
+    await addPoint(absensi.id, userId, points)
     return absensi
 }
 
