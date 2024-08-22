@@ -1,5 +1,6 @@
 import { Router } from "express";
 import { validateRequest } from "../../middleware/validateRequest";
+import { VerifyAdmin } from "../../middleware/verifyAdmin";
 import { VerifySuperAdmin } from "../../middleware/verifySuperAdmin";
 import { VerifyToken } from "../../middleware/verifyToken";
 import { CatchWrapper } from "../../utils/CatchWrapper";
@@ -10,7 +11,7 @@ const route = Router()
 
 route.post("/register", validateRequest(registerSchema), CatchWrapper(registerController))
 route.post("/login", validateRequest(loginSchema), CatchWrapper(loginController))
-route.post("/admin/login", VerifySuperAdmin, validateRequest(loginSchema), CatchWrapper(loginAdminController))
+route.post("/admin/login", VerifySuperAdmin, VerifyAdmin, validateRequest(loginSchema), CatchWrapper(loginAdminController))
 route.post('/otp', validateRequest(requestOtpSchema), CatchWrapper(requestOtpController))
 route.post('/otp/validate', validateRequest(validateOtpSchema), CatchWrapper(validateOtpController))
 route.put('/forgot-password', validateRequest(forgotPasswordSchema), CatchWrapper(forgotPasswordController))
