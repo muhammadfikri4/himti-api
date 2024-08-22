@@ -104,25 +104,27 @@ export const getDetailAcaraService = async (id: string, openAbsen?: string, toke
         const user = await getUserById(userId)
         if (user?.role === 'USER' && !user.anggotaId) {
             subAcara = []
-        } else if (user?.role === 'ANGGOTA' || user?.role === 'ADMIN') {
+        } else if (user?.role === 'ANGGOTA' || user?.role === 'ADMIN' || user?.role === 'SUPER_ADMIN') {
+
             const sub = await getSubAcaraByAcaraId(id) || []
-            const filterSub = sub.filter((s: SubAcara) => {
-                const isExpired = new Date(s.endTime as Date) < new Date(Date.now())
+            // const filterSub = sub.filter((s: SubAcara) => {
+            //     const isExpired = new Date(s.endTime as Date) < new Date(Date.now())
 
-                if (typeof absen === 'boolean') {
-                    if ((absen && !isExpired)) {
-                        return true; // skip this item
-                    } else if (!absen && isExpired) {
-                        return true; // skip this item
-                    }
-                    return false
-                } else if (typeof absen === 'undefined') {
-                    return true
-                }
-                return true
-            })
+            //     if ((!isExpired)) {
+            //         return true; // skip this item
+            //     }
+            //     return false; // skip this item
 
-            subAcara = await subAcaraMapper(filterSub as SubAcara[], userId)
+            // })
+
+            const data = await subAcaraMapper(sub as SubAcara[], userId)
+            if (typeof absen === 'boolean') {
+                subAcara = data.filter(i => i.isOpenAbsen === absen)
+            } else {
+                subAcara = data
+            }
+
+
         }
     }
 

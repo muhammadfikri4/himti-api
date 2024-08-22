@@ -1,5 +1,6 @@
 import { SubAcara } from "@prisma/client";
 import { getSingleAbsensiByUserId } from "../absensi/absensiRepository";
+import { SubAcaraDTO } from "./acaraDTO";
 import { AcaraModelTypes } from "./acaraTypes";
 
 export const acaraMapper = (acaras: AcaraModelTypes[]) => {
@@ -17,7 +18,7 @@ export const acaraMapper = (acaras: AcaraModelTypes[]) => {
     return mapper
 }
 
-export const subAcaraMapper = async (subAcaras: SubAcara[], userId: string) => {
+export const subAcaraMapper = async (subAcaras: SubAcara[], userId: string): Promise<SubAcaraDTO[]> => {
     return await Promise.all(subAcaras.map(async (item: SubAcara) => {
         // const { createdAt, updatedAt, ...rest } = item
         let isAlreadyAbsen = false
