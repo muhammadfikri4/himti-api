@@ -4,7 +4,7 @@ import { MESSAGE_CODE } from '../../utils/ErrorCode'
 import { HandleResponse } from '../../utils/HandleResponse'
 import { ErrorApp } from '../../utils/HttpError'
 import { MESSAGES } from '../../utils/Messages'
-import { createUserService, getUsersService } from "./userService"
+import { createUserService, getUserService, getUsersService } from "./userService"
 
 export const getUsersController = async (req: Request, res: Response, next: NextFunction) => {
     const { search, role, page, perPage } = req.query
@@ -35,4 +35,19 @@ export const createUserController = async (
         return
     }
     HandleResponse(res, 201, MESSAGE_CODE.SUCCESS, MESSAGES.CREATED.USER.ACCOUNT)
+}
+
+export const getUserController = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+) => {
+    const { userId } = req.params
+    const result = await getUserService(userId)
+
+    if (result instanceof ErrorApp) {
+        next(result)
+        return
+    }
+    HandleResponse(res, 200, MESSAGE_CODE.SUCCESS, MESSAGES.SUCCESS.USER_DATA.GET, result)
 }

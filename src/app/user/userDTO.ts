@@ -24,3 +24,9 @@ export interface UserRequestBodyDTO {
     password: string
     role?: Role
 }
+
+export interface UserDTO {
+    id: string
+    name: string
+    email: string
+}

@@ -1,9 +1,12 @@
+import { User } from '@prisma/client'
 import * as bcrypt from 'bcrypt'
 import { MESSAGE_CODE } from "../../utils/ErrorCode"
 import { ErrorApp } from "../../utils/HttpError"
 import { MESSAGES } from "../../utils/Messages"
 import { Meta } from "../../utils/Meta"
+import { getUserById } from '../authentication/authRepository'
 import { IFilterUser, UserRequestBodyDTO } from "./userDTO"
+import { userDTOMapper } from './userMapper'
 import { createUser, getUserByEmail, getUsers, getUsersCount } from "./userRepository"
 
 
@@ -30,4 +33,16 @@ export const createUserService = async (body: UserRequestBodyDTO) => {
     const user = await createUser({ ...body, role: 'ADMIN', password: hashPassword })
     return user
 
+}
+
+export const getUserService = async (userId: string) => {
+
+    const user = await getUserById(userId)
+
+    if (!user) {
+        return new ErrorApp(MESSAGES.ERROR.NOT_FOUND.USER.ACCOUNT, 404, MESSAGE_CODE.NOT_FOUND)
+    }
+
+    const data = userDTOMapper(user as User)
+    return data
 }
