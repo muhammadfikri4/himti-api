@@ -19,13 +19,13 @@ export const VerifySuperAdmin = (req: Request, res: Response, next: NextFunction
                 return HandleResponse(res, 401, MESSAGE_CODE.UNAUTHORIZED, MESSAGES.ERROR.UNAUTHORIZED.EXPIRED)
             }
             const decodeToken = decode(token)
+            console.log(decodeToken)
             if (!(decodeToken as TokenDecodeInterface)?.id) {
                 return HandleResponse(res, 401, MESSAGE_CODE.UNAUTHORIZED, MESSAGES.ERROR.UNAUTHORIZED.RECOGNIZED)
             }
             if ((decodeToken as TokenDecodeInterface)?.id) {
                 const { id } = decodeToken as TokenDecodeInterface
                 const getUser = await getUserById(id)
-
                 if (!getUser) {
                     return HandleResponse(res, 401, MESSAGE_CODE.NOT_FOUND, MESSAGES.ERROR.NOT_FOUND.USER.ACCOUNT)
                 }
@@ -37,6 +37,7 @@ export const VerifySuperAdmin = (req: Request, res: Response, next: NextFunction
             }
             return HandleResponse(res, 401, MESSAGE_CODE.UNAUTHORIZED, MESSAGES.ERROR.INVALID.AUTH)
         }
+        console.log(token)
         next()
     })
 
