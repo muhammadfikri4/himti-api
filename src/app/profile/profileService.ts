@@ -127,9 +127,7 @@ export const updatePasswordService = async (token: string, { newPassword, oldPas
     if (!user) {
         return new ErrorApp(MESSAGES.ERROR.NOT_FOUND.USER.ACCOUNT, 404, MESSAGE_CODE.NOT_FOUND)
     }
-    console.log(user)
     const match = await bcrypt.compare(oldPassword as string, user.password)
-    console.log({ match })
     if (!match) {
         return new ErrorApp(MESSAGES.ERROR.INVALID.USER.PASSWORD, 401, MESSAGE_CODE.UNAUTHORIZED)
     }

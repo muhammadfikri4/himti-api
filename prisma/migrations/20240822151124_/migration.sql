@@ -1,0 +1,14 @@
+-- AlterTable
+ALTER TABLE "Absensi" ALTER COLUMN "image" SET DATA TYPE VARCHAR(255);
+
+-- AlterTable
+ALTER TABLE "Acara" ALTER COLUMN "image" SET DATA TYPE VARCHAR(255);
+
+-- AlterTable
+ALTER TABLE "Struktural" ALTER COLUMN "image" SET DATA TYPE VARCHAR(255);
+
+-- AlterTable
+ALTER TABLE "SubAcara" ALTER COLUMN "image" SET DATA TYPE VARCHAR(255);
+
+-- AlterTable
+ALTER TABLE "business" ALTER COLUMN "image" SET DATA TYPE VARCHAR(255);
