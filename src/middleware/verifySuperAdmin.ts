@@ -30,7 +30,7 @@ export const VerifySuperAdmin = (req: Request, res: Response, next: NextFunction
                     return HandleResponse(res, 401, MESSAGE_CODE.NOT_FOUND, MESSAGES.ERROR.NOT_FOUND.USER.ACCOUNT)
                 }
 
-                if (getUser.role !== "SUPER_ADMIN") {
+                if (getUser.role !== "SUPER_ADMIN" && getUser.role !== "ADMIN") {
                     return HandleResponse(res, 401, MESSAGE_CODE.UNAUTHORIZED, MESSAGES.ERROR.INVALID.ROLE_ADMIN)
                 }
 
