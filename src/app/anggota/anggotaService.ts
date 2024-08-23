@@ -74,7 +74,7 @@ export const getAnggotaService = async ({ search, page = 1, perPage = 10, year, 
 
     return {
         data: redisData.items.map(item => ({
-            redisId: item.id,
+            // redisId: item.id,
             id: item.data.id,
             name: item.data.name,
             email: item.data.email,

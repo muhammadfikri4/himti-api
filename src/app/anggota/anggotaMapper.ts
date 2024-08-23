@@ -6,6 +6,7 @@ export const anggotaMapper = (anggotas: AnggotaModelTypes[]) => {
         const sosmed = { facebook, instagram, linkedin, twitter }
         const now = new Date().getFullYear()
         return {
+            // redisId: "",
             id,
             nim,
             name,
