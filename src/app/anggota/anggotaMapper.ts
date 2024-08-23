@@ -6,7 +6,6 @@ export const anggotaMapper = (anggotas: AnggotaModelTypes[]) => {
         const sosmed = { facebook, instagram, linkedin, twitter }
         const now = new Date().getFullYear()
         return {
-            // redisId: "",
             id,
             nim,
             name,
@@ -17,6 +16,8 @@ export const anggotaMapper = (anggotas: AnggotaModelTypes[]) => {
             },
             ...sosmed,
             isActive: Number(anggota.angkatan.year) <= now - 5 ? false : true,
+            createdAt,
+            updatedAt
 
         }
     })

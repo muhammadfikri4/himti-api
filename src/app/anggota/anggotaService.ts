@@ -71,7 +71,19 @@ export const getAnggotaService = async ({ search, page = 1, perPage = 10, year, 
         }
 
     }
-
+    // "id": "667ea366768c4c5979926298",
+    //     "nim": "2552010110",
+    //         "name": " Farhan Maulana",
+    //             "email": null,
+    //                 "angkatan": {
+    //     "id": "5d4928b0-d011-4dbf-8cf2-898b9236217b",
+    //         "year": "2023"
+    // },
+    // "facebook": null,
+    //     "instagram": null,
+    //         "linkedin": null,
+    //             "twitter": null,
+    //                 "isActive": true
     return {
         data: redisData.items.map(item => ({
             // redisId: item.id,
@@ -79,16 +91,16 @@ export const getAnggotaService = async ({ search, page = 1, perPage = 10, year, 
             name: item.data.name,
             email: item.data.email,
             nim: item.data.nim,
-            isActive: item.data.isActive,
-            instagram: item.data.instagram,
             facebook: item.data.facebook,
-            twitter: item.data.twitter,
+            instagram: item.data.instagram,
             linkedin: item.data.linkedin,
+            twitter: item.data.twitter,
             angkatan: {
                 id: item.data.angkatan.id,
                 year: item.data.angkatan.year,
-                isActive: item.data.angkatan.isActive
+                // isActive: item.data.angkatan.isActive
             },
+            isActive: item.data.isActive,
             createdAt: item.data.createdAt,
             updatedAt: item.data.updatedAt
         })),
