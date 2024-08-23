@@ -37,16 +37,22 @@ export const createAngkatanService = async ({ year, isActive }: AngkatanBodyDTO)
 export const getAngkatanService = async ({ search, page = 1, perPage = 10, status }: IFilterAngkatan) => {
 
     const st = statusValue(status as string)
-    const [angkatan, totalData] = await Promise.all([getAngkatan({ page, perPage, search }, st), getAngkatanCount({ search }, st)])
+    const [angkatan, totalData] = await Promise.all([getAngkatan({ page, perPage, search }), getAngkatanCount({ search })])
 
     const data = angkatanMapper(angkatan)
     const meta = Meta(page, perPage, totalData)
 
-    if (!data.length && !meta.totalPages && !meta.totalData) {
+    let result = data
+
+    if (typeof st === 'boolean') {
+        result = data.filter(i => i.isActive === st)
+    }
+
+    if (!result.length && !meta.totalPages && !meta.totalData) {
         return new ErrorApp(MESSAGES.ERROR.NOT_FOUND.ANGKATAN.NAME, 404, MESSAGE_CODE.NOT_FOUND)
     }
     return {
-        data,
+        data: result,
         meta
     }
 }

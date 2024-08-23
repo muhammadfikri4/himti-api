@@ -2,10 +2,12 @@ import { AngkatanModelTypes } from "./angkatanTypes";
 
 export const angkatanMapper = (angkatans: AngkatanModelTypes[]) => {
     return angkatans.map((angkatan) => {
+        const now = new Date().getFullYear()
+
         return {
             id: angkatan.id,
             year: angkatan.year,
-            isActive: angkatan.isActive
+            isActive: Number(angkatan.year) <= now - 5 ? false : true,
         }
     })
 }
