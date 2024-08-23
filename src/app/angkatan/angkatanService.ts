@@ -1,9 +1,12 @@
+import { Angkatan } from '@prisma/client'
 import dotenv from 'dotenv'
+import { REDIS_KEY, RedisFunction } from 'utils/Redis'
 import { MESSAGE_CODE } from '../../utils/ErrorCode'
 import { statusValue } from '../../utils/FilterStatus'
 import { ErrorApp } from '../../utils/HttpError'
 import { MESSAGES } from '../../utils/Messages'
 import { Meta } from '../../utils/Meta'
+import { Pagination } from '../../utils/Pagination'
 import { getAnggotaByAngkatanId } from '../anggota/anggotaRepository'
 import { AngkatanBodyDTO } from './angkatanDTO'
 import { createAngkatan, deleteAngkatanRepository, getAngkatan, getAngkatanById, getAngkatanByYear, getAngkatanCount, getMatchAngkatanExceptSameId, updateAngkatan } from './angkatanRepository'
@@ -20,10 +23,6 @@ export const createAngkatanService = async ({ year, isActive }: AngkatanBodyDTO)
         return new ErrorApp(MESSAGES.ERROR.REQUIRED.ANGKATAN_YEAR, 400, MESSAGE_CODE.BAD_REQUEST)
     }
 
-    // if (typeof year !== 'number') {
-    //     return new ErrorApp(MESSAGES.ERROR.INVALID.ANGKATAN, 400, MESSAGE_CODE.BAD_REQUEST)
-    // }
-
     const matchAngkatan = await getAngkatanByYear(year_string as string)
     if (matchAngkatan) {
         return new ErrorApp(MESSAGES.ERROR.ALREADY.ANGKATAN, 400, MESSAGE_CODE.BAD_REQUEST)
@@ -37,22 +36,41 @@ export const createAngkatanService = async ({ year, isActive }: AngkatanBodyDTO)
 export const getAngkatanService = async ({ search, page = 1, perPage = 10, status }: IFilterAngkatan) => {
 
     const st = statusValue(status as string)
-    const [angkatan, totalData] = await Promise.all([getAngkatan({ page, perPage, search }), getAngkatanCount({ search })])
 
-    const data = angkatanMapper(angkatan)
-    const meta = Meta(page, perPage, totalData)
+    const redisData = await RedisFunction.get<Angkatan[]>(REDIS_KEY.ANGKATAN)
 
-    let result = data
+    if (!redisData) {
+        const [angkatan, totalData] = await Promise.all([getAngkatan({ page, perPage, search }), getAngkatanCount({ search })])
+
+        const data = angkatanMapper(angkatan)
+        const meta = Meta(page, perPage, totalData)
+        await RedisFunction.set(REDIS_KEY.ANGKATAN, data)
+
+        let result = data
+
+        if (typeof st === 'boolean') {
+            result = data.filter(i => i.isActive === st)
+        }
+
+        if (!result.length && !meta.totalPages && !meta.totalData) {
+            return new ErrorApp(MESSAGES.ERROR.NOT_FOUND.ANGKATAN.NAME, 404, MESSAGE_CODE.NOT_FOUND)
+        }
+        return {
+            data: result,
+            meta
+        }
+    }
+
+    let data = Pagination(redisData, page, perPage)
 
     if (typeof st === 'boolean') {
-        result = data.filter(i => i.isActive === st)
+        const filter = redisData.filter(i => i.isActive === st)
+        data = Pagination(filter, page, perPage)
     }
+    const meta = Meta(page, perPage, data.length)
 
-    if (!result.length && !meta.totalPages && !meta.totalData) {
-        return new ErrorApp(MESSAGES.ERROR.NOT_FOUND.ANGKATAN.NAME, 404, MESSAGE_CODE.NOT_FOUND)
-    }
     return {
-        data: result,
+        data: angkatanMapper(data),
         meta
     }
 }

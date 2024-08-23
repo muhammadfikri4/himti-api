@@ -74,8 +74,13 @@ export const getAnggotaService = async ({ search, page = 1, perPage = 10, year, 
 
     }
 
-    const meta = Meta(page, perPage, redisData.length)
-    const data = Pagination(redisData, page, perPage)
+    let data = Pagination(redisData, page, perPage)
+
+    if (typeof st === 'boolean') {
+        const filter = redisData.filter(i => i.isActive === st)
+        data = Pagination(filter, page, perPage)
+    }
+    const meta = Meta(page, perPage, data.length)
 
     return {
         data: anggotaMapper(data),
