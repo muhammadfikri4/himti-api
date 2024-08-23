@@ -5,16 +5,17 @@ import { statusValue } from '../../utils/FilterStatus'
 import { ErrorApp } from '../../utils/HttpError'
 import { MESSAGES } from '../../utils/Messages'
 import { Meta } from '../../utils/Meta'
+import { Pagination } from '../../utils/Pagination'
 import { REDIS_KEY, RedisFunction } from '../../utils/Redis'
 import { AnggotaBodyDTO } from './anggotaDTO'
-import { anggotaMapper } from './anggotaMapper'
+import { AnggotaData, anggotaMapper } from './anggotaMapper'
 import { createAnggota, deleteAnggota, getAnggota, getAnggotaById, getAnggotaCount, getAnggotas, updateAnggota } from './anggotaRepository'
-import { AnggotaModelTypes, IFilterAnggota } from './anggotaTypes'
+import { IFilterAnggota } from './anggotaTypes'
 import { anggotaValidate } from './anggotaValidate'
 
 dotenv.config();
 
-const redis = RedisFunction<Anggota & { angkatan: Angkatan }>(REDIS_KEY.ANGGOTA)
+// const redis = RedisFunction<Anggota & { angkatan: Angkatan }>(REDIS_KEY.ANGGOTA)
 
 export const createAnggotaService = async ({ name, nim, email, angkatanId, isActive }: AnggotaBodyDTO) => {
 
@@ -30,12 +31,13 @@ export const createAnggotaService = async ({ name, nim, email, angkatanId, isAct
 export const getAnggotaService = async ({ search, page = 1, perPage = 10, year, status }: IFilterAnggota) => {
     const st = statusValue(status as string)
 
-    const redisData = await redis.get<Anggota & Angkatan>(page, perPage)
-    // const RD = await redis.getAll()
-    console.log({ redisData })
-    if (!redisData.items.length) {
+    const redisData = await RedisFunction.get<(Anggota & { angkatan: Angkatan })[]>(REDIS_KEY.ANGGOTA)
+    // const redisData = await redis.get<Anggota & Angkatan>(page, perPage)
+    // const totalData = await redis.getAll()
+    // console.log({ redisData })
+    if (!redisData) {
         const anggotas = await getAnggotas()
-        await redis.set(anggotas)
+        await RedisFunction.set(REDIS_KEY.ANGGOTA, anggotas)
 
         const [anggota, totalData] = await Promise.all([
             getAnggota({
@@ -46,7 +48,7 @@ export const getAnggotaService = async ({ search, page = 1, perPage = 10, year, 
             }),
             getAnggotaCount({ search, year, status: st as unknown as string }, st)])
 
-        const data = anggotaMapper(anggota as unknown as AnggotaModelTypes[])
+        const data = anggotaMapper(anggota as AnggotaData[])
         const meta = Meta(page, perPage, totalData)
 
         if (!data.length && !meta.totalPages && !meta.totalData) {
@@ -61,8 +63,8 @@ export const getAnggotaService = async ({ search, page = 1, perPage = 10, year, 
                 perPage: 9999999,
                 year,
             })
-            const map = anggotaMapper(anggota as unknown as AnggotaModelTypes[])
-            result = map.filter(i => i.isActive === st)
+
+            result = data.filter(i => i.isActive === st)
         }
 
         return {
@@ -71,40 +73,13 @@ export const getAnggotaService = async ({ search, page = 1, perPage = 10, year, 
         }
 
     }
-    // "id": "667ea366768c4c5979926298",
-    //     "nim": "2552010110",
-    //         "name": " Farhan Maulana",
-    //             "email": null,
-    //                 "angkatan": {
-    //     "id": "5d4928b0-d011-4dbf-8cf2-898b9236217b",
-    //         "year": "2023"
-    // },
-    // "facebook": null,
-    //     "instagram": null,
-    //         "linkedin": null,
-    //             "twitter": null,
-    //                 "isActive": true
+
+    const meta = Meta(page, perPage, redisData.length)
+    const data = Pagination(redisData, page, perPage)
+
     return {
-        data: redisData.items.map(item => ({
-            // redisId: item.id,
-            id: item.data.id,
-            name: item.data.name,
-            email: item.data.email,
-            nim: item.data.nim,
-            facebook: item.data.facebook,
-            instagram: item.data.instagram,
-            linkedin: item.data.linkedin,
-            twitter: item.data.twitter,
-            angkatan: {
-                id: item.data.angkatan.id,
-                year: item.data.angkatan.year,
-                // isActive: item.data.angkatan.isActive
-            },
-            isActive: item.data.isActive,
-            createdAt: item.data.createdAt,
-            updatedAt: item.data.updatedAt
-        })),
-        meta: '1'
+        data: anggotaMapper(data),
+        meta
     }
 
 

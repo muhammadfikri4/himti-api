@@ -47,7 +47,7 @@ app.use(HandlingError)
 
 async function startServer() {
     try {
-        redis.on('connect', () => console.log('Redis connected'));
+        await redis.connect();
         console.log('Connected to Redis');
         app.listen(port, () => {
             console.log(`Server running on port ${port}🚀`);

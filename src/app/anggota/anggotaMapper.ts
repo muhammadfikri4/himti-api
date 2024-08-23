@@ -1,7 +1,11 @@
-import { AnggotaModelTypes } from "./anggotaTypes";
+import { Anggota, Angkatan } from "@prisma/client";
 
-export const anggotaMapper = (anggotas: AnggotaModelTypes[]) => {
-    const mapper = anggotas.map((anggota: AnggotaModelTypes) => {
+export interface AnggotaData extends Anggota {
+    angkatan: Angkatan
+}
+
+export const anggotaMapper = (anggotas: AnggotaData[]) => {
+    const mapper = anggotas.map((anggota: AnggotaData) => {
         const { id, createdAt, updatedAt, email, name, nim, facebook, instagram, linkedin, twitter } = anggota
         const sosmed = { facebook, instagram, linkedin, twitter }
         const now = new Date().getFullYear()
