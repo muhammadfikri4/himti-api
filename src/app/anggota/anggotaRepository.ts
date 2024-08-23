@@ -11,6 +11,20 @@ export const getAnggotaByAngkatanId = async (angkatanId: string) => {
     })
 }
 
+export const getAnggotas = async () => {
+    return await prisma.anggota.findMany({
+        include: {
+            angkatan: {
+                select: {
+                    id: true,
+                    year: true,
+                    isActive: true
+                }
+            }
+        }
+    })
+}
+
 export const getAnggota = async ({ page, perPage, search, year }: IFilterAnggota) => {
     const filter = {} as { OR: Prisma.AnggotaWhereInput[], angkatan: Prisma.AngkatanWhereInput }
 

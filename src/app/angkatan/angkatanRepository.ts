@@ -7,6 +7,9 @@ export const createAngkatan = async ({ year, isActive }: AngkatanBodyDTO) => {
         data: {
             year: year as string,
             isActive
+        },
+        select: {
+            id: true
         }
     })
 }
@@ -17,7 +20,6 @@ export const getAngkatan = async ({ page, perPage, search }: IFilterAngkatan) =>
             year: {
                 contains: search, mode: 'insensitive'
             },
-            // isActive: status
         },
         orderBy: {
             year: 'desc'

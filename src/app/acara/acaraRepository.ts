@@ -12,6 +12,9 @@ export const createAcara = async ({ description, endTime, image, isOpenAbsen, is
             isOpenAbsen,
             startTime,
             image: image as string
+        },
+        select: {
+            id: true
         }
     })
 }
@@ -25,6 +28,9 @@ export const createSubAcara = async ({ description, endTime, image, name, startT
             startTime,
             image: image as string,
             acaraId
+        },
+        select: {
+            id: true
         }
     })
 }
@@ -43,6 +49,14 @@ export const getAcara = async ({ page, perPage, search, openAbsen, openRegister 
         },
         orderBy: {
             createdAt: 'desc'
+        },
+        select: {
+            id: true,
+            name: true,
+            startTime: true,
+            endTime: true,
+            isOpen: true,
+            image: true,
         },
         take: perPage,
         skip: (Number(page) - 1) * Number(perPage)

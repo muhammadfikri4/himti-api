@@ -16,8 +16,6 @@ export const anggotaMapper = (anggotas: AnggotaModelTypes[]) => {
             },
             ...sosmed,
             isActive: Number(anggota.angkatan.year) <= now - 5 ? false : true,
-            createdAt,
-            updatedAt
 
         }
     })

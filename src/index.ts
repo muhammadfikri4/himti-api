@@ -3,11 +3,14 @@ import cookieParser from 'cookie-parser'
 import cors from 'cors'
 import dotenv from 'dotenv'
 import express from 'express'
+
 import { environment } from './libs'
 import routes from './routes'
 import { HandlingError } from './utils/HandlingError'
+import { redis } from './utils/Redis'
 
 const app = express()
+
 const port = environment.PORT || 8000
 dotenv.config()
 // dbconnect()
@@ -33,8 +36,27 @@ app.use(cookieParser())
 app.use(routes);
 app.use(HandlingError)
 
-app.listen(port, () => {
-    console.log(`Server running on port ${port}🚀`)
-})
+
+// redis.on('error', err => {
+//     console.error('Error connecting to Redis', err)
+// })
+
+// app.listen(port, () => {
+//     console.log(`Server running on port ${port}🚀`)
+// })
+
+async function startServer() {
+    try {
+        redis.on('connect', () => console.log('Redis connected'));
+        console.log('Connected to Redis');
+        app.listen(port, () => {
+            console.log(`Server running on port ${port}🚀`);
+        });
+    } catch (err) {
+        console.error('Redis connection error', err);
+    }
+}
+
+startServer();
 
 export default app

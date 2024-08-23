@@ -48,7 +48,7 @@ export const getAcaraService = async ({ search, page = 1, perPage = 10, openAbse
         getAcaraCount({ search, openAbsen: absen, openRegister: regist })
     ])
 
-    const data = await acaraMapper(acara as unknown as AcaraModelTypes[])
+    const data = acaraMapper(acara as unknown as AcaraModelTypes[])
     if (!data.length) {
         return new ErrorApp(MESSAGES.ERROR.NOT_FOUND.ACARA, 404, MESSAGE_CODE.NOT_FOUND)
 

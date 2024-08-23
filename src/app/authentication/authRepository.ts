@@ -10,6 +10,9 @@ export const createUser = async ({ email, name, password, nim, role, anggotaId }
             nim,
             role,
             anggotaId
+        },
+        select: {
+            id: true
         }
     })
 }
@@ -18,6 +21,14 @@ export const getUserByEmail = async (email: string) => {
     return await prisma.user.findFirst({
         where: {
             email
+        },
+        select: {
+            id: true,
+            email: true,
+            password: true,
+            nim: true,
+            role: true,
+            name: true
         }
     })
 }
