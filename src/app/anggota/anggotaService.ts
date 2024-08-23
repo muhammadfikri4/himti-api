@@ -88,7 +88,9 @@ export const getAnggotaService = async ({ search, page = 1, perPage = 10, year, 
                 id: item.data.angkatan.id,
                 year: item.data.angkatan.year,
                 isActive: item.data.angkatan.isActive
-            }
+            },
+            createdAt: item.data.createdAt,
+            updatedAt: item.data.updatedAt
         })),
         meta: '1'
     }
