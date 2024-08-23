@@ -80,6 +80,10 @@ export const getAnggotaService = async ({ search, page = 1, perPage = 10, year, 
         const filter = redisData.filter(i => i.isActive === st)
         data = Pagination(filter, page, perPage)
     }
+    if (search) {
+        const filter = redisData.filter(i => i.name.toLowerCase().includes(search) || i.nim?.toLowerCase().includes(search))
+        data = Pagination(filter, page, perPage)
+    }
     const meta = Meta(page, perPage, data.length)
 
     return {

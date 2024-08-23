@@ -67,6 +67,11 @@ export const getAngkatanService = async ({ search, page = 1, perPage = 10, statu
         const filter = redisData.filter(i => i.isActive === st)
         data = Pagination(filter, page, perPage)
     }
+    if (search) {
+        const filter = redisData.filter(i => i.year.toLowerCase().includes(search))
+        data = Pagination(filter, page, perPage)
+    }
+
     const meta = Meta(page, perPage, data.length)
 
     return {
