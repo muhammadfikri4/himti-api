@@ -24,5 +24,10 @@ export const environment = {
         PRIVATE_KEY: process.env.FIREBASE_PRIVATE_KEY,
         PROJECT_ID: process.env.FIREBASE_PROJECT_ID
     },
-    TESTING_FCM: process.env.TESTING_FCM
+    TESTING_FCM: process.env.TESTING_FCM,
+    REDIS: {
+        PASSWORD: process.env.REDIS_PASSWORD,
+        HOST: process.env.REDIS_HOST,
+        PORT: process.env.REDIS_PORT
+    }
 }

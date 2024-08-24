@@ -1,10 +1,11 @@
 import { createClient } from 'redis'
+import { environment } from '../libs'
 
 export const redis = createClient({
-    password: 'ocFM2CRIpviGiuFgchOM5I8xeR808Mq1',
+    password: environment.REDIS.PASSWORD,
     socket: {
-        host: 'redis-18216.c240.us-east-1-3.ec2.redns.redis-cloud.com',
-        port: 18216
+        host: environment.REDIS.HOST,
+        port: Number(environment.REDIS.PORT)
     }
 })
 
