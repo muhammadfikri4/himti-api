@@ -63,6 +63,7 @@
     "prisma": "^5.16.0",
     "qrcode": "^1.5.3",
     "redis": "^4.7.0",
+    "redis-om": "^0.4.6",
     "tsconfig-paths": "^4.2.0",
     "vercel": "^34.2.6"
   },

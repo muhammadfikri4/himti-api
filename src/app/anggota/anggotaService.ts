@@ -1,20 +1,22 @@
-import { Anggota, Angkatan } from '@prisma/client'
 import dotenv from 'dotenv'
+import { Repository } from 'redis-om'
+import { Pagination } from 'utils/Pagination'
+import { anggotaSchema } from '../../schema/anggota'
 import { MESSAGE_CODE } from '../../utils/ErrorCode'
 import { statusValue } from '../../utils/FilterStatus'
 import { ErrorApp } from '../../utils/HttpError'
 import { MESSAGES } from '../../utils/Messages'
 import { Meta } from '../../utils/Meta'
-import { Pagination } from '../../utils/Pagination'
-import { REDIS_KEY, RedisFunction } from '../../utils/Redis'
+import { redis } from '../../utils/Redis'
 import { AnggotaBodyDTO } from './anggotaDTO'
 import { AnggotaData, anggotaMapper } from './anggotaMapper'
 import { createAnggota, deleteAnggota, getAnggota, getAnggotaById, getAnggotaCount, getAnggotas, updateAnggota } from './anggotaRepository'
 import { IFilterAnggota } from './anggotaTypes'
 import { anggotaValidate } from './anggotaValidate'
+import { GetAnggotaQuery } from './redis.repository'
 
 dotenv.config();
-
+const anggotaRepository = new Repository(anggotaSchema, redis)
 // const redis = RedisFunction<Anggota & { angkatan: Angkatan }>(REDIS_KEY.ANGGOTA)
 
 export const createAnggotaService = async ({ name, nim, email, angkatanId, isActive }: AnggotaBodyDTO) => {
@@ -30,15 +32,19 @@ export const createAnggotaService = async ({ name, nim, email, angkatanId, isAct
 
 export const getAnggotaService = async ({ search, page = 1, perPage = 10, year, status }: IFilterAnggota) => {
     const st = statusValue(status as string)
-
-    const redisData = await RedisFunction.get<(Anggota & { angkatan: Angkatan })[]>(REDIS_KEY.ANGGOTA)
+    // await redis.connect()
+    // const redisData = await RedisFunction.get<(Anggota & { angkatan: Angkatan })[]>(REDIS_KEY.ANGGOTA)
+    await anggotaRepository.createIndex()
+    const redisData = await anggotaRepository.search().returnCount()
     // const redisData = await redis.get<Anggota & Angkatan>(page, perPage)
     // const totalData = await redis.getAll()
     // console.log({ redisData })
+
+    console.log(redisData)
     if (!redisData) {
         const anggotas = await getAnggotas()
-        await RedisFunction.set(REDIS_KEY.ANGGOTA, anggotas)
-
+        // await RedisFunction.set(REDIS_KEY.ANGGOTA, anggotas)
+        await anggotaRepository.save(anggotas)
         const [anggota, totalData] = await Promise.all([
             getAnggota({
                 search,
@@ -66,6 +72,7 @@ export const getAnggotaService = async ({ search, page = 1, perPage = 10, year, 
 
             result = data.filter(i => i.isActive === st)
         }
+        // await redis.quit()
 
         return {
             data: result,
@@ -74,20 +81,40 @@ export const getAnggotaService = async ({ search, page = 1, perPage = 10, year, 
 
     }
 
-    let data = Pagination(redisData, page, perPage)
+    // const datas = await anggotaRepository.search()
+    //     .where('name')
+    //     .equals(search as string)
+    //     .or('nim')
+    //     .equals(search as string)
+    //     .or('isActive')
+    //     .match(st as boolean)
+    //     .return.all()
+    // console.log({ datas })
+    // const dataParse = anggotaDTOMapperFromRedis(datas)
+    // const data = Pagination(
+    //     dataParse,
+    //     page,
+    //     perPage)
 
-    if (typeof st === 'boolean') {
-        const filter = redisData.filter(i => i.isActive === st)
-        data = Pagination(filter, page, perPage)
-    }
-    if (search) {
-        const filter = redisData.filter(i => i.name.toLowerCase().includes(search) || i.nim?.toLowerCase().includes(search))
-        data = Pagination(filter, page, perPage)
-    }
+    const data = await GetAnggotaQuery(search, st)
+    const result = Pagination(data)
     const meta = Meta(page, perPage, data.length)
+    // if (typeof st === 'boolean') {
+    //     const filter = redisData.filter(i => i.isActive === st)
+    //     data = Pagination(filter, page, perPage)
+    // }
+    // const filter = redisData.filter(i =>
+    //     i.name.toLowerCase().includes(search as string) ||
+    //     i.nim?.toLowerCase().includes(search as string) ||
+    //     i.isActive === st
+    // )
+    // console.log(filter)
+    // data = Pagination(filter, page, perPage)
+    // const meta = Meta(page, perPage, data.length)
 
+    // await redis.quit()
     return {
-        data: anggotaMapper(data),
+        data: result,
         meta
     }
 

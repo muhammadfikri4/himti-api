@@ -4,6 +4,10 @@ export interface AnggotaData extends Anggota {
     angkatan: Angkatan
 }
 
+interface DataRedis {
+    [x: string]: AnggotaData
+}
+
 export const anggotaMapper = (anggotas: AnggotaData[]) => {
     const mapper = anggotas.map((anggota: AnggotaData) => {
         const { id, createdAt, updatedAt, email, name, nim, facebook, instagram, linkedin, twitter } = anggota
@@ -26,4 +30,8 @@ export const anggotaMapper = (anggotas: AnggotaData[]) => {
         }
     })
     return mapper
+}
+
+export const anggotaDTOMapperFromRedis = (data: DataRedis[]) => {
+    return data.flatMap(obj => Object.values(obj))
 }

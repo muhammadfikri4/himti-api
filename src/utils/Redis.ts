@@ -1,4 +1,4 @@
-import { createClient } from 'redis'
+import { createClient } from 'redis';
 
 export const redis = createClient({
     password: 'ocFM2CRIpviGiuFgchOM5I8xeR808Mq1',
@@ -49,7 +49,10 @@ export const REDIS_KEY = {
 // }
 export const RedisFunction = {
     get: async<T = string>(redisKey: string): Promise<T | null> => {
-        const data = await redis.get(redisKey)
+        await redis.connect();
+        let data
+        data = await redis.get(redisKey)
+        await redis.quit()
         return data ? JSON.parse(data) : null
     },
     set: async<T>(redisKey: string, redisValue: T) => {
