@@ -18,6 +18,6 @@ export const ProfileDTOMapper = (data: ProfileData): ProfileDTO => {
         facebook: data?.Anggota?.facebook as string,
         twitter: data?.Anggota?.twitter as string,
         linkedin: data?.Anggota?.linkedin as string,
-        point
+        totalPoint: point
     }
 }
