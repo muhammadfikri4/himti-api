@@ -1,3 +1,4 @@
+import { FormatIDTime } from "utils/FormatIDTime"
 import { MESSAGE_CODE } from "../../utils/ErrorCode"
 import { ErrorApp } from "../../utils/HttpError"
 import { MESSAGES } from "../../utils/Messages"
@@ -39,7 +40,7 @@ export const createAbsensiSubAcaraValidate = async ({ subAcaraId, image, userId,
     if (!getSubAcara) {
         return new ErrorApp(MESSAGES.ERROR.NOT_FOUND.SUB_ACARA, 404, MESSAGE_CODE.NOT_FOUND)
     }
-    const isExpired = new Date(getSubAcara.endTime as Date) < new Date(Date.now())
+    const isExpired = new Date(FormatIDTime(getSubAcara.endTime as Date)) < new Date(FormatIDTime(new Date(Date.now())))
 
 
     if (!image) {

@@ -98,7 +98,7 @@ export const MESSAGES = {
             ABSENSI_ONCE: "Absensi can only be one time",
             ABSENSI: "Absensi is closed",
             ACARA_REGISTER: 'Acara is closed to register',
-            ABSENSI_SUBACARA_EXPIRED: "Absensi telah melewati batas waktu, silahkan absensi pada acara selanjutnya! (makanya jangan telat jing)",
+            ABSENSI_SUBACARA_EXPIRED: "Absensi telah melewati batas waktu, silahkan absensi pada acara selanjutnya!",
             TIME: "Start time must be less than end time",
             READ_NOTIFICATION: "You're not allowed to read this notification",
             MINIMAL_TIME: "Start time and end time has to be at least 1 hour",

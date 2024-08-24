@@ -202,9 +202,15 @@ export const forgotPasswordService = async ({ key, password }: ForgotPasswordDTO
         return new ErrorApp(MESSAGES.ERROR.NOT_FOUND.USER.ACCOUNT, 404, MESSAGE_CODE.NOT_FOUND)
     }
 
+    if (user.UserFCM.length) {
+        await deleteUserFCM(user.UserFCM[0].id)
+    }
+
     if (otp && !otp.isVerified) {
         return new ErrorApp(MESSAGES.ERROR.INVALID.OTP_VERIFIED, 400, MESSAGE_CODE.BAD_REQUEST)
     }
+
+
 
     const hashPassword = await bcrypt.hash(password, 10)
     const response = await changePassword(user.id, hashPassword)

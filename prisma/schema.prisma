@@ -3,8 +3,9 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
 
 model User {
@@ -195,6 +196,8 @@ model Point {
   createdAt DateTime @default(now()) @map("created_at")
   updateAt  DateTime @default(now()) @updatedAt @map("updated_at")
 
+  @@index([userId])
+  @@index([absensiId])
   @@map("points")
 }
 
@@ -212,6 +215,9 @@ model NotificationHistory {
   createdAt  DateTime  @default(now()) @map("created_at") @db.Timestamp(0)
   updateAt   DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamp()
 
+  @@index([acaraId])
+  @@index([userId])
+  @@index([subAcaraId])
   @@map("notification_history")
 }
 
