@@ -1,5 +1,6 @@
 import dotenv from 'dotenv'
 import { MESSAGE_CODE } from '../../utils/ErrorCode'
+import { FormatIDTime } from '../../utils/FormatIDTime'
 import { ErrorApp } from '../../utils/HttpError'
 import { MESSAGES } from '../../utils/Messages'
 import { Meta } from '../../utils/Meta'
@@ -32,7 +33,7 @@ export const createSubAcaraService = async ({ name, description, endTime, image,
         return new ErrorApp(MESSAGES.ERROR.INVALID.MINIMAL_TIME, 400, MESSAGE_CODE.BAD_REQUEST)
     }
 
-    const response = await createSubAcara({ name, image: path, description, endTime, startTime, acaraId })
+    const response = await createSubAcara({ name, image: path, description, endTime: FormatIDTime(new Date(endTime as string)), startTime: FormatIDTime(new Date(startTime as string)), acaraId })
     return response
 }
 
@@ -85,8 +86,8 @@ export const updateSubAcaraService = async ({ id, name, image, description, endT
     if (name) updateFields.name = name;
     if (description) updateFields.description = description;
     if (image) updateFields.image = image;
-    if (startTime) updateFields.startTime = startTime;
-    if (endTime) updateFields.endTime = endTime;
+    if (startTime) updateFields.startTime = FormatIDTime(new Date(startTime as string));
+    if (endTime) updateFields.endTime = FormatIDTime(new Date(endTime as string));
 
     const response = await updateSubAcara(updateFields, id as string)
     return response;

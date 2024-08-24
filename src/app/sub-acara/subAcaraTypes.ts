@@ -5,8 +5,8 @@ export interface SubAcaraModelTypes {
     description?: string,
     acaraId?: string
     image?: string,
-    startTime?: Date,
-    endTime?: Date
+    startTime?: Date | string,
+    endTime?: Date | string
     createdAt: Date,
     updatedAt: Date
 }

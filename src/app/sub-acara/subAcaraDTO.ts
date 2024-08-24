@@ -5,6 +5,6 @@ export interface SubAcaraBodyDTO {
     acaraId?: string
     description?: string,
     image?: string,
-    startTime?: Date,
-    endTime?: Date
+    startTime?: Date | string,
+    endTime?: Date | string
 }
