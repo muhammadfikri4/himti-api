@@ -7,7 +7,6 @@ import express from 'express'
 import { environment } from './libs'
 import routes from './routes'
 import { HandlingError } from './utils/HandlingError'
-import { redis } from './utils/Redis'
 
 const app = express()
 
@@ -36,27 +35,8 @@ app.use(cookieParser())
 app.use(routes);
 app.use(HandlingError)
 
-
-// redis.on('error', err => {
-//     console.error('Error connecting to Redis', err)
-// })
-
-// app.listen(port, () => {
-//     console.log(`Server running on port ${port}🚀`)
-// })
-
-async function startServer() {
-    try {
-        await redis.connect();
-        console.log('Connected to Redis');
-        app.listen(port, () => {
-            console.log(`Server running on port ${port}🚀`);
-        });
-    } catch (err) {
-        console.error('Redis connection error', err);
-    }
-}
-
-startServer();
+app.listen(port, () => {
+    console.log(`Server running on port ${port}🚀`)
+})
 
 export default app

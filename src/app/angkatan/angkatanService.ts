@@ -1,11 +1,9 @@
-import { Angkatan } from '@prisma/client'
 import dotenv from 'dotenv'
 import { MESSAGE_CODE } from '../../utils/ErrorCode'
 import { statusValue } from '../../utils/FilterStatus'
 import { ErrorApp } from '../../utils/HttpError'
 import { MESSAGES } from '../../utils/Messages'
 import { Meta } from '../../utils/Meta'
-import { Pagination } from '../../utils/Pagination'
 import { REDIS_KEY, RedisFunction } from '../../utils/Redis'
 import { getAnggotaByAngkatanId } from '../anggota/anggotaRepository'
 import { AngkatanBodyDTO } from './angkatanDTO'
@@ -37,45 +35,23 @@ export const getAngkatanService = async ({ search, page = 1, perPage = 10, statu
 
     const st = statusValue(status as string)
 
-    const redisData = await RedisFunction.get<Angkatan[]>(REDIS_KEY.ANGKATAN)
+    const [angkatan, totalData] = await Promise.all([getAngkatan({ page, perPage, search }), getAngkatanCount({ search })])
 
-    if (!redisData) {
-        const [angkatan, totalData] = await Promise.all([getAngkatan({ page, perPage, search }), getAngkatanCount({ search })])
+    const data = angkatanMapper(angkatan)
+    const meta = Meta(page, perPage, totalData)
+    await RedisFunction.set(REDIS_KEY.ANGKATAN, data)
 
-        const data = angkatanMapper(angkatan)
-        const meta = Meta(page, perPage, totalData)
-        await RedisFunction.set(REDIS_KEY.ANGKATAN, data)
-
-        let result = data
-
-        if (typeof st === 'boolean') {
-            result = data.filter(i => i.isActive === st)
-        }
-
-        if (!result.length && !meta.totalPages && !meta.totalData) {
-            return new ErrorApp(MESSAGES.ERROR.NOT_FOUND.ANGKATAN.NAME, 404, MESSAGE_CODE.NOT_FOUND)
-        }
-        return {
-            data: result,
-            meta
-        }
-    }
-
-    let data = Pagination(redisData, page, perPage)
+    let result = data
 
     if (typeof st === 'boolean') {
-        const filter = redisData.filter(i => i.isActive === st)
-        data = Pagination(filter, page, perPage)
-    }
-    if (search) {
-        const filter = redisData.filter(i => i.year.toLowerCase().includes(search))
-        data = Pagination(filter, page, perPage)
+        result = data.filter(i => i.isActive === st)
     }
 
-    const meta = Meta(page, perPage, data.length)
-
+    if (!result.length && !meta.totalPages && !meta.totalData) {
+        return new ErrorApp(MESSAGES.ERROR.NOT_FOUND.ANGKATAN.NAME, 404, MESSAGE_CODE.NOT_FOUND)
+    }
     return {
-        data: angkatanMapper(data),
+        data: result,
         meta
     }
 }
