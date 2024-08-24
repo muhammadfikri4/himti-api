@@ -1,4 +1,4 @@
-import { SubAcara } from '@prisma/client'
+import { Acara } from '@prisma/client'
 import dotenv from 'dotenv'
 import { TokenDecodeInterface } from 'interface'
 import { decode } from 'jsonwebtoken'
@@ -7,9 +7,9 @@ import { ErrorApp } from '../../utils/HttpError'
 import { MESSAGES } from '../../utils/Messages'
 import { Meta } from '../../utils/Meta'
 import { getUserById } from '../authentication/authRepository'
-import { AcaraBodyDTO } from './acaraDTO'
-import { acaraMapper, subAcaraMapper } from './acaraMapper'
-import { createAcara, deleteAcara, getAcara, getAcaraById, getAcaraCount, getSubAcaraByAcaraId, updateAcara } from './acaraRepository'
+import { AcaraBodyDTO, SubAcaraDTO } from './acaraDTO'
+import { SubAcaraData, acaraDTOMapper, acarasDTOMapper, subAcaraMapper } from './acaraMapper'
+import { createAcara, deleteAcara, getAcara, getAcaraById, getAcaraCount, updateAcara } from './acaraRepository'
 import { AcaraModelTypes, IFilterAcara } from './acaraTypes'
 import { acaraValidate } from './acaraValidate'
 
@@ -48,7 +48,7 @@ export const getAcaraService = async ({ search, page = 1, perPage = 10, openAbse
         getAcaraCount({ search, openAbsen: absen, openRegister: regist })
     ])
 
-    const data = acaraMapper(acara as unknown as AcaraModelTypes[])
+    const data = acarasDTOMapper(acara as Acara[])
     if (!data.length) {
         return new ErrorApp(MESSAGES.ERROR.NOT_FOUND.ACARA, 404, MESSAGE_CODE.NOT_FOUND)
 
@@ -92,39 +92,33 @@ export const updateAcaraService = async ({ id, name, image, description, endTime
 export const getDetailAcaraService = async (id: string, openAbsen?: string, token?: string) => {
 
     const absen = openValue(openAbsen)
-    let subAcara: Array<SubAcara | null | Promise<SubAcara>> = []
-
-    if (!token) {
-        subAcara = []
-    }
-
-    if (token) {
-        const decodeToken = decode(token)
-        const userId = (decodeToken as TokenDecodeInterface)?.id
-        const user = await getUserById(userId)
-        if (user?.role === 'USER' && !user.anggotaId) {
-            subAcara = []
-        } else if (user?.role === 'ANGGOTA' || user?.role === 'ADMIN' || user?.role === 'SUPER_ADMIN') {
-
-            const sub = await getSubAcaraByAcaraId(id) || []
-
-            const data = await subAcaraMapper(sub as SubAcara[], userId)
-            if (typeof absen === 'boolean') {
-                subAcara = data.filter(i => i.isOpenAbsen === absen)
-            } else {
-                subAcara = data
-            }
-
-
-        }
-    }
 
     const acara = await getAcaraById(id)
     if (!acara) {
         return new ErrorApp(MESSAGES.ERROR.NOT_FOUND.ACARA, 404, MESSAGE_CODE.NOT_FOUND)
     }
+    let subAcara: SubAcaraDTO[] = []
+
+    if (token) {
+        const decodeToken = decode(token)
+        const userId = (decodeToken as TokenDecodeInterface)?.id
+        const user = await getUserById(userId)
+        if (user?.role === 'USER') {
+            subAcara = []
+        } else if (user?.role === 'ANGGOTA' || user?.role === 'ADMIN' || user?.role === 'SUPER_ADMIN') {
+            const data = subAcaraMapper(acara?.SubAcara as SubAcaraData[], userId)
+            if (typeof absen === 'boolean') {
+                subAcara = data.filter(i => i.isOpenAbsen === absen)
+            } else {
+                subAcara = data
+            }
+        }
+    }
+
+    const data = acaraDTOMapper(acara as unknown as Acara)
+
     return {
-        ...acara,
+        ...data,
         subAcara
     }
 }

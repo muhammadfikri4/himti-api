@@ -87,6 +87,27 @@ export const getAcaraById = async (id: string) => {
     return await prisma.acara.findUnique({
         where: {
             id
+        },
+        select: {
+            id: true,
+            name: true,
+            image: true,
+            startTime: true,
+            endTime: true,
+            description: true,
+            isOpen: true,
+            SubAcara: {
+                include: {
+                    absensi: {
+                        select: {
+                            id: true,
+                            acaraId: true,
+                            userId: true,
+                            subAcaraId: true
+                        }
+                    }
+                },
+            },
         }
     })
 }
@@ -95,6 +116,9 @@ export const deleteAcara = async (id: string) => {
     return await prisma.acara.delete({
         where: {
             id
+        },
+        select: {
+            id: true
         }
     })
 }
@@ -104,7 +128,12 @@ export const updateAcara = async (data: AcaraBodyDTO, id: string) => {
         where: {
             id
         },
-        data
+        data,
+        select: {
+            id: true,
+            name: true,
+            description: true
+        }
     })
 }
 

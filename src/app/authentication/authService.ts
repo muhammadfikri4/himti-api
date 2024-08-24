@@ -10,7 +10,7 @@ import { ErrorApp } from '../../utils/HttpError'
 import { SendEmail } from '../../utils/MailerConfig'
 import { MESSAGES } from '../../utils/Messages'
 import { getAnggotaByNIM } from '../anggota/anggotaRepository'
-import { createUserFCM, deleteUserFCM, getUserFCMByUserId } from '../user-fcm/user-fcm.repository'
+import { createUserFCM, deleteUserFCM } from '../user-fcm/user-fcm.repository'
 import { ForgotPasswordDTO, LoginAuthBodyDTO, RegisterAuthBodyDTO, ValidateOtpDTO } from './authDTO'
 import { changePassword, createOtp, createUser, getOtp, getUserByEmail, getUserById, getUserByNIM, userLogin, verifiedOtp } from './authRepository'
 
@@ -44,9 +44,7 @@ export const registerService = async ({ email, name, password, nim, code }: Regi
     }
 
     if (nim) {
-        // if (nim === isAnggota?.nim) {
-        //     return new ErrorApp(MESSAGES.ERROR.ALREADY.GLOBAL.NIM, 400, MESSAGE_CODE.BAD_REQUEST)
-        // }
+
         if (nim === alreadyUser?.nim) {
             return new ErrorApp(MESSAGES.ERROR.ALREADY.GLOBAL.NIM, 400, MESSAGE_CODE.BAD_REQUEST)
         }
@@ -88,8 +86,8 @@ export const loginService = async (
         return new ErrorApp(MESSAGES.ERROR.UNAUTHORIZED.ADMIN, 401, MESSAGE_CODE.UNAUTHORIZED)
     }
 
-    const fcm = await getUserFCMByUserId(user.id)
-    if (fcm) {
+    // const fcm = await getUserFCMByUserId(user.id)
+    if (user.UserFCM.length > 0) {
         return new ErrorApp(MESSAGES.ERROR.ALREADY.LOGIN, 401, MESSAGE_CODE.UNAUTHORIZED)
     }
     if (fcmToken) {
@@ -220,13 +218,12 @@ export const logoutService = async (token: string) => {
     if (!user) {
         return new ErrorApp(MESSAGES.ERROR.NOT_FOUND.USER.ACCOUNT, 404, MESSAGE_CODE.NOT_FOUND)
     }
-    const fcm = await getUserFCMByUserId(user.id)
+    // const fcm = await getUserFCMByUserId(user.id)
     // if (!fcm) {
     //     return new ErrorApp(MESSAGES.ERROR.NOT_FOUND.USER.FCM, 404, MESSAGE_CODE.NOT_FOUND)
     // }
-    if (fcm) {
-
-        await deleteUserFCM(fcm.id)
+    if (user.UserFCM.length > 0) {
+        await deleteUserFCM(user.UserFCM[0].id)
     }
     const response = await userLogin(user.id, false)
     return response

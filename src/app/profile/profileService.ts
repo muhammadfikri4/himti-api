@@ -5,10 +5,11 @@ import { MESSAGE_CODE } from "../../utils/ErrorCode"
 import { ErrorApp } from "../../utils/HttpError"
 import { MESSAGES } from "../../utils/Messages"
 import { AnggotaSosmedDTO } from "../anggota/anggotaDTO"
-import { getAnggotaById, getAnggotaByNIM, updateSosmedAnggota } from "../anggota/anggotaRepository"
+import { getAnggotaByNIM, updateSosmedAnggota } from "../anggota/anggotaRepository"
 import { getUserByEmail, getUserById, getUserByNIM } from "../authentication/authRepository"
 import { getPointByUserId } from '../point/pointRepository'
 import { ChangePasswordDTO, ProfileDTO } from "./profileDTO"
+import { ProfileDTOMapper, ProfileData } from './profileMapper'
 import { getProfile, updatePassword, updateProfile } from "./profileRepository"
 
 export const getProfileService = async (token: string) => {
@@ -20,35 +21,11 @@ export const getProfileService = async (token: string) => {
     if (!profile) {
         return new ErrorApp(MESSAGES.ERROR.NOT_FOUND.USER.ACCOUNT, 404, MESSAGE_CODE.NOT_FOUND)
     }
-
-    let anggota
-    if (profile.anggotaId) {
-        anggota = await getAnggotaById(profile.anggotaId)
-
-    }
-
-    const sosmed = {
-        instagram: anggota?.instagram,
-        linkedin: anggota?.linkedin,
-        twitter: anggota?.twitter,
-        facebook: anggota?.facebook,
-    }
-
     const point = await getPointByUserId((decodeToken as TokenDecodeInterface).id)
-    const { email, id, name, nim, role, updatedAt, createdAt } = profile
-    const response = {
-        id,
-        email,
-        name,
-        nim,
-        role,
-        ...sosmed,
-        totalPoint: point._sum.point,
-        createdAt,
-        updatedAt
-    }
 
-    return response
+    const result = ProfileDTOMapper(profile as ProfileData, point._sum.point as number)
+
+    return result
 }
 
 export const updateProfileService = async (token: string, { email, name, nim, facebook, instagram, twitter, linkedin }: ProfileDTO) => {
@@ -109,14 +86,14 @@ export const updateProfileService = async (token: string, { email, name, nim, fa
         return response
     }
     const [profile, anggota] = await Promise.all([updateProfile(profileField as ProfileDTO), updateSosmedAnggota(sosmedField as AnggotaSosmedDTO)])
-    const { password, ...rest } = profile
+
     const sosmedAnggota = {
         instagram: anggota?.instagram,
         linkedin: anggota?.linkedin,
         twitter: anggota?.twitter,
         facebook: anggota?.facebook,
     }
-    return { ...rest, ...sosmedAnggota }
+    return { ...profile, ...sosmedAnggota }
 
 }
 

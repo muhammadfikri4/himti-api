@@ -22,14 +22,16 @@ export const getUserByEmail = async (email: string) => {
         where: {
             email
         },
-        select: {
-            id: true,
-            email: true,
-            password: true,
-            nim: true,
-            role: true,
-            name: true
-        }
+        include: {
+            UserFCM: {
+                select: {
+                    id: true,
+                    userId: true,
+                    fcmToken: true
+                }
+            }
+        },
+
     })
 }
 
@@ -37,7 +39,16 @@ export const getUserById = async (id: string) => {
     return await prisma.user.findUnique({
         where: {
             id
-        }
+        },
+        include: {
+            UserFCM: {
+                select: {
+                    id: true,
+                    userId: true,
+                    fcmToken: true
+                }
+            }
+        },
     })
 }
 
@@ -45,7 +56,15 @@ export const getUserByNIM = async (nim: string) => {
     return await prisma.user.findFirst({
         where: {
             nim
+        },
+        select: {
+            id: true,
+            email: true,
+            name: true,
+            nim: true,
+            role: true
         }
+
     })
 }
 
@@ -105,6 +124,9 @@ export const userLogin = async (id: string, isLogin: boolean) => {
         },
         data: {
             isLogin
+        },
+        select: {
+            id: true
         }
     })
 }

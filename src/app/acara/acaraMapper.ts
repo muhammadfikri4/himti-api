@@ -1,39 +1,54 @@
-import { SubAcara } from "@prisma/client";
-import { getSingleAbsensiByUserId } from "../absensi/absensiRepository";
-import { SubAcaraDTO } from "./acaraDTO";
-import { AcaraModelTypes } from "./acaraTypes";
+import { Absensi, Acara, SubAcara } from "@prisma/client";
+import { AcaraDTO, SubAcaraDTO } from "./acaraDTO";
 
-export const acaraMapper = (acaras: AcaraModelTypes[]) => {
-    const mapper = acaras.map((acara) => {
-        const { isOpen, isOpenAbsen, createdAt, updatedAt, ...rest } = acara
-        return {
-            ...rest,
-            isOpenRegister: acara.isOpen,
-            isOpenAbsen,
-            createdAt,
-            updatedAt
-
-        }
-    })
-    return mapper
+export interface SubAcaraData extends SubAcara {
+    absensi: Absensi[]
 }
 
-export const subAcaraMapper = async (subAcaras: SubAcara[], userId: string): Promise<SubAcaraDTO[]> => {
-    return await Promise.all(subAcaras.map(async (item: SubAcara) => {
+export const acarasDTOMapper = (acaras: Acara[]): AcaraDTO[] => {
+    return acaras.map((acara) => {
+        return {
+            id: acara.id,
+            description: acara.description,
+            endTime: acara.endTime as Date,
+            image: acara.image as string,
+            name: acara.name,
+            startTime: acara.startTime as Date,
+            isOpen: acara.isOpen,
+        }
+    })
+}
+export const acaraDTOMapper = (acara: Acara): AcaraDTO => {
+    return {
+        id: acara.id,
+        name: acara.name,
+        description: acara.description,
+        image: acara.image as string,
+        startTime: acara.startTime as Date,
+        endTime: acara.endTime as Date,
+        isOpen: acara.isOpen,
+    }
+}
+
+export const subAcaraMapper = (subAcaras: SubAcaraData[], userId: string): SubAcaraDTO[] => {
+    return subAcaras.map((item) => {
         // const { createdAt, updatedAt, ...rest } = item
         let isAlreadyAbsen = false
-        const absensi = await getSingleAbsensiByUserId(userId, item.id as string)
+        const absensi = item.absensi.filter((absen) => absen.userId === userId && absen.subAcaraId === item.id)
         if (absensi) {
             isAlreadyAbsen = true
         }
         const isExpired = new Date(item.endTime as Date) < new Date(Date.now())
 
         return {
-            ...item,
+            id: item.id,
+            name: item.name,
+            description: item.description,
+            image: item.image as string,
+            endTime: item.endTime as Date,
+            startTime: item.startTime as Date,
             isOpenAbsen: !isExpired,
-            isAlreadyAbsen,
-            createdAt: item.createdAt,
-            updatedAt: item.updatedAt
+            isAlreadyAbsen
         }
-    }))
+    })
 }

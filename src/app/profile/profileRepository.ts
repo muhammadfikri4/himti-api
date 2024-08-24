@@ -5,6 +5,17 @@ export const getProfile = async (id: string) => {
     return await prisma.user.findUnique({
         where: {
             id
+        },
+        include: {
+            Anggota: {
+                select: {
+                    id: true,
+                    facebook: true,
+                    instagram: true,
+                    linkedin: true,
+                    twitter: true
+                }
+            }
         }
     })
 }
@@ -14,7 +25,14 @@ export const updateProfile = async (data: ProfileDTO) => {
         where: {
             id: data.id
         },
-        data
+        data,
+        select: {
+            id: true,
+            email: true,
+            name: true,
+            nim: true,
+            role: true
+        }
     })
 }
 

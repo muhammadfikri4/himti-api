@@ -21,8 +21,7 @@ export const getProfileController = async (req: Request, res: Response, next: Ne
 export const updateProfileController = async (req: Request, res: Response, next: NextFunction) => {
 
     const bearerToken = req.headers.authorization?.replace("Bearer ", "")
-    const { name, email, nim, facebook, twitter, linkedin, instagram } = req.body
-    const body = { name, email, nim, facebook, twitter, linkedin, instagram }
+    const { body } = req
     const profile = await updateProfileService(bearerToken as string, body)
     if (profile instanceof ErrorApp) {
         next(profile)

@@ -19,6 +19,7 @@ model User {
   createdAt           DateTime              @default(now()) @map("created_at") @db.Timestamp(0)
   updatedAt           DateTime              @default(now()) @updatedAt @map("updated_at") @db.Timestamp(0)
   isLogin             Boolean               @default(false) @map("is_login")
+  Anggota             Anggota?              @relation(fields: [anggotaId], references: [id])
   Point               Point[]
   UserFCM             UserFCM[]
   NotificationHistory NotificationHistory[]
@@ -76,6 +77,7 @@ model Anggota {
   Struktural Struktural[]
   createdAt  DateTime     @default(now()) @map("created_at") @db.Timestamp(0)
   updatedAt  DateTime     @default(now()) @updatedAt @map("updated_at") @db.Timestamp(0)
+  User       User[]
 
   @@index([angkatanId])
 }
@@ -119,7 +121,7 @@ model SubAcara {
   endTime             DateTime?             @default(now()) @map("end_time") @db.Timestamp(0)
   startTime           DateTime?             @default(now()) @map("start_time") @db.Timestamp(0)
   acaraId             String                @db.VarChar(110)
-  acara               Acara                 @relation(fields: [acaraId], references: [id], onDelete: Restrict)
+  acara               Acara                 @relation(fields: [acaraId], references: [id], onDelete: Cascade)
   absensi             Absensi[]
   createdAt           DateTime              @default(now()) @map("created_at") @db.Timestamp(0)
   updatedAt           DateTime              @updatedAt @map("updated_at") @db.Timestamp(0)

@@ -6,7 +6,8 @@ export interface ProfileDTO {
     instagram?: string
     facebook?: string
     twitter?: string
-    linkedin?: string
+    linkedin?: string,
+    point: number
 }
 
 export interface ChangePasswordDTO {

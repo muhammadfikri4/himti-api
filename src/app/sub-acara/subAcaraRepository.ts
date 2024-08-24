@@ -96,6 +96,14 @@ export const getSubAcaraById = async (id: string) => {
     return await prisma.subAcara.findUnique({
         where: {
             id
+        },
+        select: {
+            id: true,
+            name: true,
+            image: true,
+            startTime: true,
+            endTime: true,
+            description: true
         }
     })
 }
@@ -104,6 +112,9 @@ export const deleteSubAcara = async (id: string) => {
     return await prisma.subAcara.delete({
         where: {
             id
+        },
+        select: {
+            id: true
         }
     })
 }
@@ -113,6 +124,10 @@ export const updateSubAcara = async (data: SubAcaraBodyDTO, id: string) => {
         where: {
             id
         },
-        data
+        data,
+        select: {
+            id: true,
+            name: true,
+        }
     })
 }

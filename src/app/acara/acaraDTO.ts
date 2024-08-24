@@ -1,4 +1,3 @@
-import { SubAcara } from "@prisma/client"
 
 export interface AcaraBodyDTO {
     id?: string
@@ -11,6 +10,16 @@ export interface AcaraBodyDTO {
     endTime?: Date
 }
 
+export interface AcaraDTO {
+    id: string
+    name: string
+    image: string
+    startTime: Date
+    endTime: Date
+    description?: string | null
+    isOpen: boolean
+}
+
 export interface SubAcaraBodyDTO {
     id?: string
     name?: string
@@ -21,7 +30,13 @@ export interface SubAcaraBodyDTO {
     acaraId: string
 }
 
-export interface SubAcaraDTO extends SubAcara {
-    isOpenAbsen: boolean,
+export interface SubAcaraDTO {
+    id: string
+    name: string
+    description: string | null
+    image: string
+    endTime: Date
+    startTime: Date
+    isOpenAbsen: boolean
     isAlreadyAbsen: boolean
 }

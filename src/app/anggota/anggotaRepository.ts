@@ -122,6 +122,11 @@ export const getAnggotaByNIM = async (nim: string) => {
     return await prisma.anggota.findUnique({
         where: {
             nim
+        },
+        select: {
+            id: true,
+            name: true,
+            email: true
         }
     })
 }
@@ -184,6 +189,12 @@ export const updateSosmedAnggota = async (data: AnggotaSosmedDTO) => {
         where: {
             id: data.id
         },
-        data
+        data,
+        select: {
+            facebook: true,
+            instagram: true,
+            linkedin: true,
+            twitter: true
+        }
     })
 }

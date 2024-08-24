@@ -10,6 +10,11 @@ export const createNotification = async ({ body, title, acaraId, subAcaraId, use
             subAcaraId: subAcaraId ? subAcaraId : null,
             isRead: false,
             userId: userId as string
+        },
+        select: {
+            id: true,
+            title: true,
+            body: true,
         }
     })
 }
@@ -17,11 +22,21 @@ export const createNotification = async ({ body, title, acaraId, subAcaraId, use
 export const getNotifications = async (userId: string) => {
     return await prisma.notificationHistory.findMany({
         where: {
-            userId
+            userId,
         },
         include: {
-            acara: true,
-            subAcara: true,
+            acara: {
+                select: {
+                    id: true,
+                    name: true,
+                }
+            },
+            subAcara: {
+                select: {
+                    id: true,
+                    name: true,
+                }
+            },
 
         },
         orderBy: {
@@ -34,6 +49,11 @@ export const getNotificationById = async (notificationId: string) => {
     return await prisma.notificationHistory.findUnique({
         where: {
             id: notificationId
+        },
+        select: {
+            id: true,
+            userId: true,
+            isRead: true
         }
     })
 }
@@ -45,6 +65,10 @@ export const updateStatusNotification = async (notificationId: string, status: b
         },
         data: {
             isRead: status
+        },
+        select: {
+            id: true,
+            isRead: true
         }
 
     })
