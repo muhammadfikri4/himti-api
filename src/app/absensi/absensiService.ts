@@ -52,7 +52,7 @@ export const createAbsensiSubAcaraService = async ({ subAcaraId, image, coordina
     const absensiDate = new Date(FormatIDTime(absensi.createdAt))
 
     // Periksa jika absensi dilakukan 3 jam lebih awal
-    const timeDifference = (targetTime.getTime() - absensiDate.getTime()) / (1000 * 60 * 60) // Selisih dalam jam
+    const timeDifference = (absensiDate.getTime() - targetTime.getTime()) / (1000 * 60 * 60) // Selisih dalam jam
     let points = 20 // Poin default
 
     if (timeDifference <= 1) {

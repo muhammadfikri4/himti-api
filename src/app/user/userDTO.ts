@@ -25,6 +25,11 @@ export interface UserRequestBodyDTO {
     role?: Role
 }
 
+export interface UpdateUserBodyRequest {
+    name?: string
+    email?: string
+}
+
 export interface UserDTO {
     id: string
     name: string

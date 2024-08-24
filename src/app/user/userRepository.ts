@@ -1,6 +1,7 @@
 import { Prisma } from "@prisma/client"
 import { prisma } from "../../config"
-import { IFilterUser, UserRequestBodyDTO } from "./userDTO"
+import { ReturnValue } from "../../utils/ReturnValue"
+import { IFilterUser, UpdateUserBodyRequest, UserRequestBodyDTO } from "./userDTO"
 
 // export const createAbsensi = async ({ acaraId, image, userId, coordinate }: AbsensiDTO) => {
 //     return await prisma.absensi.create({
@@ -75,10 +76,19 @@ export const getUsers = async ({ page, perPage, search, role }: IFilterUser) => 
         orderBy: {
             createdAt: 'desc'
         },
+        select: {
+            id: true,
+            name: true,
+            email: true,
+            nim: true,
+            role: true,
+            isLogin: true
+        },
         take: perPage,
         skip: (Number(page) - 1) * Number(perPage)
     })
 }
+
 export const getUsersCount = async ({ search }: IFilterUser) => {
     const filter = {} as { OR: Prisma.UserWhereInput[] }
 
@@ -142,6 +152,21 @@ export const createUser = async (data: UserRequestBodyDTO) => {
         select: {
             id: true,
             name: true
+        }
+    })
+}
+
+export const updateUser = async (userId: string, data: UpdateUserBodyRequest) => {
+    return await prisma.user.update({
+        where: {
+            id: userId
+        },
+        data: {
+            name: ReturnValue<string>(data.name as string),
+            email: ReturnValue<string>(data.email as string),
+        },
+        select: {
+            id: true,
         }
     })
 }

@@ -5,9 +5,9 @@ import { ErrorApp } from "../../utils/HttpError"
 import { MESSAGES } from "../../utils/Messages"
 import { Meta } from "../../utils/Meta"
 import { getUserById } from '../authentication/authRepository'
-import { IFilterUser, UserRequestBodyDTO } from "./userDTO"
+import { IFilterUser, UpdateUserBodyRequest, UserRequestBodyDTO } from "./userDTO"
 import { userDTOMapper } from './userMapper'
-import { createUser, getUserByEmail, getUsers, getUsersCount } from "./userRepository"
+import { createUser, getUserByEmail, getUsers, getUsersCount, updateUser } from "./userRepository"
 
 
 
@@ -45,4 +45,16 @@ export const getUserService = async (userId: string) => {
 
     const data = userDTOMapper(user as User)
     return data
+}
+
+export const updateUserService = async (userId: string, data: UpdateUserBodyRequest) => {
+
+    const user = await getUserById(userId)
+    if (!user) {
+        return new ErrorApp(MESSAGES.ERROR.NOT_FOUND.USER.ACCOUNT, 404, MESSAGE_CODE.NOT_FOUND)
+    }
+
+    const result = await updateUser(userId, data)
+    return result
+
 }

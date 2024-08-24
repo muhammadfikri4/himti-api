@@ -7,8 +7,7 @@ export interface ProfileData extends User {
 }
 
 export const ProfileDTOMapper = (data: ProfileData): ProfileDTO => {
-    const sumPoint = data.Point.reduce((a: number, b: Point) => a + b.point, 0)
-    const point = data.Point.length ? sumPoint : 0
+    const point = data.Point?.reduce((a: number, b: Point) => a + b.point, 0)
     return {
         id: data.id,
         email: data.email,

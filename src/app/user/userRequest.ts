@@ -14,3 +14,10 @@ export const createUserSchema = Joi.object({
         "string.min": MESSAGES.ERROR.INVALID.USER.PASSWORD_LENGTH
     }),
 })
+
+export const updateUserSchema = Joi.object({
+    name: Joi.string().optional(),
+    email: Joi.string().optional().email().messages({
+        "string.email": MESSAGES.ERROR.INVALID.GLOBAL.EMAIL
+    })
+})

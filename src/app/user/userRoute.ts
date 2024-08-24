@@ -3,8 +3,8 @@ import { validateRequest } from "../../middleware/validateRequest";
 import { VerifyAdmin } from "../../middleware/verifyAdmin";
 import { VerifySuperAdmin } from "../../middleware/verifySuperAdmin";
 import { CatchWrapper } from "../../utils/CatchWrapper";
-import { createUserController, getUserController, getUsersController } from "./userController";
-import { createUserSchema } from "./userRequest";
+import { createUserController, getUserController, getUsersController, updateUserController } from "./userController";
+import { createUserSchema, updateUserSchema } from "./userRequest";
 
 const route = Router()
 
@@ -13,5 +13,6 @@ const route = Router()
 route.get('/', VerifyAdmin, CatchWrapper(getUsersController))
 route.get('/:userId', VerifyAdmin, CatchWrapper(getUserController))
 route.post('/admin', VerifySuperAdmin, validateRequest(createUserSchema), CatchWrapper(createUserController))
+route.put('/admin/:userId', VerifySuperAdmin, validateRequest(updateUserSchema), CatchWrapper(updateUserController))
 
 export default route
