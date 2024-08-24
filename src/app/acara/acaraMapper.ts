@@ -35,7 +35,7 @@ export const subAcaraMapper = (subAcaras: SubAcaraData[], userId: string): SubAc
         // const { createdAt, updatedAt, ...rest } = item
         let isAlreadyAbsen = false
         const absensi = item.absensi.filter((absen) => absen.userId === userId && absen.subAcaraId === item.id)
-        if (absensi) {
+        if (absensi.length) {
             isAlreadyAbsen = true
         }
         const isExpired = new Date(item.endTime as Date) < new Date(Date.now())
