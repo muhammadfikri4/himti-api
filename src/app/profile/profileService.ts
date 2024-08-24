@@ -7,7 +7,6 @@ import { MESSAGES } from "../../utils/Messages"
 import { AnggotaSosmedDTO } from "../anggota/anggotaDTO"
 import { getAnggotaByNIM, updateSosmedAnggota } from "../anggota/anggotaRepository"
 import { getUserByEmail, getUserById, getUserByNIM } from "../authentication/authRepository"
-import { getPointByUserId } from '../point/pointRepository'
 import { ChangePasswordDTO, ProfileDTO } from "./profileDTO"
 import { ProfileDTOMapper, ProfileData } from './profileMapper'
 import { getProfile, updatePassword, updateProfile } from "./profileRepository"
@@ -21,9 +20,7 @@ export const getProfileService = async (token: string) => {
     if (!profile) {
         return new ErrorApp(MESSAGES.ERROR.NOT_FOUND.USER.ACCOUNT, 404, MESSAGE_CODE.NOT_FOUND)
     }
-    const point = await getPointByUserId((decodeToken as TokenDecodeInterface).id)
-
-    const result = ProfileDTOMapper(profile as ProfileData, point._sum.point as number)
+    const result = ProfileDTOMapper(profile as unknown as ProfileData)
 
     return result
 }

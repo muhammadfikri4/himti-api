@@ -15,6 +15,11 @@ export const getProfile = async (id: string) => {
                     linkedin: true,
                     twitter: true
                 }
+            },
+            Point: {
+                select: {
+                    point: true
+                }
             }
         }
     })

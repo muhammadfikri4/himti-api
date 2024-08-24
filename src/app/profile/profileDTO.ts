@@ -1,8 +1,11 @@
+import { Role } from "@prisma/client"
+
 export interface ProfileDTO {
     id?: string
     email: string
     name: string
     nim: string
+    role: Role
     instagram?: string
     facebook?: string
     twitter?: string
