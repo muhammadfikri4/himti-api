@@ -6,7 +6,7 @@ import { MESSAGES } from '../../utils/Messages'
 import { Meta } from '../../utils/Meta'
 import { AnggotaBodyDTO } from './anggotaDTO'
 import { AnggotaData, anggotaMapper } from './anggotaMapper'
-import { createAnggota, deleteAnggota, getAnggota, getAnggotaById, getAnggotaCount, updateAnggota } from './anggotaRepository'
+import { createAnggota, deleteAnggota, getAnggota, getAnggotaById, getAnggotaCount, updateAnggota, updateAnggotaNonActive } from './anggotaRepository'
 import { IFilterAnggota } from './anggotaTypes'
 import { anggotaValidate } from './anggotaValidate'
 
@@ -34,20 +34,19 @@ export const getAnggotaService = async ({ search, page = 1, perPage = 10, year, 
         }),
         getAnggotaCount({ search, year, status: st as unknown as string }, st)])
 
+    await updateAnggotaNonActive()
     const data = anggotaMapper(anggota as AnggotaData[])
     const meta = Meta(page, perPage, totalData)
+
 
     if (!data.length && !meta.totalPages && !meta.totalData) {
         return new ErrorApp(MESSAGES.ERROR.NOT_FOUND.ANGGOTA, 404, MESSAGE_CODE.NOT_FOUND)
     }
 
-    let result = data
-    if (typeof st === 'boolean') {
-        result = data.filter(i => i.isActive === st)
-    }
-
+    console.log(st)
+    // console.log(result.filter(i => i.isActive === st))
     return {
-        data: result,
+        data,
         meta
     }
 

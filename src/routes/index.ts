@@ -10,6 +10,7 @@ import angkatanRoute from '../app/angkatan/angkatanRoute';
 import authRoute from '../app/authentication/authRoute';
 import businessRoute from '../app/business/businessRoute';
 import dosenRoute from '../app/dosen/dosenRoute';
+import initialRoute from '../app/initial/initialRoute';
 import notificationRoute from '../app/notification/notificationRoute';
 import prestasiRoute from '../app/prestasi/prestasiRoute';
 import profileRoute from '../app/profile/profileRoute';
@@ -36,6 +37,7 @@ route.use('/prestasi', prestasiRoute)
 route.use('/user', userRoute)
 route.use('/notification', notificationRoute)
 route.use('/user-fcm', userFcmRoute)
+route.use('/initial', initialRoute)
 
 
 registerFont(path.join(__dirname, '../../public/times-new-roman.ttf'), { family: 'Times New Roman' });

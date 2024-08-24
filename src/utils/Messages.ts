@@ -1,7 +1,8 @@
 export const MESSAGES = {
     CREATED: {
         USER: {
-            ACCOUNT: "User created successfully"
+            ACCOUNT: "User created successfully",
+            INITIAL: "Initial user created successfully"
         },
         ROLE: "Role created successfully",
         ANGKATAN: "Angkatan created successfully",
@@ -60,7 +61,8 @@ export const MESSAGES = {
             USER_NIM: "User cannot use anggota NIM",
             MERCHANDISE: "Merchandise is already exist",
             OTP_VERIFIED: "OTP is already verified, please request otp again to forget password",
-            LOGIN: "Please log out on other device and login again"
+            LOGIN: "Please log out on other device and login again",
+            INITIAL: "Initial user already exist"
         },
         INVALID: {
             GLOBAL: {

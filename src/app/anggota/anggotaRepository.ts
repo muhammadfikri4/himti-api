@@ -131,6 +131,22 @@ export const getAnggotaByNIM = async (nim: string) => {
     })
 }
 
+export const updateAnggotaNonActive = async () => {
+    const now = new Date().getFullYear()
+    const fiveYearAgo = now - 5
+
+    return await prisma.anggota.updateMany({
+        where: {
+            angkatan: {
+                year: fiveYearAgo.toString()
+            }
+        },
+        data: {
+            isActive: false
+        }
+    })
+}
+
 export const getAnggotaById = async (id: string) => {
     return await prisma.anggota.findUnique({
         where: {

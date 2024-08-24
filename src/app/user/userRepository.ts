@@ -174,3 +174,7 @@ export const updateUser = async (userId: string, data: UpdateUserBodyRequest) =>
 export const getAllUsers = async () => {
     return await prisma.user.findMany()
 }
+
+export const getAllUsersCount = async () => {
+    return await prisma.user.count()
+}
