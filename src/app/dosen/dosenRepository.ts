@@ -12,6 +12,10 @@ export const createDosen = async ({ email, isActive, lesson, name, nidn, numberP
             name: name as string,
             nidn: nidn as string,
             numberPhone
+        },
+        select: {
+            id: true,
+            name: true,
         }
     })
 
@@ -47,6 +51,14 @@ export const getDosen = async ({ page, perPage, search }: IFilterDosen) => {
         where: filter,
         orderBy: {
             createdAt: 'desc'
+        },
+        select: {
+            id: true,
+            name: true,
+            email: true,
+            nidn: true,
+            numberPhone: true,
+            lesson: true,
         },
         take: perPage,
         skip: (Number(page) - 1) * Number(perPage)

@@ -1,6 +1,6 @@
-import { AngkatanModelTypes } from "./angkatanTypes";
+import { Angkatan } from "@prisma/client";
 
-export const angkatanMapper = (angkatans: AngkatanModelTypes[]) => {
+export const angkatanMapper = (angkatans: Angkatan[]) => {
     return angkatans.map((angkatan) => {
         const now = new Date().getFullYear()
 

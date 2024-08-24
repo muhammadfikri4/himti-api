@@ -1,3 +1,4 @@
+import { Prestasi } from "@prisma/client";
 import { Query } from "../../interface/Query";
 import { Meta } from "../../utils/Meta";
 import { getPrestasiDTOMapper } from "./prestasiMapper";
@@ -16,7 +17,7 @@ export const getPrestasiService = async (query: Query) => {
         totalData
     )
 
-    const data = getPrestasiDTOMapper(prestasi)
+    const data = getPrestasiDTOMapper(prestasi as Prestasi[])
     const response = { data, meta }
 
     return response

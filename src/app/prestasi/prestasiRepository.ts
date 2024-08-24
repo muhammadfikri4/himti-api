@@ -28,6 +28,11 @@ export const getPrestasi = async (query: Query) => {
         where: {
             ...querySearch(query)
         },
+        select: {
+            id: true,
+            image: true,
+            title: true
+        },
         ...queryPagination(query)
     })
 }

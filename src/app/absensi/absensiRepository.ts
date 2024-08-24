@@ -12,6 +12,12 @@ export const createAbsensi = async ({ acaraId, image, userId, coordinate, subAca
             coordinate,
             address,
             absensiTime
+        },
+        select: {
+            id: true,
+            coordinate: true,
+            address: true,
+            createdAt: true
         }
     })
 }

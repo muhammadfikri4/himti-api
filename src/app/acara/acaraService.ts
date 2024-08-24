@@ -107,15 +107,6 @@ export const getDetailAcaraService = async (id: string, openAbsen?: string, toke
         } else if (user?.role === 'ANGGOTA' || user?.role === 'ADMIN' || user?.role === 'SUPER_ADMIN') {
 
             const sub = await getSubAcaraByAcaraId(id) || []
-            // const filterSub = sub.filter((s: SubAcara) => {
-            //     const isExpired = new Date(s.endTime as Date) < new Date(Date.now())
-
-            //     if ((!isExpired)) {
-            //         return true; // skip this item
-            //     }
-            //     return false; // skip this item
-
-            // })
 
             const data = await subAcaraMapper(sub as SubAcara[], userId)
             if (typeof absen === 'boolean') {

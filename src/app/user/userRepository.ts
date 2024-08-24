@@ -119,6 +119,14 @@ export const getUserByEmail = async (email: string) => {
     return await prisma.user.findFirst({
         where: {
             email
+        },
+        select: {
+            id: true,
+            name: true,
+            email: true,
+            nim: true,
+            anggotaId: true,
+            role: true
         }
     })
 }
@@ -130,6 +138,10 @@ export const createUser = async (data: UserRequestBodyDTO) => {
             email: data.email,
             password: data.password,
             role: data.role
+        },
+        select: {
+            id: true,
+            name: true
         }
     })
 }

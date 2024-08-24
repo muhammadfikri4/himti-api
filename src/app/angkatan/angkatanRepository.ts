@@ -24,6 +24,10 @@ export const getAngkatan = async ({ page, perPage, search }: IFilterAngkatan) =>
         orderBy: {
             year: 'desc'
         },
+        select: {
+            id: true,
+            year: true,
+        },
         take: perPage,
         skip: (Number(page) - 1) * Number(perPage)
     })

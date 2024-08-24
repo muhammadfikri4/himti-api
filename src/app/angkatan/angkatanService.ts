@@ -1,3 +1,4 @@
+import { Angkatan } from '@prisma/client'
 import dotenv from 'dotenv'
 import { MESSAGE_CODE } from '../../utils/ErrorCode'
 import { statusValue } from '../../utils/FilterStatus'
@@ -36,7 +37,7 @@ export const getAngkatanService = async ({ search, page = 1, perPage = 10, statu
 
     const [angkatan, totalData] = await Promise.all([getAngkatan({ page, perPage, search }), getAngkatanCount({ search })])
 
-    const data = angkatanMapper(angkatan)
+    const data = angkatanMapper(angkatan as Angkatan[])
     const meta = Meta(page, perPage, totalData)
 
     let result = data
