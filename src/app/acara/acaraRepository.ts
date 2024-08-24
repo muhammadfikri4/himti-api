@@ -107,6 +107,9 @@ export const getAcaraById = async (id: string) => {
                         }
                     }
                 },
+                orderBy: {
+                    createdAt: 'desc'
+                }
             },
         }
     })
