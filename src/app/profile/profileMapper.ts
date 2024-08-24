@@ -11,10 +11,10 @@ export const ProfileDTOMapper = (data: ProfileData, point: number): ProfileDTO =
         email: data.email,
         name: data.name,
         nim: data.nim as string,
-        instagram: data.Anggota.instagram as string,
-        facebook: data.Anggota.facebook as string,
-        twitter: data.Anggota.twitter as string,
-        linkedin: data.Anggota.linkedin as string,
+        instagram: data?.Anggota?.instagram as string,
+        facebook: data?.Anggota?.facebook as string,
+        twitter: data?.Anggota?.twitter as string,
+        linkedin: data?.Anggota?.linkedin as string,
         point
     }
 }
