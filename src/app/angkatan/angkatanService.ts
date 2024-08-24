@@ -4,7 +4,6 @@ import { statusValue } from '../../utils/FilterStatus'
 import { ErrorApp } from '../../utils/HttpError'
 import { MESSAGES } from '../../utils/Messages'
 import { Meta } from '../../utils/Meta'
-import { REDIS_KEY, RedisFunction } from '../../utils/Redis'
 import { getAnggotaByAngkatanId } from '../anggota/anggotaRepository'
 import { AngkatanBodyDTO } from './angkatanDTO'
 import { createAngkatan, deleteAngkatanRepository, getAngkatan, getAngkatanById, getAngkatanByYear, getAngkatanCount, getMatchAngkatanExceptSameId, updateAngkatan } from './angkatanRepository'
@@ -39,7 +38,6 @@ export const getAngkatanService = async ({ search, page = 1, perPage = 10, statu
 
     const data = angkatanMapper(angkatan)
     const meta = Meta(page, perPage, totalData)
-    await RedisFunction.set(REDIS_KEY.ANGKATAN, data)
 
     let result = data
 
