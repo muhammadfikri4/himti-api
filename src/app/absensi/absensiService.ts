@@ -48,19 +48,24 @@ export const createAbsensiSubAcaraService = async ({ subAcaraId, image, coordina
 
 
     const absensi = await createAbsensi({ acaraId: getSubAcara?.acaraId, subAcaraId, image, userId: (decodeToken as TokenTypes)?.id as string, coordinate, address, absensiTime })
-    const targetTime = new Date(getSubAcara?.startTime as Date) // Asumsikan startTime adalah waktu target
-    const absensiDate = new Date(FormatIDTime(absensi.createdAt))
+    // const targetTime = new Date(getSubAcara?.startTime as Date) // Asumsikan startTime adalah waktu target
+    const absensiDate = new Date(FormatIDTime(new Date()))
 
     // Periksa jika absensi dilakukan 3 jam lebih awal
-    const timeDifference = ((new Date(absensiDate as Date)?.getTime()) - new Date(getSubAcara?.startTime as Date)?.getTime()) / (1000 * 60 * 60)
+    const timeDifference = ((absensiDate?.getTime()) - new Date(FormatIDTime(getSubAcara?.startTime as Date))?.getTime()) / (1000 * 60 * 60)
     // Selisih dalam jam
     let points = 20 // Poin default
-    console.log({ absensi, timeDifference, targetTime, createdAt: absensi.createdAt, absensiDate })
+    console.log({ timeDifference, targetTime: new Date(FormatIDTime(getSubAcara?.startTime as Date)), absensiDate })
+    // console.log({ absensi, timeDifference, targetTime, createdAt: absensi.createdAt, absensiDate })
+    if (timeDifference <= 0) {
+        return new ErrorApp(MESSAGES.ERROR.INVALID.ABSENSI_NOT_OPEN, 400, MESSAGE_CODE.BAD_REQUEST)
+    }
     if (timeDifference >= 0 && timeDifference <= 1) {
         points = 100 // Poin untuk absen 3 jam lebih awal
     }
+    console.log({ points })
     await addPoint(absensi.id, userId, points)
-    return absensi
+    return
 }
 
 export const getAbsensiService = async ({ acaraId }: IFilterAbsensi, token: string) => {
