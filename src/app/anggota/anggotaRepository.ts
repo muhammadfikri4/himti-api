@@ -138,7 +138,9 @@ export const updateAnggotaNonActive = async () => {
     return await prisma.anggota.updateMany({
         where: {
             angkatan: {
-                year: fiveYearAgo.toString()
+                year: {
+                    lt: fiveYearAgo.toString()
+                }
             }
         },
         data: {
