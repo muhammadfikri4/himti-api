@@ -15,6 +15,7 @@ export interface TokenTypes {
 export interface IFilterAbsensi {
     userId?: string
     acaraId?: string
+    subAcaraId?: string
     page?: number
     perPage?: number
 }

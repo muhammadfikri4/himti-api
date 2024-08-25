@@ -33,7 +33,7 @@ export const createSubAcaraService = async ({ name, description, endTime, image,
         return new ErrorApp(MESSAGES.ERROR.INVALID.MINIMAL_TIME, 400, MESSAGE_CODE.BAD_REQUEST)
     }
 
-    const response = await createSubAcara({ name, image: path, description, endTime: FormatIDTime(new Date(endTime as string)), startTime: FormatIDTime(new Date(startTime as string)), acaraId })
+    const response = await createSubAcara({ name, image: path, description, endTime, startTime, acaraId })
     return response
 }
 

@@ -190,4 +190,29 @@ export const getAbsensiById = async (id: number) => {
             }
         }
     })
-} 
+}
+
+export const getAbsensies = async (
+    subAcaraId: string,
+    page: number = 1,
+    perPage: number = 10
+) => {
+    return await prisma.absensi.findMany({
+        where: {
+            subAcaraId
+        },
+        select: {
+            id: true,
+            user: {
+                select: {
+                    id: true,
+                    name: true,
+                    nim: true
+                }
+            },
+            image: true
+        },
+        take: Number(perPage),
+        skip: (Number(page) - 1) * Number(perPage)
+    })
+}
