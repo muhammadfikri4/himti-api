@@ -95,44 +95,28 @@ export const getAbsensiByUserId = (userId: string, acaraId?: string) => {
             userId,
             acaraId
         },
-        include: {
+        select: {
+            id: true,
+            image: true,
+            absensiTime: true,
             acara: {
                 select: {
                     id: true,
                     name: true,
-                    SubAcara: {
-                        select: {
-                            id: true,
-                            name: true,
-
-                        }
-                    },
-                    Absensi: {
-                        select: {
-                            id: true,
-                            absensiTime: true,
-                        }
-                    }
                 },
             },
             subAcara: {
                 select: {
                     id: true,
                     name: true,
-                    acaraId: true
-                }
-            },
-            user: {
-                select: {
-                    id: true,
-                    name: true
                 }
             },
             Point: {
                 select: {
                     point: true
                 }
-            }
+            },
+
         },
         orderBy: {
             createdAt: 'desc'
