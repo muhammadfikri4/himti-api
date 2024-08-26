@@ -25,6 +25,7 @@ model User {
   UserFCM             UserFCM[]
   NotificationHistory NotificationHistory[]
 
+  @@index([anggotaId], map: "user_fk_1")
   @@index([email])
 }
 
@@ -34,7 +35,7 @@ model UserFCM {
   fcmToken String @map("fcm_token") @db.VarChar(255)
   user     User   @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
 
-  @@index([userId], map: "user_id")
+  @@index([userId], map: "user_fcm_fk_1")
   @@map("user_fcm")
 }
 
@@ -80,7 +81,7 @@ model Anggota {
   updatedAt  DateTime     @default(now()) @updatedAt @map("updated_at") @db.Timestamp(0)
   User       User[]
 
-  @@index([angkatanId])
+  @@index([angkatanId], map: "anggota_fk_1")
 }
 
 model Struktural {
@@ -93,7 +94,7 @@ model Struktural {
   createdAt DateTime @default(now()) @map("created_at") @db.Timestamp(0)
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamp(0)
 
-  @@index([anggotaId])
+  @@index([anggotaId], map: "struktural_fk_1")
 }
 
 model Acara {
@@ -111,7 +112,7 @@ model Acara {
   SubAcara            SubAcara[]
   NotificationHistory NotificationHistory[]
 
-  @@index([name])
+  @@index([name], map: "name")
 }
 
 model SubAcara {
@@ -128,7 +129,7 @@ model SubAcara {
   updatedAt           DateTime              @updatedAt @map("updated_at") @db.Timestamp(0)
   NotificationHistory NotificationHistory[]
 
-  @@index([acaraId])
+  @@index([acaraId], map: "sub_acara_fk_1")
 }
 
 model Absensi {
@@ -147,7 +148,9 @@ model Absensi {
   subAcara    SubAcara? @relation(fields: [subAcaraId], references: [id])
   Point       Point[]
 
-  @@index([userId, acaraId])
+  @@index([userId], map: "absensi_fk_1")
+  @@index([acaraId], map: "absensi_fk_2")
+  @@index([subAcaraId], map: "absensi_fk_3")
 }
 
 model Prestasi {
@@ -196,8 +199,8 @@ model Point {
   createdAt DateTime @default(now()) @map("created_at")
   updateAt  DateTime @default(now()) @updatedAt @map("updated_at")
 
-  @@index([userId])
-  @@index([absensiId])
+  @@index([userId], map: "point_fk_1")
+  @@index([absensiId], map: "point_fk_2")
   @@map("points")
 }
 
@@ -215,9 +218,9 @@ model NotificationHistory {
   createdAt  DateTime  @default(now()) @map("created_at") @db.Timestamp(0)
   updateAt   DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamp()
 
-  @@index([acaraId])
-  @@index([userId])
-  @@index([subAcaraId])
+  @@index([acaraId], map: "notification_history_fk_1")
+  @@index([userId], map: "notification_history_fk_2")
+  @@index([subAcaraId], map: "notification_history_fk_3")
   @@map("notification_history")
 }
 
