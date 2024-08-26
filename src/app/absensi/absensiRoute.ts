@@ -13,7 +13,7 @@ const route = Router()
 route.post("/acara", VerifyToken, validateRequest(createAbsensiAcaraSchema, imageSchema), upload.single("image"), CatchWrapper(createAbsensiAcaraController))
 route.post("/sub-acara", VerifyToken, CatchWrapper(upload.single('image')), validateRequest(createAbsensiSubAcaraSchema, imageSchema), CatchWrapper(createAbsensiSubAcaraController))
 route.get("/", VerifyToken, CatchWrapper(getAbsensiController))
-route.get('/:subAcaraId', VerifyAdmin, CatchWrapper(getAbsensiesController))
+route.get('/sub-acara/:subAcaraId', VerifyAdmin, CatchWrapper(getAbsensiesController))
 route.get("/:id", VerifyToken, CatchWrapper(getAbsensiByIdController))
 
 export default route
