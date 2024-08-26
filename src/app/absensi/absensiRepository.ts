@@ -99,8 +99,21 @@ export const getAbsensiByUserId = (userId: string, acaraId?: string) => {
             acara: {
                 select: {
                     id: true,
-                    name: true
-                }
+                    name: true,
+                    SubAcara: {
+                        select: {
+                            id: true,
+                            name: true,
+
+                        }
+                    },
+                    Absensi: {
+                        select: {
+                            id: true,
+                            absensiTime: true,
+                        }
+                    }
+                },
             },
             subAcara: {
                 select: {
@@ -113,6 +126,11 @@ export const getAbsensiByUserId = (userId: string, acaraId?: string) => {
                 select: {
                     id: true,
                     name: true
+                }
+            },
+            Point: {
+                select: {
+                    point: true
                 }
             }
         },

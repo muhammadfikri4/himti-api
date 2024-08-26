@@ -7,7 +7,7 @@ import { MESSAGES } from "../../utils/Messages"
 import { getSubAcaraById } from "../acara/acaraRepository"
 import { addPoint, getPointByAbsensi } from "../point/pointRepository"
 import { AbsensiDTO, IFilterAbsensi, TokenTypes } from "./absensiDTO"
-import { historyAbsensiMapper } from "./absensiMapper"
+import { AbsensiAcara, historyAbsensiMapper } from "./absensiMapper"
 import { createAbsensi, getAbsensiById, getAbsensiBySubAcaraId, getAbsensiByUserId, getAbsensies } from "./absensiRepository"
 import { createAbsensiAcaraValidate, createAbsensiSubAcaraValidate } from "./absensiValidate"
 
@@ -77,7 +77,7 @@ export const getAbsensiService = async ({ acaraId }: IFilterAbsensi, token: stri
     const decodeToken = decode(token) as TokenDecodeInterface
     const acara = await getAbsensiByUserId(decodeToken.id, acaraId)
 
-    const data = await historyAbsensiMapper(acara, decodeToken.id)
+    const data = historyAbsensiMapper(acara as unknown as AbsensiAcara[], decodeToken.id)
     // const absensi = await getHistoryAbsensiByUserId((decodeToken as TokenTypes)?.id as string, acaraId, subAcaraId, page, perPage)
     if (!data.length) {
         return new ErrorApp(MESSAGES.ERROR.NOT_FOUND.ABSENSI, 404, MESSAGE_CODE.NOT_FOUND)

@@ -1,6 +1,4 @@
-import { Absensi } from "@prisma/client";
-import { getPointByAbsensiUserId } from "../point/pointRepository";
-import { getAllAbsensiByAcaraId } from "./absensiRepository";
+import { Absensi, Point } from "@prisma/client";
 
 interface HistoryAbsensiResponse {
     acara: {
@@ -18,11 +16,23 @@ interface HistoryAbsensiResponse {
     }[]
 }
 
-interface AbsensiAcara extends Absensi {
+interface AbsensiSubAcara extends Absensi {
+    subAcara: {
+        id: string,
+        name: string
+    }
+}
+
+export interface AbsensiAcara extends Absensi {
     acara: {
         id: string
         name: string
+    },
+    subAcara: {
+        id: string
+        name: string
     }
+    Point: Point[]
 }
 
 export const absensiMapper = (data: Absensi[]) => {
@@ -34,33 +44,35 @@ export const absensiMapper = (data: Absensi[]) => {
     })
 }
 
-export const historyAbsensiMapper = async (absensi: Absensi[], userId: string) => {
+export const historyAbsensiMapper = (absensi: AbsensiAcara[], userId: string) => {
     const data: AbsensiAcara[] = []
-    absensi.map(async (item) => {
+    absensi.map((item) => {
         if (data.find((i: any) => i.acaraId === item.acaraId)) {
             return null
         }
         data.push(item as unknown as AbsensiAcara)
     })
-    const absens = await Promise.all(data.map(async (item: AbsensiAcara) => {
-        const subAcara = await getAllAbsensiByAcaraId(item.acaraId, userId)
 
+    const absens = data.map(item => {
+        const subacara = absensi.filter(i => i.acaraId === item.acaraId)
         return {
             acara: {
                 id: item.acara.id,
                 name: item.acara.name
             },
-            absensi: await Promise.all(subAcara.map(async (subItem) => ({
-                id: subItem.id as number,
-                image: subItem.image,
-                absensiTime: subItem.absensiTime as string,
-                subAcara: {
-                    id: subItem?.subAcara?.id as string,
-                    name: subItem?.subAcara?.name as string
-                },
-                point: await getPointByAbsensiUserId(subItem.id, userId) || 0
-            })))
+            absensi: subacara.map(subItem => {
+                return {
+                    id: subItem.id,
+                    image: subItem.image,
+                    absensiTime: subItem.absensiTime as string,
+                    subAcara: {
+                        id: subItem.subAcara.id,
+                        name: subItem?.subAcara?.name as string
+                    },
+                    point: subItem.Point.reduce((a: number, b: Point) => a + b.point, 0)
+                }
+            })
         }
-    }))
+    })
     return absens
 }
