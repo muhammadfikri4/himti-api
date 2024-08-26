@@ -90,15 +90,44 @@ export const getAbsensiBySubAcaraId = async (subAcaraId: string, userId: string)
 }
 
 export const getAbsensiByUserId = (userId: string, acaraId?: string) => {
+    // return prisma.absensi.findMany({
+    //     where: {
+    //         userId,
+    //         acaraId
+    //     },
+    //     select: {
+    //         id: true,
+    //         image: true,
+    //         absensiTime: true,
+    //         acara: {
+    //             select: {
+    //                 id: true,
+    //                 name: true,
+    //             },
+    //         },
+    //         subAcara: {
+    //             select: {
+    //                 id: true,
+    //                 name: true,
+    //             }
+    //         },
+    //         Point: {
+    //             select: {
+    //                 point: true
+    //             }
+    //         },
+
+    //     },
+    //     orderBy: {
+    //         createdAt: 'desc'
+    //     }
+    // })
     return prisma.absensi.findMany({
         where: {
             userId,
             acaraId
         },
-        select: {
-            id: true,
-            image: true,
-            absensiTime: true,
+        include: {
             acara: {
                 select: {
                     id: true,
@@ -115,8 +144,7 @@ export const getAbsensiByUserId = (userId: string, acaraId?: string) => {
                 select: {
                     point: true
                 }
-            },
-
+            }
         },
         orderBy: {
             createdAt: 'desc'
