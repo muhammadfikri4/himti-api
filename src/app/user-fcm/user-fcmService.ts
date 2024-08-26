@@ -1,10 +1,10 @@
-import { ErrorApp } from "utils/HttpError";
+import { MESSAGE_CODE } from "../../utils/ErrorCode";
+import { ErrorApp } from "../../utils/HttpError";
+import { MESSAGES } from "../../utils/Messages";
 import { Meta } from "../../utils/Meta";
-import { getAllFCMUser, getAllFCMUserCount, getFCMUserById, getUserFCMByUserId } from "./user-fcm.repository";
+import { getAllFCMUser, getAllFCMUserCount, getFCMUserById } from "./user-fcm.repository";
 import { UserFCMQuery } from "./user-fcmDTO";
 import { userFCMDTOMapper } from "./user-fcmMapper";
-import { MESSAGES } from "utils/Messages";
-import { MESSAGE_CODE } from "utils/ErrorCode";
 
 export const getAllFCMUserService = async (query: UserFCMQuery) => {
     const { page = '1', perPage = '10' } = query
@@ -18,10 +18,10 @@ export const getAllFCMUserService = async (query: UserFCMQuery) => {
     return { data, meta }
 }
 
-export const deleteUserFCMUserService = async(userFcmId:string) => {
-    const userFCM = await getFCMUserById(userFcmId) 
+export const deleteUserFCMUserService = async (userFcmId: string) => {
+    const userFCM = await getFCMUserById(userFcmId)
 
-    if(!userFCM) {
+    if (!userFCM) {
         return new ErrorApp(MESSAGES.ERROR.NOT_FOUND.USER.FCM, 404, MESSAGE_CODE.NOT_FOUND)
     }
 }
