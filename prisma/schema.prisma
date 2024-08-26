@@ -32,7 +32,7 @@ model UserFCM {
   id       String @id @unique @default(uuid())
   userId   String @map("user_id") @db.VarChar(110)
   fcmToken String @map("fcm_token") @db.VarChar(255)
-  user     User   @relation(fields: [userId], references: [id])
+  user     User   @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
 
   @@index([userId], map: "user_id")
   @@map("user_fcm")
