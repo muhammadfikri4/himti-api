@@ -6,7 +6,11 @@ export const getProfile = async (id: string) => {
         where: {
             id
         },
-        include: {
+        select: {
+            name: true,
+            email: true,
+            nim: true,
+            role: true,
             Anggota: {
                 select: {
                     id: true,
