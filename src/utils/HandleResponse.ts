@@ -10,5 +10,5 @@ export function HandleResponse<Res = unknown>(
     data?: Res,
     meta?: MetaResponse
 ) {
-    return res.status(status).json(ApiResponse<Res>({ status, message, data, code, meta }))
+    return res.status(status).jsonp(ApiResponse<Res>({ status, message, data, code, meta }))
 }

@@ -1,11 +1,16 @@
 import { Router } from "express";
-import { createAngkatanController, deleteAngkatanController, getAngkatanController, updateAngkatanController } from "./angkatanController";
+import { validateRequest } from "../../middleware/validateRequest";
+import { VerifyToken } from "../../middleware/verifyToken";
+import { CatchWrapper } from "../../utils/CatchWrapper";
+import { createAngkatanController, deleteAngkatanController, getAngkatanByIdController, getAngkatanController, updateAngkatanController } from "./angkatanController";
+import { createAngkatanSchema } from "./angkatanRequest";
 
 const route = Router()
 
-route.post("/", createAngkatanController)
-route.get("/", getAngkatanController)
-route.delete("/:id", deleteAngkatanController)
-route.put("/:id", updateAngkatanController)
+route.post("/", VerifyToken, validateRequest(createAngkatanSchema), CatchWrapper(createAngkatanController))
+route.get("/", VerifyToken, CatchWrapper(getAngkatanController))
+route.get('/:id', VerifyToken, CatchWrapper(getAngkatanByIdController))
+route.delete("/:id", VerifyToken, CatchWrapper(deleteAngkatanController))
+route.put("/:id", VerifyToken, CatchWrapper(updateAngkatanController))
 
 export default route

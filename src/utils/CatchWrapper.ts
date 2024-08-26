@@ -1,13 +1,12 @@
 import { NextFunction, type Request, type Response } from "express";
-import { MESSAGE_CODE } from "./ErrorCode";
-import { HandleResponse } from "./HandleResponse";
-import { MESSAGES } from "./Messages";
+import { RequestWithAccessToken } from "interface/Request";
 
-export const CatchWrapper = (fn: (req: Request, res: Response, next: NextFunction) => Promise<Response>) => {
+export const CatchWrapper = (fn: (req: Request | RequestWithAccessToken, res: Response, next: NextFunction) => any) => {
     return (req: Request, res: Response, next: NextFunction) => {
-        fn(req, res, next).catch((error) => {
+        fn(req, res, next)?.catch((error: Error) => {
             if (error) {
-                HandleResponse(res, 500, MESSAGE_CODE.INTERNAL_SERVER_ERROR, MESSAGES.ERROR.SERVER_ERROR.INTERNAL_SERVER_ERROR)
+                next(error)
+                return
             }
             next()
         });

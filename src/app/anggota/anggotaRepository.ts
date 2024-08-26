@@ -1,12 +1,26 @@
 import { Prisma } from "@prisma/client"
 import { prisma } from "../../config"
-import { AnggotaBodyDTO } from "./anggotaDTO"
+import { AnggotaBodyDTO, AnggotaSosmedDTO } from "./anggotaDTO"
 import { IFilterAnggota } from "./anggotaTypes"
 
 export const getAnggotaByAngkatanId = async (angkatanId: string) => {
     return await prisma.anggota.findFirst({
         where: {
             angkatanId
+        }
+    })
+}
+
+export const getAnggotas = async () => {
+    return await prisma.anggota.findMany({
+        include: {
+            angkatan: {
+                select: {
+                    id: true,
+                    year: true,
+                    isActive: true
+                }
+            }
         }
     })
 }
@@ -47,7 +61,7 @@ export const getAnggota = async ({ page, perPage, search, year }: IFilterAnggota
     }
 
     return await prisma.anggota.findMany({
-        where: filter,
+        where: { ...filter },
         include: {
             angkatan: {
                 select: {
@@ -58,14 +72,14 @@ export const getAnggota = async ({ page, perPage, search, year }: IFilterAnggota
             }
         },
         orderBy: {
-            createdAt: 'desc'
+            nim: 'desc'
         },
         take: perPage,
         skip: (Number(page) - 1) * Number(perPage)
     })
 }
 
-export const getAnggotaCount = async ({ search, year }: IFilterAnggota) => {
+export const getAnggotaCount = async ({ search, year }: IFilterAnggota, status?: boolean) => {
     const filter = {} as { OR: Prisma.AnggotaWhereInput[], angkatan: Prisma.AngkatanWhereInput }
 
     if (search) {
@@ -100,7 +114,7 @@ export const getAnggotaCount = async ({ search, year }: IFilterAnggota) => {
         }
     }
     return await prisma.anggota.count({
-        where: filter
+        where: { ...filter, isActive: status }
     })
 }
 
@@ -108,6 +122,29 @@ export const getAnggotaByNIM = async (nim: string) => {
     return await prisma.anggota.findUnique({
         where: {
             nim
+        },
+        select: {
+            id: true,
+            name: true,
+            email: true
+        }
+    })
+}
+
+export const updateAnggotaNonActive = async () => {
+    const now = new Date().getFullYear()
+    const fiveYearAgo = now - 5
+
+    return await prisma.anggota.updateMany({
+        where: {
+            angkatan: {
+                year: {
+                    lt: fiveYearAgo.toString()
+                }
+            }
+        },
+        data: {
+            isActive: false
         }
     })
 }
@@ -116,6 +153,14 @@ export const getAnggotaById = async (id: string) => {
     return await prisma.anggota.findUnique({
         where: {
             id
+        },
+        include: {
+            angkatan: {
+                select: {
+                    id: true,
+                    year: true
+                }
+            }
         }
     })
 }
@@ -153,11 +198,21 @@ export const updateAnggota = async (data: AnggotaBodyDTO) => {
         where: {
             id: data.id
         },
-        data: data.nim ? {
-            ...data,
-            nim: data.nim.toString()
-        } : {
-            ...data
+        data
+    })
+}
+
+export const updateSosmedAnggota = async (data: AnggotaSosmedDTO) => {
+    return await prisma.anggota.update({
+        where: {
+            id: data.id
+        },
+        data,
+        select: {
+            facebook: true,
+            instagram: true,
+            linkedin: true,
+            twitter: true
         }
     })
 }

@@ -4,7 +4,39 @@ export interface AcaraBodyDTO {
     name?: string
     description?: string,
     image?: string,
-    isOpen?: boolean,
+    isOpenRegister?: boolean,
+    isOpenAbsen?: boolean,
     startTime?: Date,
     endTime?: Date
+}
+
+export interface AcaraDTO {
+    id: string
+    name: string
+    image: string
+    startTime: Date
+    endTime: Date
+    description?: string | null
+    isOpen: boolean
+}
+
+export interface SubAcaraBodyDTO {
+    id?: string
+    name?: string
+    description?: string,
+    image?: string,
+    startTime?: Date,
+    endTime?: Date
+    acaraId: string
+}
+
+export interface SubAcaraDTO {
+    id: string
+    name: string
+    description: string | null
+    image: string
+    endTime: Date
+    startTime: Date
+    isOpenAbsen: boolean
+    isAlreadyAbsen: boolean
 }

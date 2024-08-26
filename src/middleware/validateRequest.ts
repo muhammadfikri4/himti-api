@@ -3,14 +3,25 @@ import Joi from "joi";
 import { MESSAGE_CODE } from "../utils/ErrorCode";
 import { HandleResponse } from "../utils/HandleResponse";
 
-export const validateRequest = (schema: Joi.ObjectSchema) => {
+export const validateRequest = (body: Joi.ObjectSchema, file?: Joi.ObjectSchema) => {
     return (req: Request, res: Response, next: NextFunction) => {
-        const { error } = schema.validate(req.body, { abortEarly: false });
+        const bv = body.validate(req.body, { abortEarly: false });
+        const fv = file ? file.validate(req.file, { abortEarly: false }) : { error: null }
 
-        if (error) {
-            const message = error.details.map(i => i.message.replace(/"/g, ''))
+        const errors = []
 
-            return HandleResponse(res, 400, MESSAGE_CODE.BAD_REQUEST, message[0]);
+        if (fv.error) {
+            errors.push(...fv.error.details.map(i => i.message.replace(/"/g, '')))
+        }
+
+        if (bv.error) {
+            errors.push(...bv.error.details.map(i => i.message.replace(/"/g, '')))
+
+        }
+
+        if (errors.length) {
+
+            return HandleResponse(res, 400, MESSAGE_CODE.BAD_REQUEST, errors[0]);
         }
 
         next();

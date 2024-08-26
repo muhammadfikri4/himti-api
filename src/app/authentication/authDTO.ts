@@ -6,11 +6,14 @@ export interface RegisterAuthBodyDTO {
     name: string
     nim: string,
     role?: Role
+    code?: string
+    anggotaId?: string
 }
 
 export interface LoginAuthBodyDTO {
     email: string
     password: string
+    fcmToken?: string
 }
 
 export interface LoginAuthResponse {
@@ -20,4 +23,20 @@ export interface LoginAuthResponse {
         nim: string,
         role: Role
     }
+}
+
+export interface RequestOtpDTO {
+    name: string
+    email: string
+}
+
+export interface ValidateOtpDTO {
+    key: string,
+    otp: number
+}
+
+export interface ForgotPasswordDTO {
+
+    key: string
+    password: string
 }

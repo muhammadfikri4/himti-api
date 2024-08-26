@@ -12,9 +12,7 @@ export interface DosenModelTypes {
 }
 
 export interface IFilterDosen {
-    name?: string,
-    email?: string
-    nidn?: string
+    search?: string
     page?: number
     perPage?: number
 }

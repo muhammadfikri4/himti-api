@@ -5,126 +5,220 @@ generator client {
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
+  // directUrl = env("DIRECT_URL")
 }
 
 model User {
-  id        String    @id @unique @default(uuid())
-  name      String
-  email     String    @unique
-  password  String
-  role      Role      @default(ADMIN)
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  nim       String
-  Absensi   Absensi[]
+  id                  String                @id @default(uuid())
+  name                String                @db.VarChar(255)
+  email               String                @unique @db.VarChar(110)
+  password            String                @db.VarChar(110)
+  role                Role?                 @default(ADMIN)
+  nim                 String?               @db.VarChar(20)
+  anggotaId           String?               @map("anggota_id") @db.VarChar(110)
+  Absensi             Absensi[]
+  createdAt           DateTime              @default(now()) @map("created_at") @db.Timestamp(0)
+  updatedAt           DateTime              @default(now()) @updatedAt @map("updated_at") @db.Timestamp(0)
+  isLogin             Boolean               @default(false) @map("is_login")
+  Anggota             Anggota?              @relation(fields: [anggotaId], references: [id])
+  Point               Point[]
+  UserFCM             UserFCM[]
+  NotificationHistory NotificationHistory[]
 
   @@index([email])
 }
 
+model UserFCM {
+  id       String @id @unique @default(uuid())
+  userId   String @map("user_id") @db.VarChar(110)
+  fcmToken String @map("fcm_token") @db.VarChar(255)
+  user     User   @relation(fields: [userId], references: [id])
+
+  @@index([userId], map: "user_id")
+  @@map("user_fcm")
+}
+
 model Dosen {
   id          String   @id @default(uuid())
-  nidn        String   @unique
-  name        String
-  email       String?  @unique
-  numberPhone BigInt?  @map("number_phone")
-  lesson      String?
-  isActive    Boolean  @default(true)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  nidn        String   @unique @db.VarChar(50)
+  name        String   @db.VarChar(255)
+  email       String?  @unique @db.VarChar(50)
+  numberPhone String?  @map("number_phone") @db.VarChar(50)
+  lesson      String?  @db.VarChar(50)
+  isActive    Boolean  @default(true) @map("is_active")
+  createdAt   DateTime @default(now()) @map("created_at") @db.Timestamp(0)
+  updatedAt   DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamp(0)
 
   @@index([name, nidn, createdAt])
 }
 
 model Angkatan {
   id        String    @id @default(uuid())
-  year      String
-  isActive  Boolean   @default(true)
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
+  year      String    @db.VarChar(20)
+  isActive  Boolean   @default(true) @map("is_active")
   Anggota   Anggota[]
+  createdAt DateTime  @default(now()) @map("created_at") @db.Timestamp(0)
+  updatedAt DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamp(0)
 
   @@index([year, createdAt])
 }
 
 model Anggota {
   id         String       @id @default(uuid())
-  name       String
-  email      String?
-  nim        String       @unique
+  name       String       @db.VarChar(255)
+  email      String?      @db.VarChar(55)
+  nim        String?      @unique @db.VarChar(110)
   angkatanId String       @map("angkatan_id")
-  createdAt  DateTime     @default(now())
-  isActive   Boolean?     @default(true)
-  updatedAt  DateTime     @updatedAt
-  Alumni     Alumni[]
+  isActive   Boolean?     @default(true) @map("is_active")
+  instagram  String?      @db.VarChar(50)
+  facebook   String?      @db.VarChar(50)
+  twitter    String?      @db.VarChar(50)
+  linkedin   String?      @db.VarChar(50)
   angkatan   Angkatan     @relation(fields: [angkatanId], references: [id])
   Struktural Struktural[]
+  createdAt  DateTime     @default(now()) @map("created_at") @db.Timestamp(0)
+  updatedAt  DateTime     @default(now()) @updatedAt @map("updated_at") @db.Timestamp(0)
+  User       User[]
 
-  @@index([angkatanId, name, nim, createdAt])
-}
-
-model Alumni {
-  id        String   @id @unique @default(uuid())
-  company   String?
-  image     String
-  anggotaId String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  anggota   Anggota  @relation(fields: [anggotaId], references: [id])
-}
-
-model Department {
-  id        String   @id @unique @default(uuid())
-  name      String
-  createdAt DateTime @default(now())
-  isActive  Boolean  @default(true)
-  updatedAt DateTime @updatedAt
+  @@index([angkatanId])
 }
 
 model Struktural {
-  id           String   @id @unique @default(uuid())
-  jabatan      Jabatan
-  instagram    String?
-  facebook     String?
-  twitter      String?
-  linkedin     String?
-  image        String
-  anggotaId    String
-  createdAt    DateTime @default(now())
-  isActive     Boolean  @default(true)
-  updatedAt    DateTime @updatedAt
-  departmentId String?
-  anggota      Anggota  @relation(fields: [anggotaId], references: [id])
+  id        String   @id @unique @default(uuid())
+  jabatan   Jabatan
+  image     String   @db.VarChar(255)
+  anggotaId String   @map("anggota_id") @db.VarChar(110)
+  isActive  Boolean  @default(true) @map("is_active")
+  anggota   Anggota  @relation(fields: [anggotaId], references: [id])
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamp(0)
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamp(0)
 
   @@index([anggotaId])
 }
 
 model Acara {
-  id          String    @id @unique @default(uuid())
-  name        String
-  description String?
-  image       String
-  isOpen      Boolean   @default(true)
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
-  endTime     DateTime  @default(now())
-  startTime   DateTime  @default(now())
-  Absensi     Absensi[]
+  id                  String                @id @unique @default(uuid())
+  name                String                @db.VarChar(255)
+  description         String?               @db.Text
+  image               String                @db.VarChar(255)
+  isOpen              Boolean               @default(true) @map("is_open")
+  isOpenAbsen         Boolean?              @default(true) @map("is_open_absen")
+  endTime             DateTime?             @default(now()) @map("end_time")
+  startTime           DateTime?             @default(now()) @map("start_time")
+  Absensi             Absensi[]
+  createdAt           DateTime              @default(now()) @map("created_at") @db.Timestamp(0)
+  updatedAt           DateTime              @default(now()) @updatedAt @map("updated_at") @db.Timestamp(0)
+  SubAcara            SubAcara[]
+  NotificationHistory NotificationHistory[]
 
-  @@index([name, startTime, endTime])
+  @@index([name])
+}
+
+model SubAcara {
+  id                  String                @id @unique @default(uuid())
+  name                String                @db.VarChar(255)
+  description         String?               @db.Text
+  image               String?               @db.VarChar(255)
+  endTime             DateTime?             @default(now()) @map("end_time") @db.Timestamp(0)
+  startTime           DateTime?             @default(now()) @map("start_time") @db.Timestamp(0)
+  acaraId             String                @db.VarChar(110)
+  acara               Acara                 @relation(fields: [acaraId], references: [id], onDelete: Cascade)
+  absensi             Absensi[]
+  createdAt           DateTime              @default(now()) @map("created_at") @db.Timestamp(0)
+  updatedAt           DateTime              @updatedAt @map("updated_at") @db.Timestamp(0)
+  NotificationHistory NotificationHistory[]
+
+  @@index([acaraId])
 }
 
 model Absensi {
-  id         Int      @id @unique @default(autoincrement())
-  image      String
-  acaraId    String
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
-  userId     String
-  acara      Acara    @relation(fields: [acaraId], references: [id])
-  user       User     @relation(fields: [userId], references: [id])
-  coordinate String
+  id          Int       @id @unique @default(autoincrement())
+  image       String    @db.VarChar(255)
+  acaraId     String    @map("acara_id") @db.VarChar(110)
+  userId      String    @map("user_id") @db.VarChar(110)
+  subAcaraId  String?   @map("sub_acara_id") @db.VarChar(110)
+  acara       Acara     @relation(fields: [acaraId], references: [id])
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  coordinate  String    @db.VarChar(110)
+  address     String?   @db.VarChar(255)
+  absensiTime String?   @db.VarChar(150)
+  createdAt   DateTime  @default(now()) @map("created_at") @db.Timestamp(0)
+  updatedAt   DateTime  @updatedAt @map("updated_at") @db.Timestamp(0)
+  subAcara    SubAcara? @relation(fields: [subAcaraId], references: [id])
+  Point       Point[]
 
-  @@index([userId, acaraId, createdAt])
+  @@index([userId, acaraId])
+}
+
+model Prestasi {
+  id          Int       @id @unique @default(autoincrement())
+  image       String    @db.VarChar(255)
+  title       String    @db.VarChar(255)
+  description String?   @db.Text
+  timeDate    DateTime? @db.Timestamp(0)
+  timeString  String?   @db.VarChar(50)
+  createdAt   DateTime  @default(now()) @map("created_at") @db.Timestamp(0)
+  updateAt    DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamp(0)
+}
+
+model Bussiness {
+  id          Int            @id @unique @default(autoincrement())
+  image       String         @db.VarChar(255)
+  title       String         @db.VarChar(110)
+  description String?        @db.Text
+  price       String         @db.VarChar(50)
+  type        BussinessType? @default(MERCHANDISE)
+  createdAt   DateTime       @default(now()) @map("created_at") @db.Timestamp(0)
+  updateAt    DateTime       @default(now()) @updatedAt @map("updated_at") @db.Timestamp(0)
+
+  @@map("business")
+}
+
+model OTP {
+  id         String    @id @unique @default(uuid())
+  email      String    @db.VarChar(50)
+  otp        String    @db.VarChar(50)
+  isVerified Boolean   @default(false) @map("is_verified")
+  expired    DateTime? @db.Timestamp(0)
+  createdAt  DateTime  @default(now()) @map("created_at") @db.Timestamp(0)
+  updateAt   DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamp()
+
+  @@map("otps")
+}
+
+model Point {
+  id        Int      @id @unique @default(autoincrement())
+  point     Int
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  absensiId Int
+  absensi   Absensi  @relation(fields: [absensiId], references: [id])
+  createdAt DateTime @default(now()) @map("created_at")
+  updateAt  DateTime @default(now()) @updatedAt @map("updated_at")
+
+  @@index([userId])
+  @@index([absensiId])
+  @@map("points")
+}
+
+model NotificationHistory {
+  id         String    @id @unique @default(uuid())
+  acaraId    String?   @map("acara_id")
+  subAcaraId String?   @map("sub_acara_id")
+  userId     String    @map("user_id")
+  acara      Acara?    @relation(fields: [acaraId], references: [id])
+  subAcara   SubAcara? @relation(fields: [subAcaraId], references: [id])
+  user       User      @relation(fields: [userId], references: [id])
+  title      String
+  body       String
+  isRead     Boolean
+  createdAt  DateTime  @default(now()) @map("created_at") @db.Timestamp(0)
+  updateAt   DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamp()
+
+  @@index([acaraId])
+  @@index([userId])
+  @@index([subAcaraId])
+  @@map("notification_history")
 }
 
 enum Jabatan {
@@ -136,7 +230,13 @@ enum Jabatan {
 }
 
 enum Role {
+  SUPER_ADMIN
   ADMIN
   USER
   ANGGOTA
+}
+
+enum BussinessType {
+  MERCHANDISE
+  SERVICE
 }

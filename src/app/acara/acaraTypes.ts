@@ -5,6 +5,7 @@ export interface AcaraModelTypes {
     description?: string,
     image?: string,
     isOpen?: boolean,
+    isOpenAbsen?: boolean,
     startTime?: Date,
     endTime?: Date
     createdAt: Date,
@@ -12,7 +13,10 @@ export interface AcaraModelTypes {
 }
 
 export interface IFilterAcara {
-    name?: string,
+    search?: string,
+    status?: string
     page?: number,
     perPage?: number
+    openAbsen?: string | boolean
+    openRegister?: string | boolean
 }

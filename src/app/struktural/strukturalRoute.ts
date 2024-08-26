@@ -1,16 +1,18 @@
-// import { Router } from "express";
-// import { upload } from "./strukturalConfig";
-// import { createStrukturalController, deleteStrukturalController, getStrukturalController, updateStrukturalController } from "./strukturalController";
+import { Router } from "express";
+import { validateRequest } from "../../middleware/validateRequest";
+import { VerifyToken } from "../../middleware/verifyToken";
+import { CatchWrapper } from "../../utils/CatchWrapper";
+import { imageSchema } from "../global/imageRequest";
+import { upload } from "./strukturalConfig";
+import { createStrukturalController, deleteStrukturalController, getStrukturalController, updateStrukturalController } from "./strukturalController";
+import { createStrukturalSchema } from "./strukturalRequest";
 
-// // const upload = multer({ storage: multer.memoryStorage() });
-// // const upload = multer({ dest: "./src/assets/images" });
 
-// const route = Router()
+const route = Router()
 
-// route.post("/", upload.single("image"), createStrukturalController)
-// // route.post("/", createStrukturalController)
-// route.get("/", getStrukturalController)
-// route.delete("/:id", deleteStrukturalController)
-// route.put("/:id", upload.single("image"), updateStrukturalController)
+route.post("/", VerifyToken, upload.single("image"), validateRequest(createStrukturalSchema, imageSchema), CatchWrapper(createStrukturalController))
+route.get("/", VerifyToken, CatchWrapper(getStrukturalController))
+route.delete("/:id", VerifyToken, CatchWrapper(deleteStrukturalController))
+route.put("/:id", VerifyToken, upload.single("image"), CatchWrapper(updateStrukturalController))
 
-// export default route
+export default route

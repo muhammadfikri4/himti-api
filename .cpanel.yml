@@ -1,0 +1,8 @@
+---
+deployment:
+  tasks:
+    - cd /home2/himtiumtid/repositories/himti-api
+    - /usr/local/bin/npm install
+    - /usr/local/bin/npm run build
+    - npx prisma migrate deploy
+    - /usr/local/bin/pm2 start ./dist/index.js --name "himti-api"

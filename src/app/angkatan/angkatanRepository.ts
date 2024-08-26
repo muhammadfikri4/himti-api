@@ -7,6 +7,9 @@ export const createAngkatan = async ({ year, isActive }: AngkatanBodyDTO) => {
         data: {
             year: year as string,
             isActive
+        },
+        select: {
+            id: true
         }
     })
 }
@@ -19,7 +22,11 @@ export const getAngkatan = async ({ page, perPage, search }: IFilterAngkatan) =>
             },
         },
         orderBy: {
-            createdAt: 'desc'
+            year: 'desc'
+        },
+        select: {
+            id: true,
+            year: true,
         },
         take: perPage,
         skip: (Number(page) - 1) * Number(perPage)
@@ -40,18 +47,20 @@ export const getAngkatanByYear = async (id: string) => {
             id
         },
         orderBy: {
-            createdAt: 'desc'
+            year: 'desc'
         }
     })
 }
 
 
-export const getProductsCount = async ({ search }: IFilterAngkatan) => {
+export const getAngkatanCount = async ({ search }: IFilterAngkatan) => {
     return await prisma.angkatan.count({
         where: {
             year: {
-                contains: search
-            }
+                contains: search,
+                mode: 'insensitive'
+            },
+            // isActive: status
         }
     })
 
@@ -70,6 +79,15 @@ export const deleteAngkatanRepository = async (id: string) => {
     return await prisma.angkatan.delete({
         where: {
             id
+        }
+    })
+}
+
+export const getMatchAngkatanExceptSameId = async (year: string) => {
+    return await prisma.angkatan.findFirst({
+        where: {
+
+            year
         }
     })
 }

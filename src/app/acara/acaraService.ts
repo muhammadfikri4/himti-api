@@ -1,37 +1,58 @@
+import { Acara } from '@prisma/client'
 import dotenv from 'dotenv'
-import { Result } from '../../utils/ApiResponse'
+import { TokenDecodeInterface } from 'interface'
+import { decode } from 'jsonwebtoken'
 import { MESSAGE_CODE } from '../../utils/ErrorCode'
-import { AppError, HttpError } from '../../utils/HttpError'
+import { ErrorApp } from '../../utils/HttpError'
 import { MESSAGES } from '../../utils/Messages'
 import { Meta } from '../../utils/Meta'
-import { AcaraBodyDTO } from './acaraDTO'
+import { getUserById } from '../authentication/authRepository'
+import { AcaraBodyDTO, SubAcaraDTO } from './acaraDTO'
+import { SubAcaraData, acaraDTOMapper, acarasDTOMapper, subAcaraMapper } from './acaraMapper'
 import { createAcara, deleteAcara, getAcara, getAcaraById, getAcaraCount, updateAcara } from './acaraRepository'
-import { acaraMapper } from './acaraResponse'
 import { AcaraModelTypes, IFilterAcara } from './acaraTypes'
 import { acaraValidate } from './acaraValidate'
 
 dotenv.config();
 
-export const createAcaraService = async ({ name, description, endTime, image, isOpen, startTime }: AcaraBodyDTO) => {
-
-    const validate = await acaraValidate({ name: name as string, image, endTime, startTime, isOpen })
-    if ((validate as HttpError)?.message) {
-        return AppError((validate as HttpError).message, (validate as HttpError).statusCode, (validate as HttpError).code)
+export const openValue = (open?: string) => {
+    if (open?.toLowerCase().includes('true')) {
+        return true
+    } else if (open?.toLowerCase().includes('false')) {
+        return false
     }
-
-
-    const newAcara = await createAcara({ name, image, description, isOpen, endTime, startTime })
-    return newAcara
+    return undefined
 }
 
-export const getAcaraService = async ({ name, page = 1, perPage = 10 }: IFilterAcara): Promise<Result<AcaraModelTypes[]>> => {
+
+export const createAcaraService = async ({ name, description, endTime, image, isOpenAbsen, isOpenRegister, startTime }: AcaraBodyDTO) => {
+    const openRegist = typeof isOpenRegister !== 'undefined' ? JSON.parse(String(isOpenRegister)) : undefined
+    const openAbsen = typeof isOpenAbsen !== 'undefined' ? JSON.parse(String(isOpenAbsen)) : undefined
+
+    const validate = await acaraValidate({ name: name as string, image, endTime, startTime, isOpenRegister: openRegist, isOpenAbsen: openAbsen })
+    if (validate instanceof ErrorApp) {
+        return new ErrorApp(validate.message, validate.statusCode, validate.code)
+    }
+    const path = (image as unknown as Express.Multer.File).path
+    const response = await createAcara({ name, image: path, description, isOpenRegister: openRegist, endTime, startTime, isOpenAbsen: openAbsen })
+    return response
+}
+
+export const getAcaraService = async ({ search, page = 1, perPage = 10, openAbsen = undefined, openRegister = undefined }: IFilterAcara) => {
+
+    const absen = openValue(openAbsen as string)
+    const regist = openValue(openRegister as string)
 
     const [acara, totalData] = await Promise.all([
-        getAcara({ name, page, perPage }),
-        getAcaraCount({ name })
+        getAcara({ search, page, perPage, openAbsen: absen, openRegister: regist }),
+        getAcaraCount({ search, openAbsen: absen, openRegister: regist })
     ])
 
-    const data = await acaraMapper(acara as unknown as AcaraModelTypes[])
+    const data = acarasDTOMapper(acara as Acara[])
+    if (!data.length) {
+        return new ErrorApp(MESSAGES.ERROR.NOT_FOUND.ACARA, 404, MESSAGE_CODE.NOT_FOUND)
+
+    }
     const response = { data, meta: Meta(page, perPage, totalData) }
     return response
 }
@@ -41,29 +62,63 @@ export const deleteAcaraService = async ({ id }: AcaraBodyDTO) => {
     const acara = await getAcaraById(id as string)
 
     if (!acara) {
-        return AppError(MESSAGES.ERROR.NOT_FOUND.ANGKATAN.NAME, 404, MESSAGE_CODE.NOT_FOUND)
+        return new ErrorApp(MESSAGES.ERROR.NOT_FOUND.ACARA, 404, MESSAGE_CODE.NOT_FOUND)
     }
 
     const response = await deleteAcara(id as string)
     return response;
 }
-export const updateAcaraService = async ({ id, name, image, description, endTime, isOpen, startTime, }: AcaraBodyDTO) => {
+export const updateAcaraService = async ({ id, name, image, description, endTime, isOpenAbsen, isOpenRegister, startTime, }: AcaraBodyDTO) => {
 
-    const matchStruktural = await getAcaraById(id as string)
+    const matchAcara = await getAcaraById(id as string)
 
-    if (!matchStruktural) {
-        return AppError(MESSAGES.ERROR.NOT_FOUND.STRUKTURAL, 404, MESSAGE_CODE.NOT_FOUND)
+    if (!matchAcara) {
+        return new ErrorApp(MESSAGES.ERROR.NOT_FOUND.ACARA, 404, MESSAGE_CODE.NOT_FOUND)
     }
     const updateFields: Partial<AcaraModelTypes> = {};
 
-    if (name !== undefined) updateFields.name = name;
-    if (description !== undefined) updateFields.description = description;
-    if (image !== undefined) updateFields.image = image;
-    if (isOpen !== undefined) updateFields.isOpen = JSON.parse(String(isOpen));
-    if (startTime !== undefined) updateFields.startTime = startTime;
-    if (endTime !== undefined) updateFields.endTime = endTime;
-
+    if (name) updateFields.name = name;
+    if (description) updateFields.description = description;
+    if (image) updateFields.image = image;
+    if (typeof isOpenRegister !== 'undefined') updateFields.isOpen = openValue(String(isOpenRegister));
+    if (typeof isOpenAbsen !== 'undefined') updateFields.isOpenAbsen = openValue(String(isOpenAbsen));
+    if (startTime) updateFields.startTime = startTime;
+    if (endTime) updateFields.endTime = endTime;
+    console.log(updateFields)
     const response = await updateAcara(updateFields, id as string)
-
     return response;
+}
+
+export const getDetailAcaraService = async (id: string, openAbsen?: string, token?: string) => {
+
+    const absen = openValue(openAbsen)
+
+    const acara = await getAcaraById(id)
+    if (!acara) {
+        return new ErrorApp(MESSAGES.ERROR.NOT_FOUND.ACARA, 404, MESSAGE_CODE.NOT_FOUND)
+    }
+    let subAcara: SubAcaraDTO[] = []
+
+    if (token) {
+        const decodeToken = decode(token)
+        const userId = (decodeToken as TokenDecodeInterface)?.id
+        const user = await getUserById(userId)
+        if (user?.role === 'USER') {
+            subAcara = []
+        } else if (user?.role === 'ANGGOTA' || user?.role === 'ADMIN' || user?.role === 'SUPER_ADMIN') {
+            const data = subAcaraMapper(acara?.SubAcara as SubAcaraData[], userId)
+            if (typeof absen === 'boolean') {
+                subAcara = data.filter(i => i.isOpenAbsen === absen)
+            } else {
+                subAcara = data
+            }
+        }
+    }
+
+    const data = acaraDTOMapper(acara as unknown as Acara)
+
+    return {
+        ...data,
+        subAcara
+    }
 }

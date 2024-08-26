@@ -1,29 +1,81 @@
-import { type Request, type Response } from 'express'
+import { NextFunction, type Request, type Response } from 'express'
 import { MESSAGE_CODE } from '../../utils/ErrorCode'
 import { HandleResponse } from '../../utils/HandleResponse'
 import { ErrorApp } from '../../utils/HttpError'
 import { MESSAGES } from '../../utils/Messages'
-import { createAbsensiService, getAbsensiService } from "./absensiService"
+import { createAbsensiAcaraService, createAbsensiSubAcaraService, getAbsensiByIdService, getAbsensiService, getOverallAbsensiService } from "./absensiService"
 
-export const createAbsensiController = async (req: Request, res: Response) => {
-    const { acaraId, coordinate } = req.body
+export const createAbsensiAcaraController = async (req: Request, res: Response, next: NextFunction) => {
+    const { acaraId, coordinate, address } = req.body
     const image = req.file?.path as string
     const token = req.headers.authorization?.replace("Bearer ", "")
 
-    const absensi = await createAbsensiService({ acaraId, image, coordinate }, token as string)
+    const absensi = await createAbsensiAcaraService({ acaraId, image, coordinate, address }, token as string)
 
     if (absensi instanceof ErrorApp) {
-        return HandleResponse(res, absensi.statusCode, absensi.code, absensi.message)
+        next(absensi)
+        return
     }
+    HandleResponse(res, 201, MESSAGE_CODE.SUCCESS, MESSAGES.CREATED.ABSENSI)
+}
+export const createAbsensiSubAcaraController = async (req: Request, res: Response, next: NextFunction) => {
+    const { subAcaraId, coordinate, address, absensiTime } = req.body
+    const image = req.file?.path as string
+    const token = req.headers.authorization?.replace("Bearer ", "")
 
-    return HandleResponse(res, 201, MESSAGE_CODE.SUCCESS, MESSAGES.CREATED.ABSENSI)
+    const absensi = await createAbsensiSubAcaraService({ subAcaraId, image, coordinate, address, absensiTime }, token as string)
+
+    if (absensi instanceof ErrorApp) {
+        next(absensi)
+        return
+    }
+    HandleResponse(res, 201, MESSAGE_CODE.SUCCESS, MESSAGES.CREATED.ABSENSI)
 }
 
-export const getAbsensiController = async (req: Request, res: Response) => {
+export const getAbsensiController = async (req: Request, res: Response, next: NextFunction) => {
+
+    const { acaraId, page, perPage } = req.query
+
     const token = req.headers.authorization?.replace("Bearer ", "")
-    const absensi = await getAbsensiService(token as string)
+    const absensi = await getAbsensiService({
+        acaraId: acaraId ? acaraId as string : undefined,
+        page: page ? Number(page) : undefined,
+        perPage: perPage ? Number(perPage) : undefined
+    }, token as string)
     if (absensi instanceof ErrorApp) {
-        return HandleResponse(res, absensi.statusCode, absensi.code, absensi.message)
+        next(absensi)
+        return
+        // return HandleResponse(res, absensi.statusCode, absensi.code, absensi.message)
     }
-    return HandleResponse(res, 200, MESSAGE_CODE.SUCCESS, MESSAGES.SUCCESS.ABSENSI.GET, absensi)
+    HandleResponse(res, 200, MESSAGE_CODE.SUCCESS, MESSAGES.SUCCESS.ABSENSI.GET, absensi)
+}
+
+export const getAbsensiByIdController = async (req: Request, res: Response, next: NextFunction) => {
+
+    const { id } = req.params
+    const absensi = await getAbsensiByIdService(Number(id))
+    if (absensi instanceof ErrorApp) {
+        next(absensi)
+        return
+    }
+    HandleResponse(res, 200, MESSAGE_CODE.SUCCESS, MESSAGES.SUCCESS.ABSENSI.GET, absensi)
+}
+
+export const getAbsensiesController = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+) => {
+    const { subAcaraId } = req.params
+    const { query } = req
+
+    const absensies = await getOverallAbsensiService({
+        subAcaraId: subAcaraId ? subAcaraId : undefined,
+        ...query
+    })
+    if (absensies instanceof ErrorApp) {
+        next(absensies)
+        return
+    }
+    HandleResponse(res, 200, MESSAGE_CODE.SUCCESS, MESSAGES.SUCCESS.ABSENSI.GET, absensies)
 }

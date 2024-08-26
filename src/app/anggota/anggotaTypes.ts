@@ -7,9 +7,13 @@ export interface AnggotaModelTypes {
     angkatanId?: string,
     angkatan: {
         id: string
-        year: number
+        year: string
         isActive: boolean
     }
+    instagram?: string,
+    facebook?: string,
+    twitter?: string,
+    linkedin?: string,
     isActive: boolean,
     createdAt: Date
     updatedAt: Date
@@ -17,6 +21,7 @@ export interface AnggotaModelTypes {
 
 export interface IFilterAnggota {
     year?: string
+    status?: string
     search?: string
     page?: number,
     perPage?: number

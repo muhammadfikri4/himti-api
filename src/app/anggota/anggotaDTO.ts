@@ -7,3 +7,11 @@ export interface AnggotaBodyDTO {
     angkatanId?: string,
     isActive?: boolean
 }
+
+export interface AnggotaSosmedDTO {
+    id: string
+    instagram?: string
+    facebook?: string
+    twitter?: string
+    linkedin?: string
+}
