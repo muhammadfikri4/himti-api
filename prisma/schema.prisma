@@ -20,7 +20,7 @@ model User {
   createdAt           DateTime              @default(now()) @map("created_at") @db.Timestamp(0)
   updatedAt           DateTime              @default(now()) @updatedAt @map("updated_at") @db.Timestamp(0)
   isLogin             Boolean               @default(false) @map("is_login")
-  Anggota             Anggota?              @relation(fields: [anggotaId], references: [id])
+  Anggota             Anggota?              @relation(fields: [anggotaId], references: [id], onDelete: NoAction)
   Point               Point[]
   UserFCM             UserFCM[]
   NotificationHistory NotificationHistory[]
@@ -138,14 +138,14 @@ model Absensi {
   acaraId     String    @map("acara_id") @db.VarChar(110)
   userId      String    @map("user_id") @db.VarChar(110)
   subAcaraId  String?   @map("sub_acara_id") @db.VarChar(110)
-  acara       Acara     @relation(fields: [acaraId], references: [id])
-  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  acara       Acara     @relation(fields: [acaraId], references: [id], onDelete: NoAction)
+  user        User      @relation(fields: [userId], references: [id], onDelete: NoAction)
   coordinate  String    @db.VarChar(110)
   address     String?   @db.VarChar(255)
   absensiTime String?   @db.VarChar(150)
   createdAt   DateTime  @default(now()) @map("created_at") @db.Timestamp(0)
   updatedAt   DateTime  @updatedAt @map("updated_at") @db.Timestamp(0)
-  subAcara    SubAcara? @relation(fields: [subAcaraId], references: [id])
+  subAcara    SubAcara? @relation(fields: [subAcaraId], references: [id], onDelete: NoAction)
   Point       Point[]
 
   @@index([userId], map: "absensi_fk_1")
@@ -193,9 +193,9 @@ model Point {
   id        Int      @id @unique @default(autoincrement())
   point     Int
   userId    String
-  user      User     @relation(fields: [userId], references: [id])
+  user      User     @relation(fields: [userId], references: [id], onDelete: NoAction)
   absensiId Int
-  absensi   Absensi  @relation(fields: [absensiId], references: [id])
+  absensi   Absensi  @relation(fields: [absensiId], references: [id], onDelete: NoAction)
   createdAt DateTime @default(now()) @map("created_at")
   updateAt  DateTime @default(now()) @updatedAt @map("updated_at")
 
@@ -209,9 +209,9 @@ model NotificationHistory {
   acaraId    String?   @map("acara_id")
   subAcaraId String?   @map("sub_acara_id")
   userId     String    @map("user_id")
-  acara      Acara?    @relation(fields: [acaraId], references: [id])
-  subAcara   SubAcara? @relation(fields: [subAcaraId], references: [id])
-  user       User      @relation(fields: [userId], references: [id])
+  acara      Acara?    @relation(fields: [acaraId], references: [id], onDelete: NoAction)
+  subAcara   SubAcara? @relation(fields: [subAcaraId], references: [id], onDelete: NoAction)
+  user       User      @relation(fields: [userId], references: [id], onDelete: NoAction)
   title      String
   body       String
   isRead     Boolean
