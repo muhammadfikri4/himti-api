@@ -18,6 +18,7 @@ import strukturalRoute from '../app/struktural/strukturalRoute';
 import subAcaraRoute from '../app/sub-acara/subAcaraRoute';
 import userFcmRoute from '../app/user-fcm/user-fcmRoute';
 import userRoute from '../app/user/userRoute';
+import versionRoute from '../app/version/versionRoute';
 import { MESSAGE_CODE } from "../utils/ErrorCode";
 import { MESSAGES } from "../utils/Messages";
 
@@ -38,6 +39,7 @@ route.use('/user', userRoute)
 route.use('/notification', notificationRoute)
 route.use('/user-fcm', userFcmRoute)
 route.use('/initial', initialRoute)
+route.use('/version', versionRoute)
 
 
 registerFont(path.join(__dirname, '../../public/times-new-roman.ttf'), { family: 'Times New Roman' });

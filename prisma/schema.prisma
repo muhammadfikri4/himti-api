@@ -180,7 +180,7 @@ model Bussiness {
 model OTP {
   id         String    @id @unique @default(uuid())
   email      String    @db.VarChar(50)
-  otp        String    @db.VarChar(50)
+  otp        String    @db.VarChar(500)
   isVerified Boolean   @default(false) @map("is_verified")
   expired    DateTime? @db.Timestamp(0)
   createdAt  DateTime  @default(now()) @map("created_at") @db.Timestamp(0)
@@ -222,6 +222,15 @@ model NotificationHistory {
   @@index([userId], map: "notification_history_fk_2")
   @@index([subAcaraId], map: "notification_history_fk_3")
   @@map("notification_history")
+}
+
+model Version {
+  id             Int     @unique @default(autoincrement())
+  androidVersion String? @map("android_version")
+  iosVersion     String? @map("ios_version")
+  playstoreLink  String? @map("play_store_link")
+  appStoreLink   String? @map("app_store_link")
+  notes          String?
 }
 
 enum Jabatan {

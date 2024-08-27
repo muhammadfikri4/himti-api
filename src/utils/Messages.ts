@@ -40,8 +40,8 @@ export const MESSAGES = {
             MERCHANDISE: "Merchandise not found",
             SERVICE: "Service not found",
             ROUTE: "Route not found, Check again your endpoint!",
-            NOTIFICATION: "Notification not found"
-
+            NOTIFICATION: "Notification not found",
+            VERSION: "Version not found"
         },
         ALREADY: {
             GLOBAL: {
@@ -62,7 +62,8 @@ export const MESSAGES = {
             MERCHANDISE: "Merchandise is already exist",
             OTP_VERIFIED: "OTP is already verified, please request otp again to forget password",
             LOGIN: "Please log out on other device and login again",
-            INITIAL: "Initial user already exist"
+            INITIAL: "Initial user already exist",
+            INITIAL_VERSION: "Initial version already exist"
         },
         INVALID: {
             GLOBAL: {
@@ -228,6 +229,10 @@ export const MESSAGES = {
             GET: "Success to fetch notification",
             READ: "Success to read notification",
             SEND: "Success to send notification"
+        },
+        VERSION: {
+            GET: "Success to get version",
+            UPDATE: "Success to update version"
         }
     }
 }
