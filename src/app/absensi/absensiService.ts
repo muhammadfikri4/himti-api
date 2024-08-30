@@ -1,9 +1,11 @@
 import { decode } from "jsonwebtoken"
 import { TokenDecodeInterface } from "../../interface"
+import { environment } from "../../libs"
 import { MESSAGE_CODE } from "../../utils/ErrorCode"
 import { FormatIDTime } from "../../utils/FormatIDTime"
 import { ErrorApp } from "../../utils/HttpError"
 import { MESSAGES } from "../../utils/Messages"
+import { FileType, UploadFileToStorage } from "../../utils/UploadFileToStorage"
 import { getSubAcaraById } from "../acara/acaraRepository"
 import { addPoint, getPointByAbsensi } from "../point/pointRepository"
 import { AbsensiDTO, IFilterAbsensi, TokenTypes } from "./absensiDTO"
@@ -52,9 +54,18 @@ export const createAbsensiSubAcaraService = async ({ subAcaraId, image, coordina
     // if (!getSubAcara?.isOpenAbsen) {
     //     return new ErrorApp(MESSAGES.ERROR.INVALID.ABSENSI, 400, MESSAGE_CODE.BAD_REQUEST)
     // }
+    const img = image as Express.Multer.File
+    const filename = `${img?.originalname.replace(FileType[img.mimetype], "")} - ${+new Date()}${FileType[img?.mimetype as string]}`
 
+    await UploadFileToStorage({
+        Bucket: environment.STORAGE.BUCKET,
+        Key: `assets/absensi/${filename}`,
+        Body: img?.buffer as Buffer,
+        ContentType: img?.mimetype as string,
+        ACL: 'public-read',
+    })
 
-    const absensi = await createAbsensi({ acaraId: getSubAcara?.acaraId, subAcaraId, image, userId: (decodeToken as TokenTypes)?.id as string, coordinate, address, absensiTime })
+    const absensi = await createAbsensi({ acaraId: getSubAcara?.acaraId, subAcaraId, image:filename, userId: (decodeToken as TokenTypes)?.id as string, coordinate, address, absensiTime })
     // const targetTime = new Date(getSubAcara?.startTime as Date) // Asumsikan startTime adalah waktu target
 
     // Periksa jika absensi dilakukan 3 jam lebih awal
@@ -88,14 +99,12 @@ export const getAbsensiService = async ({ acaraId }: IFilterAbsensi, token: stri
 
 export const getAbsensiByIdService = async (id: number) => {
     const absensi = await getAbsensiById(id)
-    const { userId, acaraId, subAcaraId, acara, user, subAcara, createdAt, updatedAt, ...rest } = absensi ?? {}
-
     const points = await getPointByAbsensi(absensi?.id as number)
     const response = {
-        ...rest,
-        acara: acara?.name,
-        subAcara: subAcara?.name,
-        user: user?.name,
+        id: absensi?.id,
+        acara: absensi?.acara.name,
+        subAcara: absensi?.subAcara?.name,
+        user: absensi?.user.name,
         points: points?.point || 0
     }
 

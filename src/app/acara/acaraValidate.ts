@@ -1,9 +1,9 @@
 import { MESSAGE_CODE } from '../../utils/ErrorCode'
 import { ErrorApp } from '../../utils/HttpError'
 import { MESSAGES } from '../../utils/Messages'
-import { AcaraBodyDTO } from './acaraDTO'
+import { CreateAcaraBodyRequest } from './acaraDTO'
 
-export const acaraValidate = async ({ name, image, endTime, isOpenRegister, startTime }: AcaraBodyDTO) => {
+export const acaraValidate = async ({ name, image, endTime, isOpenRegister, startTime }: CreateAcaraBodyRequest) => {
 
     if (!name) {
 

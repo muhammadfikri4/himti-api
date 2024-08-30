@@ -2,7 +2,7 @@ export interface AbsensiDTO {
     userId?: string
     acaraId?: string
     subAcaraId?: string
-    image: string,
+    image: Express.Multer.File | string,
     coordinate: string
     address?: string
     absensiTime?: string

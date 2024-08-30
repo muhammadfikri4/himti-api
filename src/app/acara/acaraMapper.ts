@@ -1,4 +1,5 @@
 import { Absensi, Acara, SubAcara } from "@prisma/client";
+import { ImagePath } from "utils/ImagePath";
 import { AcaraDTO, SubAcaraDTO } from "./acaraDTO";
 
 export interface SubAcaraData extends SubAcara {
@@ -11,7 +12,7 @@ export const acarasDTOMapper = (acaras: Acara[]): AcaraDTO[] => {
             id: acara.id,
             description: acara.description,
             endTime: acara.endTime as Date,
-            image: acara.image as string,
+            image: acara.image.includes('https') ? acara.image : ImagePath(acara.image),
             name: acara.name,
             startTime: acara.startTime as Date,
             isOpen: acara.isOpen,
@@ -23,7 +24,7 @@ export const acaraDTOMapper = (acara: Acara): AcaraDTO => {
         id: acara.id,
         name: acara.name,
         description: acara.description,
-        image: acara.image as string,
+        image: acara.image.includes('https') ? acara.image : ImagePath(acara.image),
         startTime: acara.startTime as Date,
         endTime: acara.endTime as Date,
         isOpen: acara.isOpen,
@@ -44,7 +45,7 @@ export const subAcaraMapper = (subAcaras: SubAcaraData[], userId: string): SubAc
             id: item.id,
             name: item.name,
             description: item.description,
-            image: item.image as string,
+            image: item?.image?.includes('https') ? item?.image : ImagePath(item?.image as unknown as string),
             endTime: item.endTime as Date,
             startTime: item.startTime as Date,
             isOpenAbsen: !isExpired,

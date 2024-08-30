@@ -9,6 +9,16 @@ export interface AcaraBodyDTO {
     startTime?: Date,
     endTime?: Date
 }
+export interface CreateAcaraBodyRequest {
+    id?: string
+    name?: string
+    description?: string,
+    image?: Express.Multer.File | string,
+    isOpenRegister?: boolean,
+    isOpenAbsen?: boolean,
+    startTime?: Date | string,
+    endTime?: Date | string
+}
 
 export interface AcaraDTO {
     id: string

@@ -1,18 +1,15 @@
 import { Router } from "express";
-import { validateRequest } from "../../middleware/validateRequest";
+import { upload as UploadFile } from "utils/UploadFileToStorage";
 import { VerifyToken } from "../../middleware/verifyToken";
 import { CatchWrapper } from "../../utils/CatchWrapper";
-import { imageSchema } from "../global/imageRequest";
-import { upload } from "./acaraConfig";
 import { createAcaraController, deleteAcaraController, getAcaraController, getDetailAcaraController, updateAcaraController } from "./acaraController";
-import { createAcaraSchema } from "./acaraRequest";
 
 const route = Router()
 
-route.post("/", VerifyToken, CatchWrapper(upload.single("image")), validateRequest(createAcaraSchema, imageSchema), CatchWrapper(createAcaraController))
+route.post("/", VerifyToken, CatchWrapper(UploadFile.single('image')), CatchWrapper(createAcaraController))
 route.get("/", CatchWrapper(getAcaraController))
 route.delete("/:id", VerifyToken, CatchWrapper(deleteAcaraController))
-route.put("/:id", VerifyToken, CatchWrapper(upload.single("image")), updateAcaraController)
+route.put("/:id", VerifyToken, CatchWrapper(UploadFile.single("image")), CatchWrapper(updateAcaraController))
 route.get("/:id", CatchWrapper(getDetailAcaraController))
 
 export default route

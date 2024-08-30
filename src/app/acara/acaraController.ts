@@ -3,17 +3,21 @@ import { MESSAGE_CODE } from "../../utils/ErrorCode";
 import { HandleResponse } from "../../utils/HandleResponse";
 import { ErrorApp } from "../../utils/HttpError";
 import { MESSAGES } from "../../utils/Messages";
-import { AcaraBodyDTO } from "./acaraDTO";
 import { createAcaraService, deleteAcaraService, getAcaraService, getDetailAcaraService, updateAcaraService } from "./acaraService";
 
 
 
-export const createAcaraController = async (req: Request, res: Response, next: NextFunction) => {
+export const createAcaraController = async (
+    req: Request & {
+        file: Express.Multer.File
+    },
+    res: Response,
+    next: NextFunction) => {
 
-    const body = req.body as AcaraBodyDTO
+    const body = req.body
     const file = req.file
 
-    const acara = await createAcaraService({ ...body, image: file as unknown as string });
+    const acara = await createAcaraService({ ...body, image: file });
     if (acara instanceof ErrorApp) {
         next(acara)
         return
@@ -52,11 +56,16 @@ export const deleteAcaraController = async (req: Request, res: Response) => {
     HandleResponse(res, 200, MESSAGE_CODE.SUCCESS, MESSAGES.SUCCESS.ACARA.DELETE)
 }
 
-export const updateAcaraController = async (req: Request, res: Response) => {
+export const updateAcaraController = async (
+    req: Request & {
+        file: Express.Multer.File
+    },
+    res: Response) => {
     const { id } = req.params;
-    const { name, description, endTime, isOpenAbsen, isOpenRegister, startTime, } = req.body as AcaraBodyDTO
+    // const { name, description, endTime, isOpenAbsen, isOpenRegister, startTime, } = req.body 
+    const { body } = req
 
-    const acara = await updateAcaraService({ id, name, description, endTime, isOpenAbsen, isOpenRegister, startTime, image: req.file?.path });
+    const acara = await updateAcaraService({ ...body, id, image: req.file });
     if (acara instanceof ErrorApp) {
         return HandleResponse(res, acara.statusCode, acara.code, acara.message)
     }
