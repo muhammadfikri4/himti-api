@@ -1,4 +1,4 @@
-import { environment } from "libs"
+import { environment } from "../libs"
 
 export const ImagePath = (filename:string) => {
   const endpoint = environment.STORAGE.ENDPOINT
