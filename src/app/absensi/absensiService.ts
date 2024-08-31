@@ -1,5 +1,3 @@
-import { decode } from "jsonwebtoken"
-import { TokenDecodeInterface } from "../../interface"
 import { environment } from "../../libs"
 import { MESSAGE_CODE } from "../../utils/ErrorCode"
 import { FormatIDTime } from "../../utils/FormatIDTime"
@@ -8,33 +6,31 @@ import { MESSAGES } from "../../utils/Messages"
 import { FileType, UploadFileToStorage } from "../../utils/UploadFileToStorage"
 import { getSubAcaraById } from "../acara/acaraRepository"
 import { addPoint, getPointByAbsensi } from "../point/pointRepository"
-import { AbsensiDTO, IFilterAbsensi, TokenTypes } from "./absensiDTO"
+import { AbsensiDTO, IFilterAbsensi } from "./absensiDTO"
 import { AbsensiAcara, historyAbsensiMapper } from "./absensiMapper"
 import { createAbsensi, getAbsensiById, getAbsensiBySubAcaraId, getAbsensiByUserId, getAbsensies } from "./absensiRepository"
 import { createAbsensiAcaraValidate, createAbsensiSubAcaraValidate } from "./absensiValidate"
 
-export const createAbsensiAcaraService = async ({ acaraId, image, address, coordinate }: AbsensiDTO, token: string) => {
-    const decodeToken = decode(token)
+export const createAbsensiAcaraService = async ({ acaraId, image, address, coordinate }: AbsensiDTO, userId: string) => {
 
-    const validate = await createAbsensiAcaraValidate({ acaraId, image, userId: (decodeToken as TokenTypes)?.id as string, coordinate })
+
+    const validate = await createAbsensiAcaraValidate({ acaraId, image, userId, coordinate })
 
     if (validate instanceof ErrorApp) {
         return validate
     }
 
-    const absensi = await createAbsensi({ acaraId, image, userId: (decodeToken as TokenTypes)?.id as string, coordinate, address })
+    const absensi = await createAbsensi({ acaraId, image, userId, coordinate, address })
     return absensi
 }
-export const createAbsensiSubAcaraService = async ({ subAcaraId, image, coordinate, address, absensiTime }: AbsensiDTO, token: string) => {
-    const decodeToken = decode(token)
+export const createAbsensiSubAcaraService = async ({ subAcaraId, image, coordinate, address, absensiTime }: AbsensiDTO, userId: string) => {
 
-    const validate = await createAbsensiSubAcaraValidate({ subAcaraId, image, userId: (decodeToken as TokenTypes)?.id as string, coordinate })
+    const validate = await createAbsensiSubAcaraValidate({ subAcaraId, image, userId, coordinate })
 
     if (validate instanceof ErrorApp) {
         return validate
     }
 
-    const userId = (decodeToken as TokenDecodeInterface)?.id
 
     const getAbsensi = await getAbsensiBySubAcaraId(subAcaraId as string, userId as string)
 
@@ -51,9 +47,6 @@ export const createAbsensiSubAcaraService = async ({ subAcaraId, image, coordina
         return new ErrorApp(MESSAGES.ERROR.INVALID.ABSENSI_NOT_OPEN, 400, MESSAGE_CODE.BAD_REQUEST)
     }
 
-    // if (!getSubAcara?.isOpenAbsen) {
-    //     return new ErrorApp(MESSAGES.ERROR.INVALID.ABSENSI, 400, MESSAGE_CODE.BAD_REQUEST)
-    // }
     const img = image as Express.Multer.File
     const filename = `${img?.originalname.replace(FileType[img.mimetype], "")} - ${+new Date()}${FileType[img?.mimetype as string]}`
 
@@ -65,14 +58,22 @@ export const createAbsensiSubAcaraService = async ({ subAcaraId, image, coordina
         ACL: 'public-read',
     })
 
-    const absensi = await createAbsensi({ acaraId: getSubAcara?.acaraId, subAcaraId, image:filename, userId: (decodeToken as TokenTypes)?.id as string, coordinate, address, absensiTime })
-    // const targetTime = new Date(getSubAcara?.startTime as Date) // Asumsikan startTime adalah waktu target
+    const absensi = await createAbsensi({ 
+        acaraId: getSubAcara?.acaraId, 
+        subAcaraId, 
+        image: filename, 
+        userId, 
+        coordinate, 
+        address, 
+        absensiTime 
+    })
 
-    // Periksa jika absensi dilakukan 3 jam lebih awal
-    // Selisih dalam jam
-    let points = 20 // Poin default
+
     console.log({ timeDifference, targetTime: new Date(FormatIDTime(getSubAcara?.startTime as Date)), absensiDate })
-    // console.log({ absensi, timeDifference, targetTime, createdAt: absensi.createdAt, absensiDate })
+    
+    // Notes: Cek waktu absensi
+    let points = 20 // Poin default
+
     if (timeDifference >= 0 && timeDifference <= 1) {
         points = 100 // Poin untuk absen 3 jam lebih awal
     }
@@ -84,12 +85,11 @@ export const createAbsensiSubAcaraService = async ({ subAcaraId, image, coordina
     return
 }
 
-export const getAbsensiService = async ({ acaraId }: IFilterAbsensi, token: string) => {
-    const decodeToken = decode(token) as TokenDecodeInterface
-    const acara = await getAbsensiByUserId(decodeToken.id, acaraId)
+export const getAbsensiService = async ({ acaraId }: IFilterAbsensi, userId: string) => {
+    const acara = await getAbsensiByUserId(userId, acaraId)
 
-    const data = historyAbsensiMapper(acara as unknown as AbsensiAcara[], decodeToken.id)
-    // const absensi = await getHistoryAbsensiByUserId((decodeToken as TokenTypes)?.id as string, acaraId, subAcaraId, page, perPage)
+    const data = historyAbsensiMapper(acara as unknown as AbsensiAcara[], userId)
+
     if (!data.length) {
         return new ErrorApp(MESSAGES.ERROR.NOT_FOUND.ABSENSI, 404, MESSAGE_CODE.NOT_FOUND)
     }

@@ -7,6 +7,7 @@ import { ErrorApp } from "./HttpError"
 
 export interface FileInterface {
     ContentType: string
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     ACL: any
     Bucket: string
     Key: string
@@ -45,7 +46,7 @@ export const MulterFileFilter = (
 
 export const StorageS3Client = new S3({
     forcePathStyle: true,
-    endpoint: environment.STORAGE.ENDPOINT,
+    endpoint: `${environment.STORAGE.ENDPOINT}/s3`,
     credentials: {
         accessKeyId: environment.STORAGE.ACCESS_KEY,
         secretAccessKey: environment.STORAGE.SECRET_KEY

@@ -14,10 +14,11 @@ export const createAcaraController = async (
     res: Response,
     next: NextFunction) => {
 
-    const body = req.body
+    const {body} = req
     const file = req.file
-
-    const acara = await createAcaraService({ ...body, image: file });
+    const combine = { ...body, image: file }
+console.log(body)
+    const acara = await createAcaraService(combine);
     if (acara instanceof ErrorApp) {
         next(acara)
         return

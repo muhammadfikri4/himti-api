@@ -5,7 +5,7 @@ import { AbsensiDTO } from "./absensiDTO"
 export const createAbsensi = async ({ acaraId, image, userId, coordinate, subAcaraId, address, absensiTime }: AbsensiDTO) => {
     return await prisma.absensi.create({
         data: {
-            image,
+            image: image as string,
             acaraId: acaraId as string,
             subAcaraId: subAcaraId ? subAcaraId : null,
             userId: userId as string,

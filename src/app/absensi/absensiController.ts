@@ -4,13 +4,20 @@ import { HandleResponse } from '../../utils/HandleResponse'
 import { ErrorApp } from '../../utils/HttpError'
 import { MESSAGES } from '../../utils/Messages'
 import { createAbsensiAcaraService, createAbsensiSubAcaraService, getAbsensiByIdService, getAbsensiService, getOverallAbsensiService } from "./absensiService"
+import { RequestWithAccessToken } from '../../interface/Request'
+import { createAbsensiAcaraSchema, createAbsensiSubAcaraSchema } from './absensiRequest'
 
-export const createAbsensiAcaraController = async (req: Request, res: Response, next: NextFunction) => {
-    const { acaraId, coordinate, address } = req.body
-    const image = req.file?.path as string
-    const token = req.headers.authorization?.replace("Bearer ", "")
+export const createAbsensiAcaraController = async (req: RequestWithAccessToken, res: Response, next: NextFunction) => {
 
-    const absensi = await createAbsensiAcaraService({ acaraId, image, coordinate, address }, token as string)
+    const file = req.file
+    const {body} = req
+const {userId} = req
+const combine = { ...body, image:file }
+    const validate = createAbsensiAcaraSchema.validate(combine)
+    if (validate.error) {
+        next(new ErrorApp(validate.error.message.replace(/"/g, ''), 400, MESSAGE_CODE.BAD_REQUEST))
+    }
+    const absensi = await createAbsensiAcaraService(combine, userId as string)
 
     if (absensi instanceof ErrorApp) {
         next(absensi)
@@ -18,12 +25,22 @@ export const createAbsensiAcaraController = async (req: Request, res: Response, 
     }
     HandleResponse(res, 201, MESSAGE_CODE.SUCCESS, MESSAGES.CREATED.ABSENSI)
 }
-export const createAbsensiSubAcaraController = async (req: Request, res: Response, next: NextFunction) => {
-    const { subAcaraId, coordinate, address, absensiTime } = req.body
-    const image = req.file?.path as string
-    const token = req.headers.authorization?.replace("Bearer ", "")
+export const createAbsensiSubAcaraController = async (req: RequestWithAccessToken, res: Response, next: NextFunction) => {
 
-    const absensi = await createAbsensiSubAcaraService({ subAcaraId, image, coordinate, address, absensiTime }, token as string)
+    const file = req.file as Express.Multer.File
+    const {userId} = req
+    const {body} = req
+    const combine = {
+        ...body,
+        image: file
+    }
+
+    const validate = createAbsensiSubAcaraSchema.validate(combine)
+    if(validate.error) {
+        next(new ErrorApp(validate.error.message.replace(/"/g, ''),400, MESSAGE_CODE.BAD_REQUEST))
+    }
+
+    const absensi = await createAbsensiSubAcaraService(combine, userId as string)
 
     if (absensi instanceof ErrorApp) {
         next(absensi)
@@ -32,20 +49,19 @@ export const createAbsensiSubAcaraController = async (req: Request, res: Respons
     HandleResponse(res, 201, MESSAGE_CODE.SUCCESS, MESSAGES.CREATED.ABSENSI)
 }
 
-export const getAbsensiController = async (req: Request, res: Response, next: NextFunction) => {
+export const getAbsensiController = async (req: RequestWithAccessToken, res: Response, next: NextFunction) => {
 
     const { acaraId, page, perPage } = req.query
+    const {userId} = req
 
-    const token = req.headers.authorization?.replace("Bearer ", "")
     const absensi = await getAbsensiService({
         acaraId: acaraId ? acaraId as string : undefined,
         page: page ? Number(page) : undefined,
         perPage: perPage ? Number(perPage) : undefined
-    }, token as string)
+    }, userId as string)
     if (absensi instanceof ErrorApp) {
         next(absensi)
         return
-        // return HandleResponse(res, absensi.statusCode, absensi.code, absensi.message)
     }
     HandleResponse(res, 200, MESSAGE_CODE.SUCCESS, MESSAGES.SUCCESS.ABSENSI.GET, absensi)
 }

@@ -40,7 +40,7 @@ export const createAcaraService = async ({ name, description, endTime, image, is
     
     await UploadFileToStorage({
         Bucket: environment.STORAGE.BUCKET,
-        Key: `assets/${filename}`,
+        Key: `assets/acara/${filename}`,
         Body: img?.buffer as Buffer,
         ContentType: img?.mimetype as string,
         ACL: 'public-read',
@@ -91,11 +91,11 @@ export const updateAcaraService = async ({ id, name, image, description, endTime
     let filename
 
     if (image) {
-        RemoveFileFromStorage(`assets/${matchAcara.image}`)
+        RemoveFileFromStorage(`assets/acara/${matchAcara.image}`)
         filename = `${img?.originalname.replace(FileType[img.mimetype], "")} - ${+new Date()}${FileType[img?.mimetype as string]}`
         await UploadFileToStorage({
             Bucket: environment.STORAGE.BUCKET,
-            Key: `assets/${filename}`,
+            Key: `assets/acarad/${filename}`,
             Body: img?.buffer as Buffer,
             ContentType: img?.mimetype as string,
             ACL: 'public-read',

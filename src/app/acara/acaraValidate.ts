@@ -4,7 +4,7 @@ import { MESSAGES } from '../../utils/Messages'
 import { CreateAcaraBodyRequest } from './acaraDTO'
 
 export const acaraValidate = async ({ name, image, endTime, isOpenRegister, startTime }: CreateAcaraBodyRequest) => {
-
+console.log(name)
     if (!name) {
 
         return new ErrorApp(MESSAGES.ERROR.REQUIRED.NAME, 400, MESSAGE_CODE.BAD_REQUEST)
