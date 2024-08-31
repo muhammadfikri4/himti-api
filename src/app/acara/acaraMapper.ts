@@ -1,5 +1,5 @@
 import { Absensi, Acara, SubAcara } from "@prisma/client";
-import { ImagePath } from "utils/ImagePath";
+import { ImagePath } from "../../utils/ImagePath";
 import { AcaraDTO, SubAcaraDTO } from "./acaraDTO";
 
 export interface SubAcaraData extends SubAcara {
