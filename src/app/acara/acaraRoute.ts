@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { upload as UploadFile } from "utils/UploadFileToStorage";
+import { upload as UploadFile } from "../../utils/UploadFileToStorage";
 import { VerifyToken } from "../../middleware/verifyToken";
 import { CatchWrapper } from "../../utils/CatchWrapper";
 import { createAcaraController, deleteAcaraController, getAcaraController, getDetailAcaraController, updateAcaraController } from "./acaraController";

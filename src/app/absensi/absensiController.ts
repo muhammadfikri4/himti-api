@@ -16,6 +16,7 @@ const combine = { ...body, image:file }
     const validate = createAbsensiAcaraSchema.validate(combine)
     if (validate.error) {
         next(new ErrorApp(validate.error.message.replace(/"/g, ''), 400, MESSAGE_CODE.BAD_REQUEST))
+        return
     }
     const absensi = await createAbsensiAcaraService(combine, userId as string)
 
@@ -38,6 +39,7 @@ export const createAbsensiSubAcaraController = async (req: RequestWithAccessToke
     const validate = createAbsensiSubAcaraSchema.validate(combine)
     if(validate.error) {
         next(new ErrorApp(validate.error.message.replace(/"/g, ''),400, MESSAGE_CODE.BAD_REQUEST))
+        return
     }
 
     const absensi = await createAbsensiSubAcaraService(combine, userId as string)
