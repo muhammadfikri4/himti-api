@@ -1,4 +1,5 @@
 import { Absensi, Point } from "@prisma/client";
+import { ImagePath } from "../../utils/ImagePath";
 
 interface HistoryAbsensiResponse {
     acara: {
@@ -16,13 +17,6 @@ interface HistoryAbsensiResponse {
     }[]
 }
 
-interface AbsensiSubAcara extends Absensi {
-    subAcara: {
-        id: string,
-        name: string
-    }
-}
-
 export interface AbsensiAcara extends Absensi {
     acara: {
         id: string
@@ -37,6 +31,7 @@ export interface AbsensiAcara extends Absensi {
 
 export const absensiMapper = (data: Absensi[]) => {
     return data.map((item) => {
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const { userId, acaraId, ...rest } = item
 
         return rest
@@ -44,10 +39,10 @@ export const absensiMapper = (data: Absensi[]) => {
     })
 }
 
-export const historyAbsensiMapper = (absensi: AbsensiAcara[], userId: string) => {
+export const historyAbsensiMapper = (absensi: AbsensiAcara[]): HistoryAbsensiResponse[] => {
     const data: AbsensiAcara[] = []
     absensi.map((item) => {
-        if (data.find((i: any) => i.acaraId === item.acaraId)) {
+        if (data.find((i: AbsensiAcara) => i.acaraId === item.acaraId)) {
             return null
         }
         data.push(item as unknown as AbsensiAcara)
@@ -63,7 +58,7 @@ export const historyAbsensiMapper = (absensi: AbsensiAcara[], userId: string) =>
             absensi: subacara.map(subItem => {
                 return {
                     id: subItem.id,
-                    image: subItem.image,
+                    image: subItem.image.includes('https')? subItem.image : ImagePath(`absensi/${subItem.image}`),
                     absensiTime: subItem.absensiTime as string,
                     subAcara: {
                         id: subItem.subAcara.id,

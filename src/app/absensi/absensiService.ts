@@ -88,7 +88,7 @@ export const createAbsensiSubAcaraService = async ({ subAcaraId, image, coordina
 export const getAbsensiService = async ({ acaraId }: IFilterAbsensi, userId: string) => {
     const acara = await getAbsensiByUserId(userId, acaraId)
 
-    const data = historyAbsensiMapper(acara as unknown as AbsensiAcara[], userId)
+    const data = historyAbsensiMapper(acara as unknown as AbsensiAcara[])
 
     if (!data.length) {
         return new ErrorApp(MESSAGES.ERROR.NOT_FOUND.ABSENSI, 404, MESSAGE_CODE.NOT_FOUND)
