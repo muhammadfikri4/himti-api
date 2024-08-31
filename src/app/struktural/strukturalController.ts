@@ -3,15 +3,14 @@ import { MESSAGE_CODE } from "../../utils/ErrorCode";
 import { HandleResponse } from "../../utils/HandleResponse";
 import { ErrorApp } from "../../utils/HttpError";
 import { MESSAGES } from "../../utils/Messages";
-import { StrukturalBodyDTO } from "./strukturalDTO";
 import { createStrukturalService, deleteStrukturalService, getStrukturalService, updateStrukturalService } from "./strukturalService";
 
 
 export const createStrukturalController = async (req: Request, res: Response, next: NextFunction) => {
 
-    const { anggotaId, jabatan, isActive } = req.body
+    const { memberId, jabatan, isActive } = req.body
 
-    const struktural = await createStrukturalService({ isActive, jabatan, anggotaId, }, req as Request);
+    const struktural = await createStrukturalService({ isActive, jabatan, memberId, }, req as Request);
     if (struktural instanceof ErrorApp) {
         next(struktural)
         return
@@ -50,9 +49,9 @@ export const deleteStrukturalController = async (req: Request, res: Response, ne
 
 export const updateStrukturalController = async (req: Request, res: Response, next: NextFunction) => {
     const { id } = req.params;
-    const { isActive, jabatan, anggotaId } = req.body as StrukturalBodyDTO
+    const { isActive, jabatan, memberId } = req.body
 
-    const struktural = await updateStrukturalService({ id, isActive, anggotaId, jabatan, image: req.file?.path });
+    const struktural = await updateStrukturalService({ id, isActive, memberId, jabatan, image: req.file?.path });
     if (struktural instanceof ErrorApp) {
         next(struktural)
         return

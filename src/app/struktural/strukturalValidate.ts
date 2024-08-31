@@ -1,18 +1,18 @@
 import { MESSAGE_CODE } from '../../utils/ErrorCode'
 import { ErrorApp } from '../../utils/HttpError'
 import { MESSAGES } from '../../utils/Messages'
-import { getAnggotaById } from '../anggota/anggotaRepository'
-import { StrukturalBodyDTO } from './strukturalDTO'
-import { getStrukturalByAnggotaId, getStrukturalByJabatan } from './strukturalRepository'
+import { getMemberById } from '../members/membersRepository'
+import { StructuralBodyDTO } from './strukturalDTO'
+import { getStructuralByAnggotaId, getStructuralByJabatan } from './strukturalRepository'
 import { jabatanChecker } from './strukturalService'
 
-export const strukturalValidate = async ({ anggotaId, image, jabatan }: StrukturalBodyDTO) => {
+export const strukturalValidate = async ({ memberId, image, jabatan }: StructuralBodyDTO) => {
 
-    if (!anggotaId) {
+    if (!memberId) {
 
         return new ErrorApp(MESSAGES.ERROR.REQUIRED.ANGGOTA_ID, 400, MESSAGE_CODE.BAD_REQUEST)
     }
-    const anggotaIsStruktural = await getStrukturalByAnggotaId(anggotaId)
+    const anggotaIsStruktural = await getStructuralByAnggotaId(memberId)
     if (anggotaIsStruktural) {
         return new ErrorApp(MESSAGES.ERROR.ALREADY.ANGGOTA_STRUKTURAL, 400, MESSAGE_CODE.BAD_REQUEST)
     }
@@ -26,12 +26,12 @@ export const strukturalValidate = async ({ anggotaId, image, jabatan }: Struktur
     if (jabatan && !jabatanIsValid) {
         return new ErrorApp(MESSAGES.ERROR.INVALID.JABATAN, 400, MESSAGE_CODE.BAD_REQUEST)
     }
-    const jabatanIsAlready = await getStrukturalByJabatan(jabatan)
+    const jabatanIsAlready = await getStructuralByJabatan(jabatan)
     if (jabatanIsAlready) {
         return new ErrorApp(MESSAGES.ERROR.ALREADY.JABATAN, 400, MESSAGE_CODE.BAD_REQUEST)
     }
 
-    const matchAnggota = await getAnggotaById(anggotaId)
+    const matchAnggota = await getMemberById(memberId)
 
     if (!matchAnggota) {
 

@@ -3,22 +3,23 @@ import { Router, type Request, type Response } from "express";
 import path from "path";
 import PDFDocument from 'pdfkit';
 import QRCode, { QRCodeToDataURLOptions } from 'qrcode';
-import absensiRoute from '../app/absensi/absensiRoute';
-import acaraRoute from '../app/acara/acaraRoute';
-import anggotaRoute from '../app/anggota/anggotaRoute';
-import angkatanRoute from '../app/angkatan/angkatanRoute';
+import absensiRoute from '../app/attendances/attendancesRoute';
+import prestasiRoute from '../app/achievements/achievementsRoute';
 import authRoute from '../app/authentication/authRoute';
 import businessRoute from '../app/business/businessRoute';
-import dosenRoute from '../app/dosen/dosenRoute';
+import dosenRoute from '../app/lecturers/lecturersRoute';
+import acaraRoute from '../app/event/eventRoute';
+import angkatanRoute from '../app/generations/generationsRoute';
 import initialRoute from '../app/initial/initialRoute';
-import notificationRoute from '../app/notification/notificationRoute';
-import prestasiRoute from '../app/prestasi/prestasiRoute';
+import anggotaRoute from '../app/members/membersRoute';
+// import notificationRoute from '../app/notification/notificationRoute';
 import profileRoute from '../app/profile/profileRoute';
 import strukturalRoute from '../app/struktural/strukturalRoute';
-import subAcaraRoute from '../app/sub-acara/subAcaraRoute';
+// import subAcaraRoute from '../app/sub-acara/subAcaraRoute';
 import userFcmRoute from '../app/user-fcm/user-fcmRoute';
 import userRoute from '../app/user/userRoute';
 import versionRoute from '../app/version/versionRoute';
+import eventMeetingRoute from '../app/eventMeeting/eventMeetingRoute';
 import { MESSAGE_CODE } from "../utils/ErrorCode";
 import { MESSAGES } from "../utils/Messages";
 
@@ -32,11 +33,12 @@ route.use("/dosen", dosenRoute)
 route.use("/struktural", strukturalRoute)
 route.use("/anggota", anggotaRoute)
 route.use("/acara", acaraRoute)
-route.use("/sub-acara", subAcaraRoute)
+route.use("/event-meeting", eventMeetingRoute)
+// route.use("/sub-acara", subAcaraRoute)
 route.use('/business', businessRoute)
 route.use('/prestasi', prestasiRoute)
 route.use('/user', userRoute)
-route.use('/notification', notificationRoute)
+// route.use('/notification', notificationRoute)
 route.use('/user-fcm', userFcmRoute)
 route.use('/initial', initialRoute)
 route.use('/version', versionRoute)

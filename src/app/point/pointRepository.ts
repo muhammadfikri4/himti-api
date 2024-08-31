@@ -1,17 +1,19 @@
 import { prisma } from "../../config"
 
-export const addPoint = async (absensiId: number, userId: string, point: number) => {
+export const addPoint = async (attendanceId: number, userId: string, point: number) => {
     return await prisma.point.create({
         data: {
-            absensiId, userId, point
+            attendanceId, 
+            userId, 
+            point
         }
     })
 }
 
-export const getPointByAbsensiUserId = async (absensiId: number, userId: string) => {
+export const getPointByAbsensiUserId = async (attendanceId: number, userId: string) => {
     const point = await prisma.point.findFirst({
         where: {
-            absensiId,
+            attendanceId,
             userId
         },
         select: {
@@ -34,10 +36,10 @@ export const getPointByUserId = async (userId: string) => {
     return point
 }
 
-export const getPointByAbsensi = async (absensiId: number) => {
+export const getPointByAbsensi = async (attendanceId: number) => {
     const point = await prisma.point.findFirst({
         where: {
-            absensiId
+            attendanceId
         }
     })
     return point

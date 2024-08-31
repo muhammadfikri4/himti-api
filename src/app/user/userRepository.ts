@@ -14,31 +14,31 @@ import { IFilterUser, UpdateUserBodyRequest, UserRequestBodyDTO } from "./userDT
 //     })
 // }
 
-export const getAbsensiByUserId = async (userId: string) => {
-    return await prisma.absensi.findMany({
-        where: {
-            userId
-        },
-        include: {
-            acara: {
-                select: {
-                    id: true,
-                    name: true
-                }
-            },
-            user: {
-                select: {
-                    id: true,
-                    name: true,
-                    nim: true
-                }
-            }
-        },
-        orderBy: {
-            createdAt: 'desc'
-        }
-    })
-}
+// export const getAbsensiByUserId = async (userId: string) => {
+//     return await prisma.attendance.findMany({
+//         where: {
+//             userId
+//         },
+//         include: {
+//             acara: {
+//                 select: {
+//                     id: true,
+//                     name: true
+//                 }
+//             },
+//             user: {
+//                 select: {
+//                     id: true,
+//                     name: true,
+//                     nim: true
+//                 }
+//             }
+//         },
+//         orderBy: {
+//             createdAt: 'desc'
+//         }
+//     })
+// }
 
 export const getUsers = async ({ page, perPage, search, role }: IFilterUser) => {
     const filter = {} as { OR: Prisma.UserWhereInput[] }
@@ -135,7 +135,7 @@ export const getUserByEmail = async (email: string) => {
             name: true,
             email: true,
             nim: true,
-            anggotaId: true,
+            memberId: true,
             role: true
         }
     })

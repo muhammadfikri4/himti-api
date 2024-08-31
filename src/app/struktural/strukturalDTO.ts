@@ -1,8 +1,8 @@
 import { Jabatan } from "@prisma/client";
 
-export interface StrukturalBodyDTO {
+export interface StructuralBodyDTO {
     id?: string,
-    anggotaId?: string,
+    memberId?: string,
     jabatan?: Jabatan,
     image?: string,
     isActive?: boolean

@@ -1,8 +1,8 @@
-import { Anggota, Point, Role, User } from "@prisma/client";
+import { Member, Point, Role, User } from "@prisma/client";
 import { ProfileDTO } from "./profileDTO";
 
 export interface ProfileData extends User {
-    Anggota: Anggota
+    Member: Member
     Point: Point[]
 }
 
@@ -14,10 +14,10 @@ export const ProfileDTOMapper = (data: ProfileData): ProfileDTO => {
         name: data.name,
         nim: data.nim as string,
         role: data.role as Role,
-        instagram: data?.Anggota?.instagram as string,
-        facebook: data?.Anggota?.facebook as string,
-        twitter: data?.Anggota?.twitter as string,
-        linkedin: data?.Anggota?.linkedin as string,
+        instagram: data?.Member?.instagram as string,
+        facebook: data?.Member?.facebook as string,
+        twitter: data?.Member?.twitter as string,
+        linkedin: data?.Member?.linkedin as string,
         totalPoint: point
     }
 }

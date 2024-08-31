@@ -9,7 +9,7 @@ import { random } from '../../utils/GeneratedRandomOTP'
 import { ErrorApp } from '../../utils/HttpError'
 import { SendEmail } from '../../utils/MailerConfig'
 import { MESSAGES } from '../../utils/Messages'
-import { getAnggotaByNIM } from '../anggota/anggotaRepository'
+import { getMemberByNIM } from '../members/membersRepository'
 import { createUserFCM, deleteUserFCM } from '../user-fcm/user-fcm.repository'
 import { ForgotPasswordDTO, LoginAuthBodyDTO, RegisterAuthBodyDTO, ValidateOtpDTO } from './authDTO'
 import { changePassword, createOtp, createUser, getOtp, getUserByEmail, getUserById, getUserByNIM, userLogin, verifiedOtp } from './authRepository'
@@ -25,9 +25,9 @@ export const registerService = async ({ email, name, password, nim, code }: Regi
 
     const hashPassword = await bcrypt.hash(password, 10)
     let role: Role = "USER"
-    let anggotaId = null
+    let memberId = null
 
-    const isAnggota = await getAnggotaByNIM(nim)
+    const isAnggota = await getMemberByNIM(nim)
     const alreadyUser = await getUserByNIM(nim)
 
     if (isAnggota && !code) {
@@ -61,9 +61,9 @@ export const registerService = async ({ email, name, password, nim, code }: Regi
 
     if (isAnggota && code === environment.ANGGOTA_CODE) {
         role = "ANGGOTA"
-        anggotaId = isAnggota.id
+        memberId = isAnggota.id
     }
-    const response = await createUser({ email, name, password: hashPassword, role, nim, anggotaId: anggotaId as string })
+    const response = await createUser({ email, name, password: hashPassword, role, nim, memberId: memberId as string })
     return response
 
 }

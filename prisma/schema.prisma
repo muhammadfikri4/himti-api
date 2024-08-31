@@ -14,31 +14,32 @@ model User {
   password            String                @db.VarChar(110)
   role                Role?                 @default(ADMIN)
   nim                 String?               @db.VarChar(20)
-  anggotaId           String?               @map("anggota_id") @db.VarChar(110)
-  Absensi             Absensi[]
+  memberId           String?               @map("member_id") @db.VarChar(110)
+  Attendance          Attendance[]
   createdAt           DateTime              @default(now()) @map("created_at") @db.Timestamp(0)
   updatedAt           DateTime              @default(now()) @updatedAt @map("updated_at") @db.Timestamp(0)
   isLogin             Boolean               @default(false) @map("is_login")
-  Anggota             Anggota?              @relation(fields: [anggotaId], references: [id], onDelete: NoAction)
+  Member              Member?               @relation(fields: [memberId], references: [id], onDelete: NoAction)
   Point               Point[]
   UserFCM             UserFCM[]
   NotificationHistory NotificationHistory[]
 
-  @@index([anggotaId], map: "user_fk_1")
-  @@index([email])
+  @@index([memberId], map: "user_fk_1")
+  @@index([email], map: "user_fk_2")
+  @@map("user")
 }
 
 model UserFCM {
   id       String @id @unique @default(uuid())
   userId   String @map("user_id") @db.VarChar(110)
   fcmToken String @map("fcm_token") @db.VarChar(255)
-  user     User   @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  User     User   @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
 
   @@index([userId], map: "user_fcm_fk_1")
   @@map("user_fcm")
 }
 
-model Dosen {
+model Lecturer {
   id          String   @id @default(uuid())
   nidn        String   @unique @db.VarChar(50)
   name        String   @db.VarChar(255)
@@ -49,118 +50,132 @@ model Dosen {
   createdAt   DateTime @default(now()) @map("created_at") @db.Timestamp(0)
   updatedAt   DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamp(0)
 
-  @@index([name, nidn, createdAt])
+  @@index([name], map: "lecturer_fk_1")
+  @@index([nidn], map: "lecturer_fk_2")
+  @@map("lecturer")
 }
 
-model Angkatan {
-  id        String    @id @default(uuid())
-  year      String    @db.VarChar(20)
-  isActive  Boolean   @default(true) @map("is_active")
-  Anggota   Anggota[]
-  createdAt DateTime  @default(now()) @map("created_at") @db.Timestamp(0)
-  updatedAt DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamp(0)
-
-  @@index([year, createdAt])
-}
-
-model Anggota {
-  id         String       @id @default(uuid())
-  name       String       @db.VarChar(255)
-  email      String?      @db.VarChar(55)
-  nim        String?      @unique @db.VarChar(110)
-  angkatanId String       @map("angkatan_id")
-  isActive   Boolean?     @default(true) @map("is_active")
-  instagram  String?      @db.VarChar(50)
-  facebook   String?      @db.VarChar(50)
-  twitter    String?      @db.VarChar(50)
-  linkedin   String?      @db.VarChar(50)
-  angkatan   Angkatan     @relation(fields: [angkatanId], references: [id])
-  Struktural Struktural[]
-  createdAt  DateTime     @default(now()) @map("created_at") @db.Timestamp(0)
-  updatedAt  DateTime     @default(now()) @updatedAt @map("updated_at") @db.Timestamp(0)
-  User       User[]
-
-  @@index([angkatanId], map: "anggota_fk_1")
-}
-
-model Struktural {
-  id        String   @id @unique @default(uuid())
-  jabatan   Jabatan
-  image     String   @db.VarChar(255)
-  anggotaId String   @map("anggota_id") @db.VarChar(110)
+model Generation {
+  id        String   @id @default(uuid())
+  year      String   @db.VarChar(20)
   isActive  Boolean  @default(true) @map("is_active")
-  anggota   Anggota  @relation(fields: [anggotaId], references: [id])
+  member    Member[]
   createdAt DateTime @default(now()) @map("created_at") @db.Timestamp(0)
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamp(0)
 
-  @@index([anggotaId], map: "struktural_fk_1")
+  @@index([year], map: "generation_fk_1")
+  @@map("generation")
 }
 
-model Acara {
+model Member {
+  id           String       @id @default(uuid())
+  name         String       @db.VarChar(255)
+  email        String?      @db.VarChar(55)
+  nim          String?      @unique @db.VarChar(110)
+  generationId String       @map("generation_id")
+  isActive     Boolean?     @default(true) @map("is_active")
+  instagram    String?      @db.VarChar(50)
+  facebook     String?      @db.VarChar(50)
+  twitter      String?      @db.VarChar(50)
+  linkedin     String?      @db.VarChar(50)
+  Generation   Generation   @relation(fields: [generationId], references: [id])
+  Structural   Structural[]
+  createdAt    DateTime     @default(now()) @map("created_at") @db.Timestamp(0)
+  updatedAt    DateTime     @default(now()) @updatedAt @map("updated_at") @db.Timestamp(0)
+  User         User[]
+
+  @@index([generationId], map: "member_fk_1")
+  @@map("member")
+}
+
+model Structural {
+  id        String   @id @unique @default(uuid())
+  jabatan   Jabatan
+  image     String   @db.VarChar(255)
+  memberId  String   @map("member_id") @db.VarChar(110)
+  isActive  Boolean  @default(true) @map("is_active")
+  Member    Member   @relation(fields: [memberId], references: [id])
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamp(0)
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamp(0)
+
+  @@index([memberId], map: "struktural_fk_1")
+  @@map("structural")
+}
+
+model Event {
   id                  String                @id @unique @default(uuid())
   name                String                @db.VarChar(255)
   description         String?               @db.Text
   image               String                @db.VarChar(255)
   isOpen              Boolean               @default(true) @map("is_open")
-  isOpenAbsen         Boolean?              @default(true) @map("is_open_absen")
   endTime             DateTime?             @default(now()) @map("end_time")
   startTime           DateTime?             @default(now()) @map("start_time")
-  Absensi             Absensi[]
   createdAt           DateTime              @default(now()) @map("created_at") @db.Timestamp(0)
   updatedAt           DateTime              @default(now()) @updatedAt @map("updated_at") @db.Timestamp(0)
-  SubAcara            SubAcara[]
   NotificationHistory NotificationHistory[]
 
   @@index([name], map: "name")
+  @@map("event")
 }
 
-model SubAcara {
-  id                  String                @id @unique @default(uuid())
-  name                String                @db.VarChar(255)
-  description         String?               @db.Text
-  image               String?               @db.VarChar(255)
-  endTime             DateTime?             @default(now()) @map("end_time") @db.Timestamp(0)
-  startTime           DateTime?             @default(now()) @map("start_time") @db.Timestamp(0)
-  acaraId             String                @db.VarChar(110)
-  acara               Acara                 @relation(fields: [acaraId], references: [id], onDelete: Cascade)
-  absensi             Absensi[]
+model EventMeeting {
+  id                  String                @unique @default(uuid())
+  name                String                @db.VarChar(155)
+  description         String?               @db.VarChar(500)
   createdAt           DateTime              @default(now()) @map("created_at") @db.Timestamp(0)
   updatedAt           DateTime              @updatedAt @map("updated_at") @db.Timestamp(0)
+  Meeting             Meeting[]
   NotificationHistory NotificationHistory[]
 
-  @@index([acaraId], map: "sub_acara_fk_1")
+  @@map("event_meeting")
 }
 
-model Absensi {
-  id          Int       @id @unique @default(autoincrement())
-  image       String    @db.VarChar(255)
-  acaraId     String    @map("acara_id") @db.VarChar(110)
-  userId      String    @map("user_id") @db.VarChar(110)
-  subAcaraId  String?   @map("sub_acara_id") @db.VarChar(110)
-  acara       Acara     @relation(fields: [acaraId], references: [id], onDelete: NoAction)
-  user        User      @relation(fields: [userId], references: [id], onDelete: NoAction)
-  coordinate  String    @db.VarChar(110)
-  address     String?   @db.VarChar(255)
-  absensiTime String?   @db.VarChar(150)
-  createdAt   DateTime  @default(now()) @map("created_at") @db.Timestamp(0)
-  updatedAt   DateTime  @updatedAt @map("updated_at") @db.Timestamp(0)
-  subAcara    SubAcara? @relation(fields: [subAcaraId], references: [id], onDelete: NoAction)
+model Meeting {
+  id             String       @unique @default(uuid())
+  name           String       @db.VarChar(155)
+  description    String       @db.VarChar(500)
+  startTime      DateTime     @map("start_time") @db.Timestamp(0)
+  endTime        DateTime     @map("end_time") @db.Timestamp(0)
+  eventMeetingId String       @db.VarChar(110) @map("event_meeting_id")
+  EventMeeting   EventMeeting @relation(fields: [eventMeetingId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  createdAt      DateTime     @default(now()) @map("created_at") @db.Timestamp(0)
+  updatedAt      DateTime     @updatedAt @map("updated_at") @db.Timestamp(0)
+  Attendance     Attendance[]
+
+  @@index([eventMeetingId], map: "meeting_fk_1")
+  @@map("meeting")
+}
+
+model Attendance {
+  id          Int      @id @unique @default(autoincrement())
+  image       String   @db.VarChar(255)
+  userId      String   @map("user_id") @db.VarChar(110)
+  meetingId   String   @map("meeting_id") @db.VarChar(110)
+  coordinate  String   @db.VarChar(110)
+  address     String?  @db.VarChar(255)
+  attendanceTime String?  @db.VarChar(150) @map("attendance_time")
+  createdAt   DateTime @default(now()) @map("created_at") @db.Timestamp(0)
+  updatedAt   DateTime @updatedAt @map("updated_at") @db.Timestamp(0)
+  User        User     @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  Meeting     Meeting  @relation(fields: [meetingId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   Point       Point[]
 
-  @@index([userId], map: "absensi_fk_1")
-  @@index([acaraId], map: "absensi_fk_2")
-  @@index([subAcaraId], map: "absensi_fk_3")
+  @@index([userId], map: "attendance_fk_1")
+  @@index([meetingId], map: "attendance_fk_2")
+  @@map("attendance")
 }
 
-model Prestasi {
+model Achievement {
   id          Int       @id @unique @default(autoincrement())
   image       String    @db.VarChar(255)
   title       String    @db.VarChar(255)
   description String?   @db.Text
-  timeDate    DateTime? @db.Timestamp(0)
-  timeString  String?   @db.VarChar(50)
+  timeDate    DateTime? @db.Timestamp(0) @map("time_date")
+  timeString  String?   @db.VarChar(50) @map("time_string")
   createdAt   DateTime  @default(now()) @map("created_at") @db.Timestamp(0)
   updateAt    DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamp(0)
+
+  @@map("achievement")
 }
 
 model Bussiness {
@@ -189,47 +204,47 @@ model OTP {
 }
 
 model Point {
-  id        Int      @id @unique @default(autoincrement())
-  point     Int
-  userId    String
-  user      User     @relation(fields: [userId], references: [id], onDelete: NoAction)
-  absensiId Int
-  absensi   Absensi  @relation(fields: [absensiId], references: [id], onDelete: NoAction)
-  createdAt DateTime @default(now()) @map("created_at")
-  updateAt  DateTime @default(now()) @updatedAt @map("updated_at")
+  id           Int        @id @unique @default(autoincrement())
+  point        Int
+  userId       String
+  user         User       @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  attendanceId Int
+  attendance   Attendance @relation(fields: [attendanceId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  createdAt    DateTime   @default(now()) @map("created_at")
+  updateAt     DateTime   @default(now()) @updatedAt @map("updated_at")
 
   @@index([userId], map: "point_fk_1")
-  @@index([absensiId], map: "point_fk_2")
+  @@index([attendanceId], map: "point_fk_2")
   @@map("points")
 }
 
 model NotificationHistory {
-  id         String    @id @unique @default(uuid())
-  acaraId    String?   @map("acara_id")
-  subAcaraId String?   @map("sub_acara_id")
-  userId     String    @map("user_id")
-  acara      Acara?    @relation(fields: [acaraId], references: [id], onDelete: NoAction)
-  subAcara   SubAcara? @relation(fields: [subAcaraId], references: [id], onDelete: NoAction)
-  user       User      @relation(fields: [userId], references: [id], onDelete: NoAction)
-  title      String
-  body       String
-  isRead     Boolean
-  createdAt  DateTime  @default(now()) @map("created_at") @db.Timestamp(0)
-  updateAt   DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamp()
+  id             String        @id @unique @default(uuid())
+  acaraId        String?       @map("acara_id") @db.VarChar(110)
+  userId         String        @map("user_id") @db.VarChar(110)
+  eventMeetingId String?       @map("event_meeting_id") @db.VarChar(110)
+  Event          Event?        @relation(fields: [acaraId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  User           User          @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  EventMeeting   EventMeeting? @relation(fields: [eventMeetingId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  title          String        @db.VarChar(155)
+  body           String        @db.VarChar(500)
+  isRead         Boolean       @db.Boolean
+  createdAt      DateTime      @default(now()) @map("created_at") @db.Timestamp(0)
+  updateAt       DateTime      @default(now()) @updatedAt @map("updated_at") @db.Timestamp()
 
   @@index([acaraId], map: "notification_history_fk_1")
   @@index([userId], map: "notification_history_fk_2")
-  @@index([subAcaraId], map: "notification_history_fk_3")
   @@map("notification_history")
 }
 
 model Version {
   id             Int     @unique @default(autoincrement())
-  androidVersion String? @map("android_version")
-  iosVersion     String? @map("ios_version")
-  playstoreLink  String? @map("play_store_link")
-  appStoreLink   String? @map("app_store_link")
-  notes          String?
+  androidVersion String? @map("android_version") @db.VarChar(110)
+  iosVersion     String? @map("ios_version") @db.VarChar(110)
+  playstoreLink  String? @map("play_store_link") @db.VarChar(300)
+  appStoreLink   String? @map("app_store_link") @db.VarChar(300)
+  notes          String? @db.VarChar(500)
+  @@map("version")
 }
 
 enum Jabatan {

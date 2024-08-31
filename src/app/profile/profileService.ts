@@ -4,9 +4,9 @@ import { TokenDecodeInterface } from "../../interface"
 import { MESSAGE_CODE } from "../../utils/ErrorCode"
 import { ErrorApp } from "../../utils/HttpError"
 import { MESSAGES } from "../../utils/Messages"
-import { AnggotaSosmedDTO } from "../anggota/anggotaDTO"
-import { getAnggotaByNIM, updateSosmedAnggota } from "../anggota/anggotaRepository"
 import { getUserByEmail, getUserById, getUserByNIM } from "../authentication/authRepository"
+import { MemberSosmedDTO } from "../members/membersDTO"
+import { getMemberByNIM, updateSosmedMember } from "../members/membersRepository"
 import { ChangePasswordDTO, ProfileDTO } from "./profileDTO"
 import { ProfileDTOMapper, ProfileData } from './profileMapper'
 import { getProfile, updatePassword, updateProfile } from "./profileRepository"
@@ -37,15 +37,15 @@ export const updateProfileService = async (token: string, { email, name, nim, fa
         return new ErrorApp(MESSAGES.ERROR.NOT_FOUND.USER.ACCOUNT, 404, MESSAGE_CODE.NOT_FOUND)
     }
 
-    if (!user?.anggotaId && sosmed) {
+    if (!user?.memberId && sosmed) {
         return new ErrorApp(MESSAGES.ERROR.INVALID.ANGGOTA, 400, MESSAGE_CODE.BAD_REQUEST)
     }
-    if (nim && user.anggotaId && user.role === 'ANGGOTA') {
+    if (nim && user.memberId && user.role === 'ANGGOTA') {
         return new ErrorApp(MESSAGES.ERROR.INVALID.NIM_ANGGOTA, 400, MESSAGE_CODE.BAD_REQUEST)
     }
 
-    if (!user.anggotaId) {
-        const getNIMAnggota = nim ? await getAnggotaByNIM(nim) : null;
+    if (!user.memberId) {
+        const getNIMAnggota = nim ? await getMemberByNIM(nim) : null;
         if (getNIMAnggota) {
             return new ErrorApp(MESSAGES.ERROR.ALREADY.USER_NIM, 400, MESSAGE_CODE.BAD_REQUEST)
         }
@@ -55,7 +55,7 @@ export const updateProfileService = async (token: string, { email, name, nim, fa
     }
 
     const getNIM = nim ? await getUserByNIM(nim) : null
-    if (getNIM && getNIM.id !== user.id && !user.anggotaId && user.role === 'USER') {
+    if (getNIM && getNIM.id !== user.id && !user.memberId && user.role === 'USER') {
         return new ErrorApp(MESSAGES.ERROR.ALREADY.GLOBAL.NIM, 400, MESSAGE_CODE.BAD_REQUEST)
     }
 
@@ -70,18 +70,18 @@ export const updateProfileService = async (token: string, { email, name, nim, fa
     if (email) profileField.email = email;
     if (nim) profileField.nim = nim
 
-    const sosmedField: Partial<AnggotaSosmedDTO> = { id: user.anggotaId as string }
+    const sosmedField: Partial<MemberSosmedDTO> = { id: user.memberId as string }
     if (instagram) sosmedField.instagram = instagram;
     if (twitter) sosmedField.twitter = twitter;
     if (linkedin) sosmedField.linkedin = linkedin;
     if (facebook) sosmedField.facebook = facebook;
 
-    if (!user.anggotaId) {
+    if (!user.memberId) {
 
         const response = await updateProfile(profileField as ProfileDTO)
         return response
     }
-    const [profile, anggota] = await Promise.all([updateProfile(profileField as ProfileDTO), updateSosmedAnggota(sosmedField as AnggotaSosmedDTO)])
+    const [profile, anggota] = await Promise.all([updateProfile(profileField as ProfileDTO), updateSosmedMember(sosmedField as MemberSosmedDTO)])
 
     const sosmedAnggota = {
         instagram: anggota?.instagram,

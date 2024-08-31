@@ -1,7 +1,7 @@
 import { prisma } from "../../config"
 import { RegisterAuthBodyDTO } from "./authDTO"
 
-export const createUser = async ({ email, name, password, nim, role, anggotaId }: RegisterAuthBodyDTO) => {
+export const createUser = async ({ email, name, password, nim, role, memberId }: RegisterAuthBodyDTO) => {
     return await prisma.user.create({
         data: {
             email,
@@ -9,7 +9,7 @@ export const createUser = async ({ email, name, password, nim, role, anggotaId }
             password,
             nim,
             role,
-            anggotaId
+            memberId
         },
         select: {
             id: true

@@ -36,7 +36,7 @@ export const getUserFCMByUserId = async (userId: string) => {
 export const getAllFCMUser = async (page?: number, perPage?: number) => {
     return await prisma.userFCM.findMany({
         include: {
-            user: true
+            User: true
         },
         take: perPage,
         skip: (Number(page) - 1) * Number(perPage)

@@ -1,44 +1,44 @@
 import { Jabatan } from "@prisma/client"
 import { prisma } from "../../config"
-import { StrukturalBodyDTO } from "./strukturalDTO"
-import { IFilterStruktural } from "./strukturalTypes"
+import { StructuralBodyDTO } from "./strukturalDTO"
+import { IFilterStructural } from "./strukturalTypes"
 
-export const getStrukturalById = async (id: string) => {
-    return await prisma.struktural.findUnique({
+export const getStructuralById = async (id: string) => {
+    return await prisma.structural.findUnique({
         where: {
             id
         }
     })
 }
 
-export const deleteStruktural = async (id: string) => {
-    return await prisma.struktural.delete({
+export const deleteStructural = async (id: string) => {
+    return await prisma.structural.delete({
         where: {
             id
         }
     })
 }
 
-export const createStruktural = async (data: StrukturalBodyDTO) => {
-    const { anggotaId, image, isActive, jabatan } = data
+export const createStructural = async (data: StructuralBodyDTO) => {
+    const { memberId, image, isActive, jabatan } = data
 
-    return await prisma.struktural.create({
+    return await prisma.structural.create({
         data: {
             image: image as string,
             jabatan: jabatan as Jabatan,
-            anggotaId: anggotaId as string,
+            memberId: memberId as string,
             isActive
         }
     })
 }
 
-export const getStruktural = async ({ search, page, perPage }: IFilterStruktural) => {
-    return await prisma.struktural.findMany({
+export const getStructural = async ({ search, page, perPage }: IFilterStructural) => {
+    return await prisma.structural.findMany({
         where: {
             jabatan: search as Jabatan,
         },
         include: {
-            anggota: {
+            Member: {
                 select: {
                     id: true,
                     name: true,
@@ -58,16 +58,16 @@ export const getStruktural = async ({ search, page, perPage }: IFilterStruktural
     })
 }
 
-export const getStrukturalCount = async ({ search, page, perPage }: IFilterStruktural) => {
-    return await prisma.struktural.count({
+export const getStructuralCount = async ({ search}: IFilterStructural) => {
+    return await prisma.structural.count({
         where: {
             jabatan: search as Jabatan,
         },
     })
 }
 
-export const updateStruktural = async (data: StrukturalBodyDTO) => {
-    return await prisma.struktural.update({
+export const updateStructural = async (data: StructuralBodyDTO) => {
+    return await prisma.structural.update({
         where: {
             id: data.id as string
         },
@@ -75,16 +75,16 @@ export const updateStruktural = async (data: StrukturalBodyDTO) => {
     })
 }
 
-export const getStrukturalByAnggotaId = async (anggotaId: string) => {
-    return await prisma.struktural.findFirst({
+export const getStructuralByAnggotaId = async (memberId: string) => {
+    return await prisma.structural.findFirst({
         where: {
-            anggotaId
+            memberId
         }
     })
 }
 
-export const getStrukturalByJabatan = async (jabatan: Jabatan) => {
-    return await prisma.struktural.findFirst({
+export const getStructuralByJabatan = async (jabatan: Jabatan) => {
+    return await prisma.structural.findFirst({
         where: {
             jabatan
         }

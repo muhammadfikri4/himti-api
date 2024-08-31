@@ -1,5 +1,5 @@
 
-export interface IFilterStruktural {
+export interface IFilterStructural {
     search?: string,
     page?: number,
     perPage?: number

@@ -11,7 +11,7 @@ export const getProfile = async (id: string) => {
             email: true,
             nim: true,
             role: true,
-            Anggota: {
+            Member: {
                 select: {
                     id: true,
                     facebook: true,

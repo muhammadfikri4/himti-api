@@ -14,6 +14,7 @@ export const MESSAGES = {
         SUB_ACARA: "Sub Acara created successfully",
         ABSENSI: "Absensi created successfully",
         MERCHANDISE: "Merchandise created successfully",
+        EVENT_MEETING: "Event Meeting created successfully",
 
     },
     ERROR: {
@@ -63,7 +64,8 @@ export const MESSAGES = {
             OTP_VERIFIED: "OTP is already verified, please request otp again to forget password",
             LOGIN: "Please log out on other device and login again",
             INITIAL: "Initial user already exist",
-            INITIAL_VERSION: "Initial version already exist"
+            INITIAL_VERSION: "Initial version already exist",
+            EVENT_MEETING: "Event Meeting is already exist"
         },
         INVALID: {
             GLOBAL: {
@@ -103,7 +105,8 @@ export const MESSAGES = {
             TIME: "Start time must be less than end time",
             READ_NOTIFICATION: "You're not allowed to read this notification",
             MINIMAL_TIME: "Start time and end time has to be at least 1 hour",
-            ABSENSI_NOT_OPEN: "Absensi is not open"
+            ABSENSI_NOT_OPEN: "Absensi is not open",
+            DATE: "Date is invalid",
         },
         UNAUTHORIZED: {
             AUTH: "If you are not logged in, please log in first",
@@ -139,7 +142,9 @@ export const MESSAGES = {
             SUB_ACARA_ID: "Sub Acara Id is required",
             OTP_KEY: "OTP Key is required",
             OTP: "OTP is required",
-            FCM_TOKEN: "FCM Token is required"
+            FCM_TOKEN: "FCM Token is required",
+            START_TIME: "Start Time is required",
+            END_TIME: "End Time is required",
         },
         RELATION: {
             ANGKATAN: "Angkatan cannot be deleted because it has a relationship"
