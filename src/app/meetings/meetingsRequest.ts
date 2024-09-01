@@ -1,5 +1,5 @@
 import Joi from "joi";
-import { MESSAGES } from "utils/Messages";
+import { MESSAGES } from "../../utils/Messages";
 
 export const createMeetingSchema = Joi.object({
   name: Joi.string().required().messages({
