@@ -15,6 +15,7 @@ export const MESSAGES = {
         ABSENSI: "Absensi created successfully",
         MERCHANDISE: "Merchandise created successfully",
         EVENT_MEETING: "Event Meeting created successfully",
+        MEETING: "Meeting created successfully"
 
     },
     ERROR: {
@@ -42,7 +43,8 @@ export const MESSAGES = {
             SERVICE: "Service not found",
             ROUTE: "Route not found, Check again your endpoint!",
             NOTIFICATION: "Notification not found",
-            VERSION: "Version not found"
+            VERSION: "Version not found",
+            EVENT_MEETING: "Event Meeting not found",
         },
         ALREADY: {
             GLOBAL: {
@@ -65,7 +67,8 @@ export const MESSAGES = {
             LOGIN: "Please log out on other device and login again",
             INITIAL: "Initial user already exist",
             INITIAL_VERSION: "Initial version already exist",
-            EVENT_MEETING: "Event Meeting is already exist"
+            EVENT_MEETING: "Event Meeting is already exist",
+            MEETING: "Meeting at this meeting event already exists"
         },
         INVALID: {
             GLOBAL: {
@@ -145,6 +148,7 @@ export const MESSAGES = {
             FCM_TOKEN: "FCM Token is required",
             START_TIME: "Start Time is required",
             END_TIME: "End Time is required",
+            EVENT_MEETING_ID: "Event Meeting Id is required",
         },
         RELATION: {
             ANGKATAN: "Angkatan cannot be deleted because it has a relationship"
@@ -238,6 +242,16 @@ export const MESSAGES = {
         VERSION: {
             GET: "Success to get version",
             UPDATE: "Success to update version"
+        },
+        EVENT_MEETING: {
+            GET: "Success to fetch event meeting",
+            DELETE: "Success to delete event meeting",
+            UPDATE: "Success to update event meeting"
+        },
+        MEETING: {
+            GET: "Success to fetch meeting",
+            DELETE: "Success to delete meeting",
+            UPDATE: "Success to update meeting"
         }
     }
 }

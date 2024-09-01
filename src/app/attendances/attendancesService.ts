@@ -1,4 +1,4 @@
-import { getMeetingById } from "app/meeting/meetingRepository"
+import { getMeetingById } from "app/meetings/meetingsRepository"
 import { environment } from "../../libs"
 import { MESSAGE_CODE } from "../../utils/ErrorCode"
 import { FormatIDTime } from "../../utils/FormatIDTime"

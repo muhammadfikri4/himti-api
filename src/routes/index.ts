@@ -20,6 +20,7 @@ import userFcmRoute from '../app/user-fcm/user-fcmRoute';
 import userRoute from '../app/user/userRoute';
 import versionRoute from '../app/version/versionRoute';
 import eventMeetingRoute from '../app/eventMeeting/eventMeetingRoute';
+import meetingRoute from '../app/meetings/meetingsRoute';
 import { MESSAGE_CODE } from "../utils/ErrorCode";
 import { MESSAGES } from "../utils/Messages";
 
@@ -34,6 +35,7 @@ route.use("/struktural", strukturalRoute)
 route.use("/anggota", anggotaRoute)
 route.use("/acara", acaraRoute)
 route.use("/event-meeting", eventMeetingRoute)
+route.use("/meeting", meetingRoute)
 // route.use("/sub-acara", subAcaraRoute)
 route.use('/business', businessRoute)
 route.use('/prestasi', prestasiRoute)

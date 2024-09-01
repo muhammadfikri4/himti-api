@@ -119,7 +119,7 @@ model Event {
 }
 
 model EventMeeting {
-  id                  String                @unique @default(uuid())
+  id                  String                @id @unique @default(uuid())
   name                String                @db.VarChar(155)
   description         String?               @db.VarChar(500)
   createdAt           DateTime              @default(now()) @map("created_at") @db.Timestamp(0)
@@ -131,9 +131,9 @@ model EventMeeting {
 }
 
 model Meeting {
-  id             String       @unique @default(uuid())
+  id             String       @id @unique @default(uuid())
   name           String       @db.VarChar(155)
-  description    String       @db.VarChar(500)
+  description    String?       @db.VarChar(500)
   startTime      DateTime     @map("start_time") @db.Timestamp(0)
   endTime        DateTime     @map("end_time") @db.Timestamp(0)
   eventMeetingId String       @db.VarChar(110) @map("event_meeting_id")
@@ -238,7 +238,7 @@ model NotificationHistory {
 }
 
 model Version {
-  id             Int     @unique @default(autoincrement())
+  id             Int     @id @default(autoincrement())
   androidVersion String? @map("android_version") @db.VarChar(110)
   iosVersion     String? @map("ios_version") @db.VarChar(110)
   playstoreLink  String? @map("play_store_link") @db.VarChar(300)
