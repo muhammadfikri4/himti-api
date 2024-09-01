@@ -5,7 +5,7 @@ export interface CreateMeetingBodyRequest {
   description: string
   startTime: Date
   endTime: Date
-  eventMeetingId:string
+  eventMeetingId: string
 }
 
 export interface FilterMeeting extends Query {
@@ -13,13 +13,12 @@ export interface FilterMeeting extends Query {
 }
 
 export interface MeetingsDTO {
-  id: string
-  name: string
-  description: string
-  startTime: Date
-  endTime: Date
-  eventMeeting: {
+  eventMeeting: string,
+  meetings: {
     id: string
     name: string
-  }
+    description: string
+    startTime: Date
+    endTime: Date
+  }[]
 }

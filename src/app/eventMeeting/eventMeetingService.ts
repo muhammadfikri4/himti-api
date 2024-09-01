@@ -3,8 +3,8 @@ import { CreateEventMeetingBodyRequest } from "./eventMeetingDTO";
 import { createEventMeeting, getEventMeetingByName, getEventMeetings, getEventMeetingsCount } from "./eventMeetingRepository";
 import { MESSAGES } from "../../utils/Messages";
 import { MESSAGE_CODE } from "../../utils/ErrorCode";
-import { Query } from "interface/Query";
-import { Meta } from "utils/Meta";
+import { Query } from "../../interface/Query";
+import { Meta } from "../../utils/Meta";
 import { EventMeetingData, eventMeetingsDTOMapper } from "./eventMeetingMapper";
 
 export const createEventMeetingService = async(body:CreateEventMeetingBodyRequest) => {
