@@ -2,11 +2,12 @@ import { Prisma } from "@prisma/client"
 import { prisma } from "../../config"
 import { AttendanceDTO } from "./attendancesDTO"
 
-export const createAttendance = async ({ image, userId, coordinate, meetingId, address, attendanceTime }: AttendanceDTO) => {
+export const createAttendance = async ({ image, userId, coordinate, meetingId, address, attendanceTime,eventMeetingId }: AttendanceDTO) => {
     return await prisma.attendance.create({
         data: {
             image: image as string,
             meetingId: meetingId as string,
+            eventMeetingId:eventMeetingId as string,
             userId: userId as string,
             coordinate: coordinate as string,
             address,
@@ -88,38 +89,6 @@ export const getAttendanceByMeetingId = async (meetingId: string, userId: string
 }
 
 export const getAttendanceByUserId = (userId: string, eventMeetingId?: string) => {
-    // return prisma.absensi.findMany({
-    //     where: {
-    //         userId,
-    //         acaraId
-    //     },
-    //     select: {
-    //         id: true,
-    //         image: true,
-    //         absensiTime: true,
-    //         acara: {
-    //             select: {
-    //                 id: true,
-    //                 name: true,
-    //             },
-    //         },
-    //         subAcara: {
-    //             select: {
-    //                 id: true,
-    //                 name: true,
-    //             }
-    //         },
-    //         Point: {
-    //             select: {
-    //                 point: true
-    //             }
-    //         },
-
-    //     },
-    //     orderBy: {
-    //         createdAt: 'desc'
-    //     }
-    // })
     return prisma.attendance.findMany({
         where: {
             userId,
@@ -127,13 +96,24 @@ export const getAttendanceByUserId = (userId: string, eventMeetingId?: string) =
                 eventMeetingId
             }
         },
-        include: {
+        select: {
+            id: true,
+            address: true,
+            coordinate: true,
+            image:true,
+            meetingId: true,
+            eventMeetingId: true,
             Meeting: {
                 select: {
                     id: true,
                     name: true,
-                    EventMeeting: true
                 },
+            },
+            EventMeeting: {
+                select: {
+                    id: true,
+                    name: true
+                }
             },
             Point: {
                 select: {
@@ -231,7 +211,7 @@ export const getAbsensiById = async (id: number) => {
     })
 }
 
-export const getAbsensies = async (
+export const getAttendances = async (
     meetingId: string,
     page: number = 1,
     perPage: number = 10

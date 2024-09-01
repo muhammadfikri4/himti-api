@@ -1,14 +1,14 @@
-import { getMeetingById } from "../meetings/meetingsRepository"
 import { environment } from "../../libs"
 import { MESSAGE_CODE } from "../../utils/ErrorCode"
 import { FormatIDTime } from "../../utils/FormatIDTime"
 import { ErrorApp } from "../../utils/HttpError"
 import { MESSAGES } from "../../utils/Messages"
 import { FileType, UploadFileToStorage } from "../../utils/UploadFileToStorage"
+import { getMeetingById } from "../meetings/meetingsRepository"
 import { addPoint, getPointByAbsensi } from "../point/pointRepository"
-import { AttendanceDTO, IFilterAttendance } from "./attendancesDTO"
-import { EventMeeting, historyAbsensiMapper } from "./attendancesMapper"
-import { createAttendance, getAbsensies, getAllAttendanceByMeetingId, getAttendanceById, getAttendanceByUserId } from "./attendancesRepository"
+import { AttendanceDTO, FilterAttendance } from "./attendancesDTO"
+import { EventMeetingData, historyAbsensiMapper } from "./attendancesMapper"
+import { createAttendance, getAttendanceById, getAttendanceByMeetingId, getAttendanceByUserId, getAttendances } from "./attendancesRepository"
 import { createAttendanceValidate } from "./attendancesValidate"
 
 export const createAttendanceService = async ({ meetingId, image, coordinate, address, attendanceTime }: AttendanceDTO, userId: string) => {
@@ -20,7 +20,7 @@ export const createAttendanceService = async ({ meetingId, image, coordinate, ad
     }
 
 
-    const attendance = await getAllAttendanceByMeetingId(meetingId as string, userId as string)
+    const attendance = await getAttendanceByMeetingId(meetingId as string, userId as string)
 
     if (attendance) {
         return new ErrorApp(MESSAGES.ERROR.INVALID.ABSENSI_ONCE, 400, MESSAGE_CODE.BAD_REQUEST)
@@ -39,7 +39,7 @@ export const createAttendanceService = async ({ meetingId, image, coordinate, ad
 
     await UploadFileToStorage({
         Bucket: environment.STORAGE.BUCKET,
-        Key: `assets/absensi/${filename}`,
+        Key: `assets/attendance/${filename}`,
         Body: img?.buffer as Buffer,
         ContentType: img?.mimetype as string,
         ACL: 'public-read',
@@ -51,7 +51,8 @@ export const createAttendanceService = async ({ meetingId, image, coordinate, ad
         userId,
         coordinate,
         address,
-        attendanceTime
+        attendanceTime,
+        eventMeetingId: meeting?.eventMeetingId
     })
 
 
@@ -71,10 +72,10 @@ export const createAttendanceService = async ({ meetingId, image, coordinate, ad
     return
 }
 
-export const getAttendanceService = async ({ acaraId }: IFilterAttendance, userId: string) => {
-    const acara = await getAttendanceByUserId(userId, acaraId)
+export const getAttendanceService = async ({ userId, meetingId }: FilterAttendance) => {
+    const meeting = await getAttendanceByUserId(userId as string, meetingId)
 
-    const data = historyAbsensiMapper(acara as unknown as EventMeeting[])
+    const data = historyAbsensiMapper(meeting as unknown as EventMeetingData[])
 
     if (!data.length) {
         return new ErrorApp(MESSAGES.ERROR.NOT_FOUND.ABSENSI, 404, MESSAGE_CODE.NOT_FOUND)
@@ -105,11 +106,15 @@ export const getAttendanceByIdService = async (id: number) => {
     return response
 }
 
-export const getAttendancesService = async (query: IFilterAttendance) => {
+export const getAttendancesService = async (query: FilterAttendance) => {
 
-    const { subAcaraId, page, perPage } = query
+    const { meetingId, page = '1', perPage = '10' } = query
 
-    const absensies = await getAbsensies(subAcaraId as string, page, perPage)
+    const absensies = await getAttendances(
+        meetingId as string, 
+        Number(page), 
+        Number(perPage)
+    )
 
     return absensies
 }

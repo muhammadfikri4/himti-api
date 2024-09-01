@@ -9,7 +9,7 @@ const route = Router()
 
 route.post("/", VerifyToken, CatchWrapper(upload.single('image')), CatchWrapper(createAttendanceController))
 route.get("/", VerifyToken, CatchWrapper(getAttendanceController))
-route.get('/sub-acara/:subAcaraId', VerifyAdmin, CatchWrapper(getAttendancesController))
+route.get('/meeting/:meetingId', VerifyAdmin, CatchWrapper(getAttendancesController))
 route.get("/:id", VerifyToken, CatchWrapper(getAttendanceByIdController))
 
 export default route

@@ -1,6 +1,9 @@
+import { Query } from "interface/Query"
+
 export interface AttendanceDTO {
     userId?: string
     meetingId: string
+    eventMeetingId?:string
     image: Express.Multer.File | string,
     coordinate: string
     address?: string
@@ -10,11 +13,7 @@ export interface AttendanceDTO {
 export interface TokenTypes {
     id: string
 }
-
-export interface IFilterAttendance {
-    userId?: string
-    acaraId?: string
-    subAcaraId?: string
-    page?: number
-    perPage?: number
+export interface FilterAttendance extends Query {
+    userId?:string
+    meetingId?:string
 }

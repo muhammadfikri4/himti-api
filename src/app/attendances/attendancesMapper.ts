@@ -17,16 +17,17 @@ interface MeetingHistoryResponse {
     }[]
 }
 
-export interface EventMeeting extends Attendance {
-    eventMeeting: {
+export interface EventMeetingData extends Attendance {
+    eventMeetingId:string
+    meetingId:string
+    Meeting: {
+        id: string
+        name: string
+    }
+    EventMeeting: {
         id: string
         name: string
     },
-    meeting: {
-        id: string
-        name: string
-        eventMeetingId:string
-    }
     Point: Point[]
 }
 
@@ -40,21 +41,21 @@ export const absensiMapper = (data: Attendance[]) => {
     })
 }
 
-export const historyAbsensiMapper = (absensi: EventMeeting[]): MeetingHistoryResponse[] => {
-    const data: EventMeeting[] = []
+export const historyAbsensiMapper = (absensi: EventMeetingData[]): MeetingHistoryResponse[] => {
+    const data: EventMeetingData[] = []
     absensi.map((item) => {
-        if (data.find((i: EventMeeting) => i.meeting.eventMeetingId === item.eventMeeting.id)) {
+        if (data.find((i: EventMeetingData) => i.eventMeetingId === item.eventMeetingId)) {
             return null
         }
-        data.push(item as unknown as EventMeeting)
+        data.push(item as unknown as EventMeetingData)
     })
 
     const attend = data.map(item => {
-        const meeting = absensi.filter(i => i.meetingId === item.meetingId)
+        const meeting = absensi.filter(i => i.eventMeetingId === item.eventMeetingId)
         return {
             eventMeeting: {
-                id: item.eventMeeting.id,
-                name: item.eventMeeting.name
+                id: item.EventMeeting.id,
+                name: item.EventMeeting.name
             },
             attendance: meeting.map(meet => {
                 return {
@@ -62,8 +63,8 @@ export const historyAbsensiMapper = (absensi: EventMeeting[]): MeetingHistoryRes
                     image: meet.image.includes('https')? meet.image : ImagePath(`absensi/${meet.image}`),
                     attendanceTime: meet.attendanceTime as string,
                     meeting: {
-                        id: meet.meeting.id,
-                        name: meet?.meeting?.name as string
+                        id: meet.Meeting.id,
+                        name: meet?.Meeting?.name as string
                     },
                     point: meet.Point.reduce((a: number, b: Point) => a + b.point, 0)
                 }

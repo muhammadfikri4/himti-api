@@ -14,7 +14,7 @@ model User {
   password            String                @db.VarChar(110)
   role                Role?                 @default(ADMIN)
   nim                 String?               @db.VarChar(20)
-  memberId           String?               @map("member_id") @db.VarChar(110)
+  memberId            String?               @map("member_id") @db.VarChar(110)
   Attendance          Attendance[]
   createdAt           DateTime              @default(now()) @map("created_at") @db.Timestamp(0)
   updatedAt           DateTime              @default(now()) @updatedAt @map("updated_at") @db.Timestamp(0)
@@ -126,6 +126,7 @@ model EventMeeting {
   updatedAt           DateTime              @updatedAt @map("updated_at") @db.Timestamp(0)
   Meeting             Meeting[]
   NotificationHistory NotificationHistory[]
+  Attendance          Attendance[]
 
   @@map("event_meeting")
 }
@@ -133,10 +134,10 @@ model EventMeeting {
 model Meeting {
   id             String       @id @unique @default(uuid())
   name           String       @db.VarChar(155)
-  description    String?       @db.VarChar(500)
+  description    String?      @db.VarChar(500)
   startTime      DateTime     @map("start_time") @db.Timestamp(0)
   endTime        DateTime     @map("end_time") @db.Timestamp(0)
-  eventMeetingId String       @db.VarChar(110) @map("event_meeting_id")
+  eventMeetingId String       @map("event_meeting_id") @db.VarChar(110)
   EventMeeting   EventMeeting @relation(fields: [eventMeetingId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   createdAt      DateTime     @default(now()) @map("created_at") @db.Timestamp(0)
   updatedAt      DateTime     @updatedAt @map("updated_at") @db.Timestamp(0)
@@ -147,21 +148,24 @@ model Meeting {
 }
 
 model Attendance {
-  id          Int      @id @unique @default(autoincrement())
-  image       String   @db.VarChar(255)
-  userId      String   @map("user_id") @db.VarChar(110)
-  meetingId   String   @map("meeting_id") @db.VarChar(110)
-  coordinate  String   @db.VarChar(110)
-  address     String?  @db.VarChar(255)
-  attendanceTime String?  @db.VarChar(150) @map("attendance_time")
-  createdAt   DateTime @default(now()) @map("created_at") @db.Timestamp(0)
-  updatedAt   DateTime @updatedAt @map("updated_at") @db.Timestamp(0)
-  User        User     @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  Meeting     Meeting  @relation(fields: [meetingId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  Point       Point[]
+  id             Int          @id @unique @default(autoincrement())
+  image          String       @db.VarChar(255)
+  userId         String       @map("user_id") @db.VarChar(110)
+  meetingId      String       @map("meeting_id") @db.VarChar(110)
+  eventMeetingId String       @map("event_meeting_id") @db.VarChar(110)
+  coordinate     String       @db.VarChar(110)
+  address        String?      @db.VarChar(255)
+  attendanceTime String?      @map("attendance_time") @db.VarChar(150)
+  createdAt      DateTime     @default(now()) @map("created_at") @db.Timestamp(0)
+  updatedAt      DateTime     @updatedAt @map("updated_at") @db.Timestamp(0)
+  User           User         @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  Meeting        Meeting      @relation(fields: [meetingId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  EventMeeting   EventMeeting @relation(fields: [eventMeetingId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  Point          Point[]
 
   @@index([userId], map: "attendance_fk_1")
   @@index([meetingId], map: "attendance_fk_2")
+  @@index([eventMeetingId], map: "attendance_fk_3")
   @@map("attendance")
 }
 
@@ -170,8 +174,8 @@ model Achievement {
   image       String    @db.VarChar(255)
   title       String    @db.VarChar(255)
   description String?   @db.Text
-  timeDate    DateTime? @db.Timestamp(0) @map("time_date")
-  timeString  String?   @db.VarChar(50) @map("time_string")
+  timeDate    DateTime? @map("time_date") @db.Timestamp(0)
+  timeString  String?   @map("time_string") @db.VarChar(50)
   createdAt   DateTime  @default(now()) @map("created_at") @db.Timestamp(0)
   updateAt    DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamp(0)
 
@@ -244,6 +248,7 @@ model Version {
   playstoreLink  String? @map("play_store_link") @db.VarChar(300)
   appStoreLink   String? @map("app_store_link") @db.VarChar(300)
   notes          String? @db.VarChar(500)
+
   @@map("version")
 }
 
