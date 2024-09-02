@@ -4,7 +4,7 @@ import { MESSAGE_CODE } from "../../utils/ErrorCode";
 import { HandleResponse } from "../../utils/HandleResponse";
 import { ErrorApp } from "../../utils/HttpError";
 import { MESSAGES } from "../../utils/Messages";
-import { createAnggotaService, deleteAnggotaService, getAnggotaByIdService, getAnggotaService, updateAnggotaService } from "./membersService";
+import { createAnggotaService, deleteAnggotaService, getMembersService, getMemberByIdService, updateAnggotaService } from "./membersService";
 import { AnggotaModelTypes } from "./membersTypes";
 
 
@@ -27,7 +27,7 @@ export const getMemberController = async (req: Request, res: Response, next: Nex
 
     const { page, perPage, search, angkatan, status } = req.query
 
-    const anggota = await getAnggotaService({
+    const anggota = await getMembersService({
         page: page ? Number(page) : undefined,
         perPage: perPage ? Number(perPage) : undefined,
         search: search as string,
@@ -72,10 +72,10 @@ export const updateMemberController = async (req: Request, res: Response, next: 
 
 export const getMemberByIdController = async (req: Request, res: Response, next: NextFunction) => {
     const { id } = req.params;
-    const anggota = await getAnggotaByIdService(id as string);
-    if (anggota instanceof ErrorApp) {
-        next(anggota)
+    const member = await getMemberByIdService(id as string);
+    if (member instanceof ErrorApp) {
+        next(member)
         return
     }
-    HandleResponse(res, 200, MESSAGE_CODE.SUCCESS, MESSAGES.SUCCESS.ANGGOTA.GET, anggota)
+    HandleResponse(res, 200, MESSAGE_CODE.SUCCESS, MESSAGES.SUCCESS.ANGGOTA.GET, member)
 }

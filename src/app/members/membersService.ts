@@ -23,7 +23,7 @@ export const createAnggotaService = async ({ name, nim, email, generationId, isA
     return anggota
 }
 
-export const getAnggotaService = async ({ search, page = 1, perPage = 10, year, status }: IFilterAnggota) => {
+export const getMembersService = async ({ search, page = 1, perPage = 10, year, status }: IFilterAnggota) => {
     const st = statusValue(status as string)
     const [member, totalData] = await Promise.all([
         getAllMember({
@@ -84,7 +84,7 @@ export const updateAnggotaService = async ({ id, name, isActive, email, generati
     return anggota;
 }
 
-export const getAnggotaByIdService = async (id: string) => {
+export const getMemberByIdService = async (id: string) => {
 
     const anggota = await getMemberById(id as string)
     if (!anggota) {

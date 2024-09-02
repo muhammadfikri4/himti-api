@@ -97,7 +97,7 @@ export const loginService = async (
 
     const token = jwt.sign({
         id: user.id,
-    }, environment.JWT_SECRET as string, { expiresIn: '3d' })
+    }, environment.JWT_SECRET as string, { expiresIn: environment.JWT_EXPIRES })
 
     const userInfo = {
         name: user.name,
