@@ -54,7 +54,17 @@ export const getMeetingsByEventMeetingId = async (query: FilterMeeting) => {
       EventMeeting: {
         select: {
           id: true,
-          name: true
+          name: true,
+        }
+      },
+      Attendance: {
+        select: {
+          User: {
+            select: {
+              id:true,
+              name: true
+            }
+          }
         }
       }
     },

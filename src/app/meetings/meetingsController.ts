@@ -1,4 +1,5 @@
 import { NextFunction, type Request, type Response } from "express"
+import { RequestWithAccessToken } from "../../interface/Request"
 import { MESSAGE_CODE } from "../../utils/ErrorCode"
 import { HandleResponse } from "../../utils/HandleResponse"
 import { ErrorApp } from "../../utils/HttpError"
@@ -21,18 +22,18 @@ export const createMeetingController = async (
   HandleResponse(res, 201, MESSAGE_CODE.SUCCESS, MESSAGES.CREATED.MEETING)
 }
 
-export const getMeetingByEventMeetingIdController = async(
-  req: Request,
+export const getMeetingByEventMeetingIdController = async (
+  req: RequestWithAccessToken,
   res: Response,
   next: NextFunction
 ) => {
 
   const { eventMeetingId } = req.params
-  const {query} = req
+  const { query, userId } = req
   const result = await getMeetingsByEventMeetingsIdService({
     ...query,
     eventMeetingId
-  })
+  }, userId as string)
 
   if (result instanceof ErrorApp) {
     next(result)

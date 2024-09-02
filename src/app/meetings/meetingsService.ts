@@ -35,7 +35,7 @@ export const createMeetingService = async(body:CreateMeetingBodyRequest) => {
   return data
 }
 
-export const getMeetingsByEventMeetingsIdService = async(query:FilterMeeting) => {
+export const getMeetingsByEventMeetingsIdService = async(query:FilterMeeting, userId:string) => {
   const {page = '1', perPage = '10'} = query
   const [meetings, totalData] = await Promise.all([
     getMeetingsByEventMeetingId(query),
@@ -48,7 +48,7 @@ export const getMeetingsByEventMeetingsIdService = async(query:FilterMeeting) =>
     totalData
   )
 
-  const data = meetingsDTOMapper(meetings as MeetingData[])
+  const data = meetingsDTOMapper(meetings as MeetingData[], userId)
 
   return {
     data,

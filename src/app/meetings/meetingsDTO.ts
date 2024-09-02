@@ -18,6 +18,7 @@ export interface MeetingsDTO {
     id: string
     name: string
     description: string
+    isAlreadyAbsen: boolean
     startTime: Date
     endTime: Date
   }[]
