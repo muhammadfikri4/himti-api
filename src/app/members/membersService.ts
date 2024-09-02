@@ -31,6 +31,7 @@ export const getAnggotaService = async ({ search, page = 1, perPage = 10, year, 
             page,
             perPage,
             year,
+            status: st
         }),
         getMemberCount({ search, year, status: st as unknown as string }, st)])
 
@@ -43,8 +44,6 @@ export const getAnggotaService = async ({ search, page = 1, perPage = 10, year, 
         return new ErrorApp(MESSAGES.ERROR.NOT_FOUND.ANGGOTA, 404, MESSAGE_CODE.NOT_FOUND)
     }
 
-    console.log(st)
-    // console.log(result.filter(i => i.isActive === st))
     return {
         data,
         meta

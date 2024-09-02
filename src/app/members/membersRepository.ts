@@ -25,8 +25,12 @@ export const getMembers = async () => {
     })
 }
 
-export const getAllMember = async ({ page, perPage, search, year }: IFilterAnggota) => {
-    const filter = {} as { OR: Prisma.MemberWhereInput[], angkatan: Prisma.GenerationWhereInput }
+export const getAllMember = async ({ page, perPage, search, year, status }: IFilterAnggota) => {
+    const filter = {} as {
+        OR: Prisma.MemberWhereInput[],
+        Generation: Prisma.GenerationWhereInput,
+        isActive: boolean
+    }
 
     if (search) {
         filter.OR = [
@@ -55,9 +59,13 @@ export const getAllMember = async ({ page, perPage, search, year }: IFilterAnggo
     }
 
     if (year) {
-        filter.angkatan = {
+        filter.Generation = {
             year
         }
+    }
+
+    if (typeof status === 'boolean') {
+        filter.isActive = status
     }
 
     return await prisma.member.findMany({
@@ -80,7 +88,7 @@ export const getAllMember = async ({ page, perPage, search, year }: IFilterAnggo
 }
 
 export const getMemberCount = async ({ search, year }: IFilterAnggota, status?: boolean) => {
-    const filter = {} as { OR: Prisma.MemberWhereInput[], angkatan: Prisma.GenerationWhereInput }
+    const filter = {} as { OR: Prisma.MemberWhereInput[], Generation: Prisma.GenerationWhereInput }
 
     if (search) {
         filter.OR = [
@@ -109,7 +117,7 @@ export const getMemberCount = async ({ search, year }: IFilterAnggota, status?: 
     }
 
     if (year) {
-        filter.angkatan = {
+        filter.Generation = {
             year
         }
     }
@@ -138,9 +146,7 @@ export const updateMemberNonActive = async () => {
     return await prisma.member.updateMany({
         where: {
             Generation: {
-                year: {
-                    lt: fiveYearAgo.toString()
-                }
+                year: fiveYearAgo.toString()
             }
         },
         data: {
