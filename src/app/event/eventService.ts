@@ -123,5 +123,5 @@ export const getDetailAcaraService = async (id: string) => {
 
     const data = eventDTOMapper(acara as unknown as Event)
 
-    data
+    return data
 }
