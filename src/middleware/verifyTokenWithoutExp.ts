@@ -17,9 +17,7 @@ export const VerifyTokenWithoutExp = (req: Request, res: Response, next: NextFun
       const decodeToken = decode(token)
       if (!(decodeToken as TokenDecodeInterface)?.id) {
         return HandleResponse(res, 401, MESSAGE_CODE.UNAUTHORIZED, MESSAGES.ERROR.UNAUTHORIZED.RECOGNIZED)
-      }
-      return HandleResponse(res, 401, MESSAGE_CODE.UNAUTHORIZED, MESSAGES.ERROR.INVALID.AUTH)
-    }
+      }    }
     (req as RequestWithAccessToken).userId = (decode(token) as TokenDecodeInterface)?.id
     next()
   })
