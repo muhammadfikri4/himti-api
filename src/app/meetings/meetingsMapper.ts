@@ -19,7 +19,7 @@ export const meetingsDTOMapper = (data: MeetingData[], userId:string): MeetingsD
     description: item.description as string,
     startTime: item.startTime as Date,
     endTime: item.endTime as Date,
-    isAlreadyAbsen: !!item.Attendance.find((item) => item.userId === userId)
+    isAlreadyAttend: !!item.Attendance.find((item) => item.userId === userId)
   }))
   return {
     eventMeeting: data[0].EventMeeting.name as string,
