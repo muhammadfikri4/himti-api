@@ -113,7 +113,7 @@ export const MESSAGES = {
         },
         UNAUTHORIZED: {
             AUTH: "If you are not logged in, please log in first",
-            FORBIDDEN: "You are not Authorized",
+            FORBIDDEN: "You are unauthorized, your token is missing",
             EXPIRED: "Token Expired, please log in again",
             RECOGNIZED: "Token not recognized",
             ADMIN: "Admin can't access this app"
