@@ -1,0 +1,128 @@
+apiVersion: serving.knative.dev/v1
+kind: Service
+metadata:
+  annotations:
+    run.googleapis.com/ingress: all
+    run.googleapis.com/ingress-status: all
+    run.googleapis.com/launch-stage: BETA
+    run.googleapis.com/minScale: "5"
+    run.googleapis.com/urls: '["https://himti-api-dev-857157499437.asia-southeast1.run.app","https://himti-api-dev-r57er27hda-as.a.run.app"]'
+  labels:
+    cloud.googleapis.com/location: asia-southeast1
+    commit-sha: 0d72d393b53457e0101addcba4a95c8da996b36c
+    gcb-build-id: b9d45257-8b18-4520-bdde-a902b9b62eea
+    gcb-trigger-id: cd2457db-e978-4870-9dd8-696feb5fe938
+    gcb-trigger-region: global
+    managed-by: gcp-cloud-build-deploy-cloud-run
+    run.googleapis.com/satisfiesPzs: "true"
+  name: himti-api-dev
+  namespace: "857157499437"
+spec:
+  template:
+    metadata:
+      annotations:
+        autoscaling.knative.dev/maxScale: "10"
+        run.googleapis.com/client-name: gcloud
+        run.googleapis.com/client-version: 490.0.0
+        run.googleapis.com/startup-cpu-boost: "true"
+      labels:
+        client.knative.dev/nonce: kpbdtmzpmp
+        commit-sha: 0d72d393b53457e0101addcba4a95c8da996b36c
+        gcb-build-id: b9d45257-8b18-4520-bdde-a902b9b62eea
+        gcb-trigger-id: cd2457db-e978-4870-9dd8-696feb5fe938
+        gcb-trigger-region: global
+        managed-by: gcp-cloud-build-deploy-cloud-run
+        run.googleapis.com/startupProbeType: Default
+    spec:
+      containerConcurrency: 80
+      containers:
+        - env:
+            - name: JWT_EXPIRES
+              value: 14d
+            - name: CLOUDINARY_API_SECRET
+              value: X5qKOS7MnFHDsfNs3jmMKl9wCw8
+            - name: CLOUDINARY_API_KEY
+              value: "872533227445899"
+            - name: CLOUDINARY_CLOUD_NAME
+              value: dgciwba8m
+            - name: AWS_STORAGE_BUCKET
+              value: himti
+            - name: AWS_STORAGE_ENDPOINT
+              value: https://vivfqijtjlovgptrwica.supabase.co/storage/v1
+            - name: AWS_STORAGE_REGION
+              value: ap-southeast-1
+            - name: AWS_STORAGE_ACCESS_KEY
+              value: 2404e5f08497609a863ff9cf5b30a7a2
+            - name: AWS_STORAGE_SECRET_KEY
+              value: b65b57c53ebd49bee171bb8ce81a58e7d841537930378fda0b189a99c2272420
+            - name: DATABASE_URL
+              value: postgresql://himti_db_owner:N2OLvE6cxJhs@ep-lucky-waterfall-a1ry1meu.ap-southeast-1.aws.neon.tech/himti_db?sslmode=require
+            - name: ANGGOTA_CODE
+              value: HIMTI091011
+            - name: JWT_SECRET
+              value: efkhlqawuuerlkbcinhwyzrdclsnyopdlulwlswyamyjjlnvtnwbbglszpduilrxtcozwjhetcudhrmsfdkndcijuadatlowyyelmfhaqslbzsgmeysjvasznzta
+            - name: SMTP_USER
+              value: aseloleasese@gmail.com
+            - name: SMTP_PASSWORD
+              value: FScBrpOVdDU5W1qJ
+            - name: SMTP_HOST
+              value: smtp-relay.brevo.com
+            - name: SMTP_PORT
+              value: "587"
+            - name: SMTP_LOGIN
+              value: 62e921001@smtp-brevo.com
+            - name: EMAIL_SENDER
+              value: himti.umt11@gmail.com
+            - name: FIREBASE_CLIENT_EMAIL
+              value: firebase-adminsdk-c4xoy@flutter-himti-app-b2d87.iam.gserviceaccount.com
+            - name: FIREBASE_PRIVATE_KEY
+              value: -----BEGIN PRIVATE KEY-----
+                MIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQC+VxZ5y6bHblm5
+                iMTWpfFAR9SqHS6966V21uqCU/7ZvMgpmnm6U6FbI4YDG/DQuq0Nc7GNgjVC9kjg
+                WUYIjWb61O3XmOxZylen/d+pL4IR8GTHseUdBUuZP2oBwYt7Cx0PqIApwdUmY4sA
+                StliKURUSH1PkkfEwoeLlfUbtOEOoWcma4gSBXpRkAhfE5C6thq/I5VTyi/0+OMw
+                rCzL8VAiKRgr7BUgybcA+tL0+4tG9mvJo2qfSDoaiBpZy327r3h8Xt9I2VEQTKg6
+                D73fHyFu9sROGy+xV1bjgtO8tzWuVrSIX9hFigTXN9aZuWP+L5sTA28cZ+HDnPIO
+                KS0lqq+NAgMBAAECggEAF246BpEyvR8Q7X1wGapAyfRtsek4vUlaS4hGQvfbCeuq
+                yjBJZs3vsXvsfcp9OPyZ2+uPgkdyjgUqUG+85sWdVShMBPu+sIjvhG8EjtuZy+KH
+                TWvRM+LYfQto3cF5DZL/J1PLPxisx/Z+AHG2U9aXojZwMpDjw81ciSrTCu+Xusie
+                GaVzRXJaqCaxJo8uOqmNMGUW6Vtk377APbvzoFgoLFKv4GCDOxBaWD4n8Icc67RU
+                7lZGYgfrZQgALyCvSxbYlNhSGgd33hF+YWawtSJDE7xsaBYz0WI4NhCuPWfFuphX
+                z1ACRpW61zsTksC3PT6ozzOcic1QA2H98AThCcZpEwKBgQDuz6eaJnny3lE2ZIs+
+                QR2MPL9YD828eMtQAJ9sh64AabfSwBAmfSRugWrcdOB8JPzNozM2rAW9rVCoAXsz
+                mTkJlAy9xRDqeIZ/wxf0HwYa1NuvCZnzAIGZxDA8GrxnW9T9bEWnzzLs6WMD1WzQ
+                0pfRXB9uOJW8UNZn1in6CjOkRwKBgQDMCk4L8SxsmsHA+mETeb7k2sHO2tjzhTOv
+                EKD2Av8eRDIeHm+YRwhKblDbhaxMnqiyOzdlLFIRpi3nfxQo0qrdiTTcDsCEwNL6
+                wfsRpTi0KWB+LJNDlvzgozigKn3S/btP9YmZNR1Hl5XvqhhP5i6L0zbVOqUj0uR0
+                CZwxc8sbiwKBgCcu2SAYyg+IXKjhDFu1kWSOHxMS3L3cz/cbcwz6ohkdP3UL4FqA
+                U/bxsxfi8WZNJ1GSQnfo97QseLxoKc/IhyxEJ2cHq4PdLKxP1WFPqc/DNxxcJe9S
+                GPGi2As0k88dqS+/kRo8i+2FSaK6ZPVKaHCIffu2uxK/7L3yzMZi4CBHAoGAIsnn
+                ALZAIsxIGMUX5CAv4glCXiiGMQ8W/tRQ/WEJanmqKeR6lnYV/crNUoB6Hh43GRxr
+                l351B7lTvlK2dzdkFp2cO6DwRjIyRrroOdv3zQ/4+cpT2YRW3V42+2gDSAQm+b0d
+                ltethFVeJRzVRFo0uXZrtPNo0LDWbspsrSnXCX0CgYBwJptu5XFo+cCcoOFxHBZk
+                eOCqHWKiUshAB7ygdIsFl0xzBks9WxUKcDxL0dHim2Lm1oCCg2xzYT2aHGLEPLdZ
+                QOmU7O/w8xXdirF7JA1jXEWTS6+2QRmKArSdDQ5xQYzuRcPWDOuH4OxEJfYge5EP
+                iMtfv+9QXOUkUurDOGZq3w==
+                -----END PRIVATE KEY-----
+            - name: FIREBASE_PROJECT_ID
+              value: flutter-himti-app-b2d87
+          image: asia-southeast1-docker.pkg.dev/personal-fikri/cloud-run-source-deploy/himti-api-dev/himti-api-dev:0d72d393b53457e0101addcba4a95c8da996b36c
+          name: placeholder-1
+          ports:
+            - containerPort: 8080
+              name: http1
+          resources:
+            limits:
+              cpu: 1000m
+              memory: 512Mi
+          startupProbe:
+            failureThreshold: 1
+            periodSeconds: 240
+            tcpSocket:
+              port: 8080
+            timeoutSeconds: 240
+      serviceAccountName: fikri-service@personal-fikri.iam.gserviceaccount.com
+      timeoutSeconds: 300
+  traffic:
+    - latestRevision: true
+      percent: 100

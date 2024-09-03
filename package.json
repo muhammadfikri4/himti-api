@@ -73,6 +73,7 @@
     "build": "prisma generate && tsc",
     "lint": "npx eslint ./src --ext .ts",
     "lint:fix": "npx eslint ./src --ext .ts --fix",
-    "postinstall": "prisma generate"
+    "postinstall": "prisma generate",
+    "deploy:dev": "gcloud app deploy app.yaml --project=personal-fikri"
   }
 }
