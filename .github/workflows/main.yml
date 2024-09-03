@@ -13,7 +13,7 @@ jobs:
     name: Deploy to Cloud Run
     runs-on: ubuntu-latest
     env:
-      IMAGE_NAME: asia-southeast1-docker.pkg.dev/personal-fikri/cloud-run-source-deploy/himti-api-dev/himti-api-dev:latest
+      IMAGE_NAME: asia-southeast2-docker.pkg.dev/personal-fikri/cloud-run-source-deploy/himti-api-dev/himti-api-dev:latest
       DATABASE_URL: ${{ secrets.DATABASE_URL }}
       BUCKET_NAME: ${{ secrets.BUCKET_NAME }}
       GCP_APP_NAME: ${{ secrets.APPLICATION }}
@@ -59,7 +59,7 @@ jobs:
       - name: Check if Artifact Registry repository exists
         id: check_repo
         run: |
-          if gcloud artifacts repositories describe ${{ env.GCP_APP_NAME }} --location=asia-southeast1 &>/dev/null; then
+          if gcloud artifacts repositories describe ${{ env.GCP_APP_NAME }} --location=asia-southeast2 &>/dev/null; then
             echo "::set-output name=repo_exists::true"
           else
             echo "::set-output name=repo_exists::false"
@@ -70,11 +70,11 @@ jobs:
         run: |
           gcloud artifacts repositories create ${{ env.GCP_APP_NAME }} \
             --repository-format=docker \
-            --location=asia-southeast1 \
+            --location=asia-southeast2 \
             --description="Docker repository for ${{ env.GCP_APP_NAME }}"
 
       - name: Configure Docker Authorization
-        run: gcloud auth configure-docker asia-southeast1-docker.pkg.dev --quiet
+        run: gcloud auth configure-docker asia-southeast2-docker.pkg.dev --quiet
 
       - name: Build Docker Image
         run: docker build -t $IMAGE_NAME .
@@ -119,10 +119,10 @@ jobs:
         run: |
           gcloud run deploy ${{ secrets.APPLICATION }} \
             --image $IMAGE_NAME \
-            --region asia-southeast1 \
+            --region asia-southeast2 \
             --platform managed \
             --allow-unauthenticated \
-            --port 8080 \
+            --port 5000 \
             --env-vars-file env_vars.yaml \
             --verbosity=debug
 
@@ -130,11 +130,11 @@ jobs:
         if: failure()
         run: |
           gcloud run services describe ${{ secrets.APPLICATION }} \
-            --region asia-southeast1 \
+            --region asia-southeast2 \
             --format='yaml(status)'
 
       - name: Debug - Check recent logs
         if: failure()
         run: |
           gcloud run services logs read --service=${{ secrets.APPLICATION }} \
-            --region=asia-southeast1
+            --region=asia-southeast2

@@ -19,7 +19,7 @@ RUN npm run build
 COPY . .
 
 # Specify the port
-EXPOSE 8080
+EXPOSE 5000
 
 # Run the application
 CMD ["npm", "start"]
