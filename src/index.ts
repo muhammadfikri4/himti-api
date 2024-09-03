@@ -10,7 +10,7 @@ import { HandlingError } from './utils/HandlingError'
 
 const app = express()
 
-const port = environment.PORT || 8000
+const port = environment.PORT || 8080
 dotenv.config()
 // dbconnect()
 app.use(cors({
