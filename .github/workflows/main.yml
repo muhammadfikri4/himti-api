@@ -116,7 +116,7 @@ jobs:
 
       - name: Deploy Docker Image to Google Cloud Run
         run: |
-          gcloud run deploy ${{ secrets.APPLICATION }} \
+          gcloud run deploy himti-api-dev \
             --image $IMAGE_NAME \
             --region asia-southeast2 \
             --platform managed \
