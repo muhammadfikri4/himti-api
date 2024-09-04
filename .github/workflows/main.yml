@@ -1,4 +1,4 @@
-name: api-dev
+name: himti-api-dev
 
 on:
   workflow_dispatch:
