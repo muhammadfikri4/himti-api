@@ -13,8 +13,7 @@ jobs:
     name: Deploy to Cloud Run
     runs-on: ubuntu-latest
     env:
-      IMAGE_NAME: asia-southeast2-docker.pkg.dev/himti-app-426206/himti-api-dev/himti-api-dev:latest
-      BUCKET_NAME: ${{ secrets.BUCKET_NAME }}
+      IMAGE_NAME: asia-southeast2-docker.pkg.dev/${{ secrets.PROJECT_ID }}/${{ secrets.APPLICATION }}/${{ secrets.APPLICATION }}:latest
       GCP_APP_NAME: ${{ secrets.APPLICATION }}
       ANGGOTA_CODE: ${{ secrets.ANGGOTA_CODE }}
       AWS_STORAGE_ACCESS_KEY: ${{ secrets.AWS_STORAGE_ACCESS_KEY }}
@@ -38,6 +37,8 @@ jobs:
       SMTP_PASSWORD: ${{ secrets.SMTP_PASSWORD }}
       SMTP_PORT: ${{ secrets.SMTP_PORT }}
       SMTP_USER: ${{ secrets.SMTP_USER }}
+
+
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v2
@@ -85,7 +86,6 @@ jobs:
         run: |
           cat << EOF > env_vars.yaml
           DATABASE_URL: "${{ secrets.DATABASE_URL }}"
-          BUCKET_NAME: "${{ secrets.BUCKET_NAME }}"
           GCP_APP_NAME: "${{ secrets.APPLICATION }}"
           ANGGOTA_CODE: "${{ secrets.ANGGOTA_CODE }}"
           AWS_STORAGE_ACCESS_KEY: "${{ secrets.AWS_STORAGE_ACCESS_KEY }}"
@@ -116,7 +116,7 @@ jobs:
 
       - name: Deploy Docker Image to Google Cloud Run
         run: |
-          gcloud run deploy himti-api-dev \
+          gcloud run deploy ${{ secrets.APPLICATION }} \
             --image $IMAGE_NAME \
             --region asia-southeast2 \
             --platform managed \
@@ -135,5 +135,147 @@ jobs:
       - name: Debug - Check recent logs
         if: failure()
         run: |
-          gcloud run services logs read --service=himti-api-dev \
+          gcloud run services logs read --service=${{ secrets.APPLICATION }} \
             --region=asia-southeast2
+
+
+# name: himti-api-dev
+
+# on:
+#   workflow_dispatch:
+#   push:
+#     branches: [main]
+#   pull_request:
+#     branches: [main]
+
+# jobs:
+  
+#   deploy:
+#     name: Deploy to Cloud Run
+#     runs-on: ubuntu-latest
+#     env:
+#       IMAGE_NAME: asia-southeast2-docker.pkg.dev/himti-app-426206/himti-api-dev/himti-api-dev:latest
+#       BUCKET_NAME: ${{ secrets.BUCKET_NAME }}
+#       GCP_APP_NAME: ${{ secrets.APPLICATION }}
+#       ANGGOTA_CODE: ${{ secrets.ANGGOTA_CODE }}
+#       AWS_STORAGE_ACCESS_KEY: ${{ secrets.AWS_STORAGE_ACCESS_KEY }}
+#       AWS_STORAGE_BUCKET: ${{ secrets.AWS_STORAGE_BUCKET }}
+#       AWS_STORAGE_ENDPOINT: ${{ secrets.AWS_STORAGE_ENDPOINT }}
+#       AWS_STORAGE_REGION: ${{ secrets.AWS_STORAGE_REGION }}
+#       AWS_STORAGE_SECRET_KEY: ${{ secrets.AWS_STORAGE_SECRET_KEY }}
+#       CLOUDINARY_API_KEY: ${{ secrets.CLOUDINARY_API_KEY }}
+#       CLOUDINARY_API_SECRET: ${{ secrets.CLOUDINARY_API_SECRET }}
+#       CLOUDINARY_CLOUD_NAME: ${{ secrets.CLOUDINARY_CLOUD_NAME }}
+#       EMAIL_SENDER: ${{ secrets.EMAIL_SENDER }}
+#       FIREBASE_CLIENT_EMAIL: ${{ secrets.FIREBASE_CLIENT_EMAIL }}
+#       FIREBASE_PRIVATE_KEY: ${{ secrets.FIREBASE_PRIVATE_KEY }}
+#       FIREBASE_PROJECT_ID: ${{ secrets.FIREBASE_PROJECT_ID }}
+#       GOOGLE_CREDENTIAL: ${{ secrets.GOOGLE_CREDENTIAL }}
+#       JWT_EXPIRES: ${{ secrets.JWT_EXPIRES }}
+#       JWT_SECRET: ${{ secrets.JWT_SECRET }}
+#       PROJECT_ID: ${{ secrets.PROJECT_ID }}
+#       SMTP_HOST: ${{ secrets.SMTP_HOST }}
+#       SMTP_LOGIN: ${{ secrets.SMTP_LOGIN }}
+#       SMTP_PASSWORD: ${{ secrets.SMTP_PASSWORD }}
+#       SMTP_PORT: ${{ secrets.SMTP_PORT }}
+#       SMTP_USER: ${{ secrets.SMTP_USER }}
+#     steps:
+#       - name: Checkout Repository
+#         uses: actions/checkout@v2
+
+#       - name: Login to Google Cloud
+#         uses: 'google-github-actions/auth@v2'
+#         with:
+#           credentials_json: ${{ secrets.GOOGLE_CREDENTIAL }}
+
+#       - name: 'Set up Cloud SDK'
+#         uses: 'google-github-actions/setup-gcloud@v2'
+
+#       - name: Enable necessary APIs
+#         run: |
+#           gcloud services enable artifactregistry.googleapis.com
+#           gcloud services enable run.googleapis.com
+
+#       - name: Check if Artifact Registry repository exists
+#         id: check_repo
+#         run: |
+#           if gcloud artifacts repositories describe ${{ env.GCP_APP_NAME }} --location=asia-southeast2 &>/dev/null; then
+#             echo "::set-output name=repo_exists::true"
+#           else
+#             echo "::set-output name=repo_exists::false"
+#           fi
+
+#       - name: Create Artifact Registry repository
+#         if: steps.check_repo.outputs.repo_exists == 'false'
+#         run: |
+#           gcloud artifacts repositories create ${{ env.GCP_APP_NAME }} \
+#             --repository-format=docker \
+#             --location=asia-southeast2 \
+#             --description="Docker repository for ${{ env.GCP_APP_NAME }}"
+
+#       - name: Configure Docker Authorization
+#         run: gcloud auth configure-docker asia-southeast2-docker.pkg.dev --quiet
+
+#       - name: Build Docker Image
+#         run: docker build -t $IMAGE_NAME .
+
+#       - name: Push Docker Image to Artifact Registry
+#         run: docker push $IMAGE_NAME
+
+#       - name: Prepare environment variables
+#         run: |
+#           cat << EOF > env_vars.yaml
+#           DATABASE_URL: "${{ secrets.DATABASE_URL }}"
+#           BUCKET_NAME: "${{ secrets.BUCKET_NAME }}"
+#           GCP_APP_NAME: "${{ secrets.APPLICATION }}"
+#           ANGGOTA_CODE: "${{ secrets.ANGGOTA_CODE }}"
+#           AWS_STORAGE_ACCESS_KEY: "${{ secrets.AWS_STORAGE_ACCESS_KEY }}"
+#           AWS_STORAGE_BUCKET: "${{ secrets.AWS_STORAGE_BUCKET }}"
+#           AWS_STORAGE_ENDPOINT: "${{ secrets.AWS_STORAGE_ENDPOINT }}"
+#           AWS_STORAGE_REGION: "${{ secrets.AWS_STORAGE_REGION }}"
+#           AWS_STORAGE_SECRET_KEY: "${{ secrets.AWS_STORAGE_SECRET_KEY }}"
+#           CLOUDINARY_API_KEY: "${{ secrets.CLOUDINARY_API_KEY }}"
+#           CLOUDINARY_API_SECRET: "${{ secrets.CLOUDINARY_API_SECRET }}"
+#           CLOUDINARY_CLOUD_NAME: "${{ secrets.CLOUDINARY_CLOUD_NAME }}"
+#           EMAIL_SENDER: "${{ secrets.EMAIL_SENDER }}"
+#           FIREBASE_CLIENT_EMAIL: "${{ secrets.FIREBASE_CLIENT_EMAIL }}"
+#           FIREBASE_PRIVATE_KEY: "${{ secrets.FIREBASE_PRIVATE_KEY }}"
+#           FIREBASE_PROJECT_ID: "${{ secrets.FIREBASE_PROJECT_ID }}"
+#           GOOGLE_CREDENTIAL: "${{ secrets.GOOGLE_CREDENTIAL }}"
+#           JWT_EXPIRES: "${{ secrets.JWT_EXPIRES }}"
+#           JWT_SECRET: "${{ secrets.JWT_SECRET }}"
+#           PROJECT_ID: "${{ secrets.PROJECT_ID }}"
+#           SMTP_HOST: "${{ secrets.SMTP_HOST }}"
+#           SMTP_LOGIN: "${{ secrets.SMTP_LOGIN }}"
+#           SMTP_PASSWORD: "${{ secrets.SMTP_PASSWORD }}"
+#           SMTP_PORT: "${{ secrets.SMTP_PORT }}"
+#           SMTP_USER: "${{ secrets.SMTP_USER }}"
+#           EOF
+
+#       - name: Debug - Check env_vars.yaml content
+#         run: cat env_vars.yaml
+
+#       - name: Deploy Docker Image to Google Cloud Run
+#         run: |
+#           gcloud run deploy himti-api-dev \
+#             --image $IMAGE_NAME \
+#             --region asia-southeast2 \
+#             --platform managed \
+#             --allow-unauthenticated \
+#             --port 5000 \
+#             --env-vars-file env_vars.yaml \
+#             --verbosity=debug
+
+#       - name: Debug - Check deployment status
+#         if: failure()
+#         run: |
+#           gcloud run services describe ${{ secrets.APPLICATION }} \
+#             --region asia-southeast2 \
+#             --format='yaml(status)'
+
+#       - name: Debug - Check recent logs
+#         if: failure()
+#         run: |
+#           gcloud run services logs read --service=himti-api-dev \
+#             --region=asia-southeast2
+
