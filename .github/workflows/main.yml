@@ -13,8 +13,7 @@ jobs:
     name: Deploy to Cloud Run
     runs-on: ubuntu-latest
     env:
-      IMAGE_NAME: asia-southeast2-docker.pkg.dev/himti-app-426206/himti-api-dev/himti-api-dev@sha256:12112fb044849cad3604cc220fc0cefc0cc183794b1474bb1ec7de3284245fb4
-      DATABASE_URL: ${{ secrets.DATABASE_URL }}
+      IMAGE_NAME: asia-southeast2-docker.pkg.dev/himti-app-426206/himti-api-dev/himti-api-dev:latest
       BUCKET_NAME: ${{ secrets.BUCKET_NAME }}
       GCP_APP_NAME: ${{ secrets.APPLICATION }}
       ANGGOTA_CODE: ${{ secrets.ANGGOTA_CODE }}
