@@ -135,5 +135,5 @@ jobs:
       - name: Debug - Check recent logs
         if: failure()
         run: |
-          gcloud run services logs read --service=${{ secrets.APPLICATION }} \
+          gcloud run services logs read --service=himti-api-dev \
             --region=asia-southeast2
