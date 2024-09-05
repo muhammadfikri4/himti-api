@@ -1,12 +1,14 @@
 import { Router } from "express";
+import { VerifyToken } from "../../middleware/verifyToken";
 import { validateRequest } from "../../middleware/validateRequest";
-import { createMeetingSchema } from "./meetingsRequest";
 import { CatchWrapper } from "../../utils/CatchWrapper";
-import { createMeetingController, getMeetingByEventMeetingIdController } from "./meetingsController";
+import { createMeetingController, getMeetingByEventMeetingIdController, getMeetingsController } from "./meetingsController";
+import { createMeetingSchema } from "./meetingsRequest";
 
 const route = Router()
 
+route.get('/', VerifyToken, CatchWrapper(getMeetingsController))
 route.post('/', validateRequest(createMeetingSchema), CatchWrapper(createMeetingController))
-route.get('/event-meeting/:eventMeetingId', CatchWrapper(getMeetingByEventMeetingIdController))
+route.get('/event-meeting/:eventMeetingId', VerifyToken, CatchWrapper(getMeetingByEventMeetingIdController))
 
 export default route

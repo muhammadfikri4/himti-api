@@ -1,29 +1,30 @@
-import { ErrorApp } from "../../utils/HttpError"
-import { CreateMeetingBodyRequest, FilterMeeting } from "./meetingsDTO"
-import { createMeeting, getMeetingByEventMeetingId, getMeetingsByEventMeetingId, getMeetingsByEventMeetingIdCount } from "./meetingsRepository"
-import { MESSAGES } from "../../utils/Messages"
+import { Query } from "../../interface/Query"
 import { MESSAGE_CODE } from "../../utils/ErrorCode"
-import { getEventMeetingById } from "../eventMeeting/eventMeetingRepository"
+import { ErrorApp } from "../../utils/HttpError"
+import { MESSAGES } from "../../utils/Messages"
 import { Meta } from "../../utils/Meta"
-import { MeetingData, meetingsDTOMapper } from "./meetingsMapper"
+import { getEventMeetingById } from "../eventMeeting/eventMeetingRepository"
+import { CreateMeetingBodyRequest, FilterMeeting } from "./meetingsDTO"
+import { MeetingData, groupingMeetingsByEventMeetingsDTOMapper, meetingsDTOMapper } from "./meetingsMapper"
+import { createMeeting, getMeetingByEventMeetingId, getMeetings, getMeetingsByEventMeetingId, getMeetingsByEventMeetingIdCount, getMeetingsCount } from "./meetingsRepository"
 
-export const createMeetingService = async(body:CreateMeetingBodyRequest) => {
+export const createMeetingService = async (body: CreateMeetingBodyRequest) => {
 
   const eventMeeting = await getEventMeetingById(body.eventMeetingId)
 
-  if(!eventMeeting) {
+  if (!eventMeeting) {
     return new ErrorApp(MESSAGES.ERROR.NOT_FOUND.EVENT_MEETING, 404, MESSAGE_CODE.NOT_FOUND)
   }
 
   const meeting = await getMeetingByEventMeetingId(body.eventMeetingId, body.name)
 
-  if(meeting?.name === body.name) {
+  if (meeting?.name === body.name) {
     return new ErrorApp(MESSAGES.ERROR.ALREADY.MEETING, 400, MESSAGE_CODE.BAD_REQUEST)
   }
 
   const timeNotValid = new Date(body.startTime as Date) < new Date(body.endTime as Date)
 
-  if(!timeNotValid) {
+  if (!timeNotValid) {
     return new ErrorApp(MESSAGES.ERROR.INVALID.TIME, 400, MESSAGE_CODE.BAD_REQUEST)
   }
 
@@ -35,8 +36,8 @@ export const createMeetingService = async(body:CreateMeetingBodyRequest) => {
   return data
 }
 
-export const getMeetingsByEventMeetingsIdService = async(query:FilterMeeting, userId:string) => {
-  const {page = '1', perPage = '10'} = query
+export const getMeetingsByEventMeetingsIdService = async (query: FilterMeeting, userId: string) => {
+  const { page = '1', perPage = '10' } = query
   const [meetings, totalData] = await Promise.all([
     getMeetingsByEventMeetingId(query),
     getMeetingsByEventMeetingIdCount(query)
@@ -47,7 +48,7 @@ export const getMeetingsByEventMeetingsIdService = async(query:FilterMeeting, us
     Number(perPage),
     totalData
   )
-
+console.log(meetings)
   const data = meetingsDTOMapper(meetings as MeetingData[], userId)
 
   return {
@@ -55,4 +56,25 @@ export const getMeetingsByEventMeetingsIdService = async(query:FilterMeeting, us
     meta
   }
 
+}
+
+export const getMeetingsService = async(query: Query,userId:string) => {
+  const {page = '1', perPage = '10'} = query
+  const [meetings, totalData] = await Promise.all([
+    getMeetings(query),
+    getMeetingsCount()
+  ])
+
+  const meta = Meta(
+    Number(page),
+    Number(perPage),
+    totalData
+  )
+
+  const data = groupingMeetingsByEventMeetingsDTOMapper(meetings as MeetingData[], userId as string)
+
+  return {
+    data,
+    meta
+  }
 }

@@ -1,3 +1,4 @@
+import { Query } from "interface/Query"
 import { prisma } from "../../config"
 import { FilterMeeting, type CreateMeetingBodyRequest } from "./meetingsDTO"
 
@@ -72,6 +73,8 @@ export const getMeetingsByEventMeetingId = async (query: FilterMeeting) => {
     skip: (Number(page) - 1) * Number(perPage)
   })
 }
+
+
 export const getMeetingsByEventMeetingIdCount = async (query: FilterMeeting) => {
   const { eventMeetingId } = query
   return await prisma.meeting.count({
@@ -80,3 +83,43 @@ export const getMeetingsByEventMeetingIdCount = async (query: FilterMeeting) => 
     },
   })
 }
+
+export const getMeetings = async (query: Query) => {
+  const { page = '1', perPage = '10' } = query
+  return await prisma.meeting.findMany({
+    select: {
+      id: true,
+      name: true,
+      description: true,
+      startTime: true,
+      endTime: true,
+      eventMeetingId: true,
+      EventMeeting: {
+        select: {
+          id: true,
+          name: true,
+        }
+      },
+      Attendance: {
+        select: {
+          User: {
+            select: {
+              id: true,
+              name: true
+            }
+          }
+        }
+      }
+    },
+    orderBy: {
+      createdAt: 'desc',
+    },
+    take: Number(perPage),
+    skip: (Number(page) - 1) * Number(perPage)
+  })
+}
+
+export const getMeetingsCount = async () => {
+  return await prisma.meeting.count()
+}
+
