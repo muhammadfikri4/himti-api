@@ -112,16 +112,16 @@ jobs:
       - name: Debug - Check env_vars.yaml content
         run: cat env_vars.yaml
 
-      # - name: Deploy Docker Image to Google Cloud Run
-      #   run: |
-      #     gcloud run deploy "${{ secrets.APPLICATION }}" \
-      #       --image $IMAGE_NAME \
-      #       --region asia-southeast2 \
-      #       --platform managed \
-      #       --allow-unauthenticated \
-      #       --port 5000 \
-      #       --env-vars-file env_vars.yaml \
-      #       --verbosity=debug
+      - name: Deploy Docker Image to Google Cloud Run
+        run: |
+          gcloud run deploy "${{ secrets.APPLICATION }}" \
+            --image $IMAGE_NAME \
+            --region asia-southeast2 \
+            --platform managed \
+            --allow-unauthenticated \
+            --port 5000 \
+            --env-vars-file env_vars.yaml \
+            --verbosity=debug
 
       - name: Debug - Check deployment status
         if: failure()
