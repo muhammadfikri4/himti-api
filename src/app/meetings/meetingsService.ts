@@ -62,7 +62,7 @@ export const getMeetingsService = async(query: Query,userId:string) => {
   const {page = '1', perPage = '10'} = query
   const [meetings, totalData] = await Promise.all([
     getMeetings(query),
-    getMeetingsCount()
+    getMeetingsCount(query)
   ])
 
   const meta = Meta(

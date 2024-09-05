@@ -64,6 +64,11 @@ export const groupingMeetingsByEventMeetingsDTOMapper = (meetings: MeetingsData[
 }
 
 export const getMeetingDTOMapper = (data: MeetingData, userId:string): MeetingDTO => {
+          const isExpiredEnd = new Date(data.endTime as Date) < new Date(Date.now())
+          const isExpiredStart = new Date(data.startTime as Date) > new Date(Date.now())
+
+          const isOpen = !isExpiredEnd && !isExpiredStart
+
   return {
     id: data.id,
     name: data.name,
@@ -72,6 +77,7 @@ export const getMeetingDTOMapper = (data: MeetingData, userId:string): MeetingDT
     endTime: data.endTime as Date,
     isAlreadyAttend: !!data.Attendance.find((item) => item.userId === userId),
     resume: data.resume as string,
+    isOpen,
     eventMeeting: {
       id: data.EventMeeting.id,
       name: data.EventMeeting.name

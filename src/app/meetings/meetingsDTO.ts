@@ -19,6 +19,7 @@ export interface MeetingDTO {
   startTime: Date
   endTime: Date
   resume?: string
+  isOpen: boolean
   isAlreadyAttend: boolean
   eventMeeting: {
     id: string
