@@ -1,5 +1,5 @@
 import Joi from "joi";
-import { MESSAGES } from "utils/Messages";
+import { MESSAGES } from "../../utils/Messages";
 
 export const sendNotificationSchema = Joi.object({
   title: Joi.string().required().messages({
