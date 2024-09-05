@@ -21,6 +21,7 @@ import userRoute from '../app/user/userRoute';
 import versionRoute from '../app/version/versionRoute';
 import eventMeetingRoute from '../app/eventMeeting/eventMeetingRoute';
 import meetingRoute from '../app/meetings/meetingsRoute';
+import notificationRoute from '../app/notification/notificationRoute';
 import { MESSAGE_CODE } from "../utils/ErrorCode";
 import { MESSAGES } from "../utils/Messages";
 
@@ -40,7 +41,7 @@ route.use("/meeting", meetingRoute)
 route.use('/business', businessRoute)
 route.use('/prestasi', prestasiRoute)
 route.use('/user', userRoute)
-// route.use('/notification', notificationRoute)
+route.use('/notification', notificationRoute)
 route.use('/user-fcm', userFcmRoute)
 route.use('/initial', initialRoute)
 route.use('/version', versionRoute)

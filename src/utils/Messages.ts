@@ -150,6 +150,7 @@ export const MESSAGES = {
             START_TIME: "Start Time is required",
             END_TIME: "End Time is required",
             EVENT_MEETING_ID: "Event Meeting Id is required",
+            BODY: "Body is required",   
         },
         RELATION: {
             ANGKATAN: "Angkatan cannot be deleted because it has a relationship"

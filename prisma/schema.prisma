@@ -225,10 +225,10 @@ model Point {
 
 model NotificationHistory {
   id             String        @id @unique @default(uuid())
-  acaraId        String?       @map("acara_id") @db.VarChar(110)
+  eventId        String?       @map("acara_id") @db.VarChar(110)
   userId         String        @map("user_id") @db.VarChar(110)
   eventMeetingId String?       @map("event_meeting_id") @db.VarChar(110)
-  Event          Event?        @relation(fields: [acaraId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  Event          Event?        @relation(fields: [eventId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   User           User          @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   EventMeeting   EventMeeting? @relation(fields: [eventMeetingId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   title          String        @db.VarChar(155)
@@ -237,7 +237,7 @@ model NotificationHistory {
   createdAt      DateTime      @default(now()) @map("created_at") @db.Timestamp(0)
   updateAt       DateTime      @default(now()) @updatedAt @map("updated_at") @db.Timestamp()
 
-  @@index([acaraId], map: "notification_history_fk_1")
+  @@index([eventId], map: "notification_history_fk_1")
   @@index([userId], map: "notification_history_fk_2")
   @@map("notification_history")
 }
