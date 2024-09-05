@@ -4,7 +4,7 @@ import { MESSAGE_CODE } from "../../utils/ErrorCode"
 import { HandleResponse } from "../../utils/HandleResponse"
 import { ErrorApp } from "../../utils/HttpError"
 import { MESSAGES } from "../../utils/Messages"
-import { createMeetingService, getMeetingsByEventMeetingsIdService, getMeetingsService } from "./meetingsService"
+import { createMeetingService, getMeetingByIdService, getMeetingsByEventMeetingsIdService, getMeetingsService } from "./meetingsService"
 
 export const createMeetingController = async (
   req: Request,
@@ -56,4 +56,20 @@ export const getMeetingsController = async(
     return
   }
   HandleResponse(res, 200, MESSAGE_CODE.SUCCESS, MESSAGES.SUCCESS.MEETING.GET, result?.data, result?.meta)
+}
+
+export const getMeetingByIdController = async(
+  req:RequestWithAccessToken,
+  res:Response,
+  next:NextFunction
+) => {
+  const { userId} = req
+  const { meetingId } = req.params
+  const result = await getMeetingByIdService(meetingId, userId as string)
+
+  if (result instanceof ErrorApp) {
+    next(result)
+    return
+  }
+  HandleResponse(res, 200, MESSAGE_CODE.SUCCESS, MESSAGES.SUCCESS.MEETING.GET, result)
 }

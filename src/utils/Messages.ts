@@ -45,6 +45,7 @@ export const MESSAGES = {
             NOTIFICATION: "Notification not found",
             VERSION: "Version not found",
             EVENT_MEETING: "Event Meeting not found",
+            MEETING: "Meeting not found"
         },
         ALREADY: {
             GLOBAL: {

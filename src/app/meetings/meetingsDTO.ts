@@ -12,6 +12,20 @@ export interface FilterMeeting extends Query {
   eventMeetingId: string
 }
 
+export interface MeetingDTO {
+  id: string
+  name: string
+  description?: string
+  startTime: Date
+  endTime: Date
+  resume?: string
+  isAlreadyAttend: boolean
+  eventMeeting: {
+    id: string
+    name: string
+  }
+}
+
 export interface MeetingsDTO {
   eventMeeting: string,
   meetings: {

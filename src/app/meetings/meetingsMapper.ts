@@ -1,18 +1,21 @@
 import { Attendance, EventMeeting, Meeting, User } from "@prisma/client";
-import { MeetingsDTO } from "./meetingsDTO";
+import { MeetingDTO, MeetingsDTO } from "./meetingsDTO";
 
 export interface AttendanceData extends Attendance {
- 
   User: User
 }
 
 export interface MeetingData extends Meeting {
   EventMeeting: EventMeeting
   Attendance: AttendanceData[]
-  
 }
 
-export const meetingsDTOMapper = (data: MeetingData[], userId:string): MeetingsDTO => {
+interface MeetingsData extends Meeting {
+  EventMeeting: EventMeeting
+  Attendance: Attendance[]
+}
+
+export const meetingsDTOMapper = (data: MeetingData[], userId: string): MeetingsDTO => {
   const datas = data.map(item => ({
     id: item.id,
     name: item.name,
@@ -27,45 +30,51 @@ export const meetingsDTOMapper = (data: MeetingData[], userId:string): MeetingsD
   }
 }
 
-interface MeetingsData extends Meeting {
-  EventMeeting: EventMeeting
-  Attendance : Attendance[]
+export const groupingMeetingsByEventMeetingsDTOMapper = (meetings: MeetingsData[], userId: string) => {
+
+  const data: MeetingsData[] = []
+  meetings.map((item) => {
+    if (data.find((i) => i.eventMeetingId === item.eventMeetingId)) {
+      return null
+    }
+    data.push(item)
+  })
+
+  const attend = data.map(item => {
+    const meeting = meetings.filter(i => i.eventMeetingId === item.eventMeetingId)
+    return {
+      eventMeeting: {
+        id: item.EventMeeting.id,
+        name: item.EventMeeting.name
+      },
+      meeting: meeting.map(meet => {
+        return {
+          id: meet.id,
+          name: meet.name,
+          description: meet.description,
+          startTime: meet.startTime as Date,
+          endTime: meet.endTime as Date,
+          isAlreadyAttend: !!meet.Attendance.find((item) => item.userId === userId)
+
+        }
+      })
+    }
+  })
+  return attend
 }
 
-export const groupingMeetingsByEventMeetingsDTOMapper = (meetings:MeetingsData[], userId:string) => {
-
-    const data: MeetingsData[] = []
-    meetings.map((item) => {
-      if (data.find((i) => i.eventMeetingId === item.eventMeetingId)) {
-        return null
-      }
-      data.push(item)
-    })
-
-    const attend = data.map(item => {
-      const meeting = meetings.filter(i => i.eventMeetingId === item.eventMeetingId)
-      return {
-        eventMeeting: {
-          id: item.EventMeeting.id,
-          name: item.EventMeeting.name
-        },
-        meeting: meeting.map(meet => {
-          return {
-            id: meet.id,
-            name: meet.name,
-            description: meet.description,
-            startTime: meet.startTime as Date,
-            endTime: meet.endTime as Date,
-            isAlreadyAttend: !!meet.Attendance.find((item) => item.userId === userId)
-            
-          }
-        })
-      }
-    })
-    return attend
+export const getMeetingDTOMapper = (data: MeetingData, userId:string): MeetingDTO => {
+  return {
+    id: data.id,
+    name: data.name,
+    description: data.description as string,
+    startTime: data.startTime as Date,
+    endTime: data.endTime as Date,
+    isAlreadyAttend: !!data.Attendance.find((item) => item.userId === userId),
+    resume: data.resume as string,
+    eventMeeting: {
+      id: data.EventMeeting.id,
+      name: data.EventMeeting.name
+    }
+  }
 }
-// "id": "04dc55d3-c4e2-430b-bf21-cb7e2743077f",
-//   "name": "Rapat Pertama",
-//     "description": null,
-//       "startTime": "2024-08-22T18:13:10.000Z",
-//         "endTime": "2024-09-23T18:13:10.000Z",

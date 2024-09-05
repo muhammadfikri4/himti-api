@@ -6,6 +6,22 @@ export const getMeetingById = async (meetingId: string) => {
   return await prisma.meeting.findUnique({
     where: {
       id: meetingId
+    },
+    select: {
+      id: true,
+      name: true,
+      description: true,
+      startTime: true,
+      endTime: true,
+      resume: true,
+      eventMeetingId: true,
+      Attendance: {
+        select: {
+          id: true,
+          userId: true
+        }
+      },
+      EventMeeting: true
     }
   })
 }

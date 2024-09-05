@@ -5,8 +5,8 @@ import { MESSAGES } from "../../utils/Messages"
 import { Meta } from "../../utils/Meta"
 import { getEventMeetingById } from "../eventMeeting/eventMeetingRepository"
 import { CreateMeetingBodyRequest, FilterMeeting } from "./meetingsDTO"
-import { MeetingData, groupingMeetingsByEventMeetingsDTOMapper, meetingsDTOMapper } from "./meetingsMapper"
-import { createMeeting, getMeetingByEventMeetingId, getMeetings, getMeetingsByEventMeetingId, getMeetingsByEventMeetingIdCount, getMeetingsCount } from "./meetingsRepository"
+import { MeetingData, getMeetingDTOMapper, groupingMeetingsByEventMeetingsDTOMapper, meetingsDTOMapper } from "./meetingsMapper"
+import { createMeeting, getMeetingByEventMeetingId, getMeetingById, getMeetings, getMeetingsByEventMeetingId, getMeetingsByEventMeetingIdCount, getMeetingsCount } from "./meetingsRepository"
 
 export const createMeetingService = async (body: CreateMeetingBodyRequest) => {
 
@@ -77,4 +77,17 @@ export const getMeetingsService = async(query: Query,userId:string) => {
     data,
     meta
   }
+}
+
+export const getMeetingByIdService = async(meetingId:string, userId:string) => {
+
+  const meeting = await getMeetingById(meetingId)
+
+  if (!meeting) {
+    return new ErrorApp(MESSAGES.ERROR.NOT_FOUND.MEETING, 404, MESSAGE_CODE.NOT_FOUND)
+  }
+
+  const data = getMeetingDTOMapper(meeting as MeetingData, userId)
+
+  return data
 }
