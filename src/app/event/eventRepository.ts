@@ -27,6 +27,7 @@ export const getEvents = async ({ page, perPage, search, openRegister }: IFilter
                 contains: search,
             },
             isOpen: openRegister as boolean,
+            deletedAt: null
         },
         orderBy: {
             createdAt: 'desc'
@@ -71,7 +72,7 @@ export const getEventById = async (id: string) => {
     })
 }
 
-export const deleteAcara = async (id: string) => {
+export const deleteEvent = async (id: string) => {
     return await prisma.event.delete({
         where: {
             id
@@ -82,7 +83,22 @@ export const deleteAcara = async (id: string) => {
     })
 }
 
-export const updateAcara = async (data: EventBodyDTO, id: string) => {
+export const sofDeleteEvent = async(id:string) => {
+    return await prisma.event.update({
+        where: {
+            id
+        },
+        data: {
+            isOpen: false,
+            deletedAt: new Date()
+        },
+        select: {
+            id: true
+        }
+    })
+} 
+
+export const updateEvent = async (data: EventBodyDTO, id: string) => {
     return await prisma.event.update({
         where: {
             id

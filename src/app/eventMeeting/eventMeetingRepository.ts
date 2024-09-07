@@ -42,8 +42,17 @@ export const getEventMeetings = async (query: Query) => {
       name: true,
       Meeting: {
         select: {
-          id: true
-        }
+          id: true,
+          name: true,
+          description: true,
+          startTime: true,
+          endTime: true,
+          Attendance: {
+            select: {
+              userId: true
+            }
+          }
+        },
       }
     },
     orderBy: {

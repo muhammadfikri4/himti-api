@@ -14,6 +14,14 @@ export interface FileInterface {
     Body: Buffer
 }
 
+export const BUCKET_FOLDER = {
+    attendance: 'attendance',
+    event: 'event',
+    business: 'business',
+    user: 'user',
+    structural: 'structural',
+}
+
 export const FileType: Record<string, string> = {
     'image/pdf': '.pdf',
     'image/png': '.png',

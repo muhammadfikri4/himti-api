@@ -2,9 +2,9 @@ import { Query } from "interface/Query"
 
 export interface AttendanceDTO {
     userId?: string
-    meetingId: string
+    meetingId?: string
     eventMeetingId?:string
-    image: Express.Multer.File | string,
+    image?: Express.Multer.File | string,
     coordinate: string
     address?: string
     attendanceTime?:string

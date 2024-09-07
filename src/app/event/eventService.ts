@@ -5,11 +5,11 @@ import { MESSAGE_CODE } from '../../utils/ErrorCode'
 import { ErrorApp } from '../../utils/HttpError'
 import { MESSAGES } from '../../utils/Messages'
 import { Meta } from '../../utils/Meta'
-import { FileType, RemoveFileFromStorage, UploadFileToStorage } from '../../utils/UploadFileToStorage'
+import { BUCKET_FOLDER, FileType, RemoveFileFromStorage, UploadFileToStorage } from '../../utils/UploadFileToStorage'
 import { CreateEventBodyRequest, EventBodyDTO } from './eventDTO'
 import { eventDTOMapper, eventsDTOMapper } from './eventMapper'
-import { createEvent, deleteAcara, getEventById, getEventCount, getEvents, updateAcara } from './eventRepository'
-import { AcaraModelTypes, IFilterEvent } from './eventTypes'
+import { createEvent, getEventById, getEventCount, getEvents, sofDeleteEvent, updateEvent } from './eventRepository'
+import {  IFilterEvent } from './eventTypes'
 
 dotenv.config();
 
@@ -38,12 +38,12 @@ export const createAcaraService = async ({ name, description, endTime, image, is
     }
     try {
         const open = typeof isOpen !== 'undefined' ? JSON.parse(String(isOpen)) : undefined
-        
+
         const img = image as Express.Multer.File
         filename = `${img?.originalname.replace(FileType[img.mimetype], "")} - ${+new Date()}${FileType[img?.mimetype as string]}`
         await UploadFileToStorage({
             Bucket: environment.STORAGE.BUCKET,
-            Key: `dev/event/${filename}`,
+            Key: `${environment.STORAGE.BUCKET_FOLDER}/${BUCKET_FOLDER.event}/${filename}`,
             Body: img?.buffer as Buffer,
             ContentType: img?.mimetype as string,
             ACL: 'public-read',
@@ -51,13 +51,13 @@ export const createAcaraService = async ({ name, description, endTime, image, is
 
         const response = await createEvent({ name, image: filename, description, isOpen: open, endTime: new Date(endTime as Date), startTime: new Date(startTime as Date) })
         return response
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    } catch (error:any) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (error: any) {
         if (error) {
             if (image) {
-                    await RemoveFileFromStorage(
-                        `${environment.STORAGE.ENDPOINT}/images/${filename}`,
-                    )
+                await RemoveFileFromStorage(
+                    `${environment.STORAGE.BUCKET_FOLDER}/${BUCKET_FOLDER.event}/${filename}`,
+                )
             }
             return new ErrorApp(MESSAGE_CODE.BAD_REQUEST, 400, `${error?.message}`)
         }
@@ -90,7 +90,7 @@ export const deleteAcaraService = async ({ id }: EventBodyDTO) => {
         return new ErrorApp(MESSAGES.ERROR.NOT_FOUND.ACARA, 404, MESSAGE_CODE.NOT_FOUND)
     }
 
-    const response = await deleteAcara(id as string)
+    const response = await sofDeleteEvent(id as string)
     return response;
 }
 export const updateAcaraService = async ({ id, name, image, description, endTime, isOpen, startTime, }: CreateEventBodyRequest) => {
@@ -104,18 +104,18 @@ export const updateAcaraService = async ({ id, name, image, description, endTime
     let filename
 
     if (image) {
-        RemoveFileFromStorage(`assets/acara/${matchAcara.image}`)
+        RemoveFileFromStorage(`${environment.STORAGE.BUCKET_FOLDER}/${BUCKET_FOLDER.event}/${filename}`)
         filename = `${img?.originalname.replace(FileType[img.mimetype], "")} - ${+new Date()}${FileType[img?.mimetype as string]}`
         await UploadFileToStorage({
             Bucket: environment.STORAGE.BUCKET,
-            Key: `assets/acarad/${filename}`,
+            Key: `${environment.STORAGE.BUCKET_FOLDER}/${BUCKET_FOLDER.event}/${filename}`,
             Body: img?.buffer as Buffer,
             ContentType: img?.mimetype as string,
             ACL: 'public-read',
         })
     }
 
-    const updateFields: Partial<AcaraModelTypes> = {};
+    const updateFields: Partial<EventBodyDTO> = {};
 
     if (name) updateFields.name = name;
     if (description) updateFields.description = description;
@@ -125,7 +125,7 @@ export const updateAcaraService = async ({ id, name, image, description, endTime
     if (startTime) updateFields.startTime = new Date(startTime as Date);
     if (endTime) updateFields.endTime = new Date(endTime as Date);
     console.log(updateFields)
-    const response = await updateAcara(updateFields, id as string)
+    const response = await updateEvent(updateFields, id as string)
     return response;
 }
 
@@ -136,7 +136,6 @@ export const getDetailAcaraService = async (id: string) => {
     if (!acara) {
         return new ErrorApp(MESSAGES.ERROR.NOT_FOUND.ACARA, 404, MESSAGE_CODE.NOT_FOUND)
     }
-
 
     const data = eventDTOMapper(acara as unknown as Event)
 

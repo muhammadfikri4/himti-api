@@ -151,11 +151,19 @@ export const getAttendanceById = async (attendanceId: number) => {
         },
         include: {
             Meeting: {
-                include: {
-                    EventMeeting: true
+                select: {
+                    id: true,
+                    name: true
                 }
             },
-            User: true
+            User: true,
+            EventMeeting: {
+                select: {
+                    id: true,
+                    name:true
+                }
+            },
+            Point: true
         }
     })
 }

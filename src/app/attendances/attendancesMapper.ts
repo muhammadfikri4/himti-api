@@ -73,3 +73,22 @@ export const historyAbsensiMapper = (absensi: EventMeetingData[]): MeetingHistor
     })
     return attend
 }
+
+export const getAttendanceDTOMapper = (data:EventMeetingData) => {
+    return {
+        id: data.id,
+        address: data.address,
+        coordinate: data.coordinate as string,
+        attendanceTime: data.attendanceTime as string,
+        image: data.image.includes('https')? data.image : ImagePath(`attendance/${data.image}`),
+        meeting: {
+            id: data.Meeting.id,
+            name: data?.Meeting?.name as string
+        },
+        eventMeeting: {
+            id: data.EventMeeting.id,
+            name: data.EventMeeting.name
+        },
+        point: data.Point.reduce((a: number, b: Point) => a + b.point, 0)
+    }
+}

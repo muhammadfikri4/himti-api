@@ -5,9 +5,9 @@ import { ErrorApp } from "../../utils/HttpError"
 import { MESSAGES } from "../../utils/Messages"
 import { FileType, UploadFileToStorage } from "../../utils/UploadFileToStorage"
 import { getMeetingById } from "../meetings/meetingsRepository"
-import { addPoint, getPointByAbsensi } from "../point/pointRepository"
+import { addPoint } from "../point/pointRepository"
 import { AttendanceDTO, FilterAttendance } from "./attendancesDTO"
-import { EventMeetingData, historyAbsensiMapper } from "./attendancesMapper"
+import { EventMeetingData, getAttendanceDTOMapper, historyAbsensiMapper } from "./attendancesMapper"
 import { createAttendance, getAttendanceById, getAttendanceByMeetingId, getAttendanceByUserId, getAttendances } from "./attendancesRepository"
 import { createAttendanceValidate } from "./attendancesValidate"
 
@@ -27,7 +27,7 @@ export const createAttendanceService = async ({ meetingId, image, coordinate, ad
     }
 
     const absensiDate = new Date(FormatIDTime(new Date()))
-    const meeting = await getMeetingById(meetingId)
+    const meeting = await getMeetingById(meetingId as string)
     const timeDifference = ((absensiDate?.getTime()) - new Date(meeting?.startTime as Date)?.getTime()) / (1000 * 60 * 60)
 
     if (timeDifference <= 0) {
@@ -39,7 +39,7 @@ export const createAttendanceService = async ({ meetingId, image, coordinate, ad
 
     await UploadFileToStorage({
         Bucket: environment.STORAGE.BUCKET,
-        Key: `assets/attendance/${filename}`,
+        Key: `${environment.STORAGE.BUCKET_FOLDER}/attendance/${filename}`,
         Body: img?.buffer as Buffer,
         ContentType: img?.mimetype as string,
         ACL: 'public-read',
@@ -91,19 +91,8 @@ export const getAttendanceByIdService = async (id: number) => {
         return new ErrorApp(MESSAGES.ERROR.NOT_FOUND.ABSENSI, 404, MESSAGE_CODE.NOT_FOUND)
     }
 
-    const points = await getPointByAbsensi(attendance?.id as number)
-    const response = {
-        id: attendance?.id,
-        eventMeeting: attendance?.Meeting.EventMeeting.name,
-        meeting: attendance?.Meeting?.name,
-        user: attendance?.User.name,
-        points: points?.point || 0
-    }
-
-    if (!response) {
-        return new ErrorApp(MESSAGES.ERROR.NOT_FOUND.ABSENSI, 404, MESSAGE_CODE.NOT_FOUND)
-    }
-    return response
+    const data = getAttendanceDTOMapper(attendance as unknown as EventMeetingData)
+    return data
 }
 
 export const getAttendancesService = async (query: FilterAttendance) => {
