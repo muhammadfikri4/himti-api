@@ -1,6 +1,6 @@
 import { Attendance, EventMeeting, Meeting } from "@prisma/client";
 import { EventMeetingDTO, EventMeetingWithMeetingDTO } from "./eventMeetingDTO";
-import { generateOpen } from "utils/GenerateOpen";
+import { generateOpen } from "../../utils/GenerateOpen";
 
 interface MeetingData extends Meeting {
   Attendance: Attendance[]
