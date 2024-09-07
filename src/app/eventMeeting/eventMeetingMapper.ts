@@ -1,5 +1,6 @@
 import { Attendance, EventMeeting, Meeting } from "@prisma/client";
 import { EventMeetingDTO, EventMeetingWithMeetingDTO } from "./eventMeetingDTO";
+import { generateOpen } from "utils/GenerateOpen";
 
 interface MeetingData extends Meeting {
   Attendance: Attendance[]
@@ -29,6 +30,7 @@ export const getEventMeetingWithMeetingDTOMapper = (data: EventMeetingData[], us
       description: subitem.description as string,
       startTime: subitem.startTime as Date,
       endTime: subitem.endTime as Date,
+      isOpen: generateOpen(subitem.startTime, subitem.endTime),
       isAlreadyAttend: !!subitem.Attendance.find((item) => item.userId === userId)
     }))
   }))

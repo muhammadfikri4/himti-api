@@ -14,7 +14,7 @@ export const getNotificationDTOMapper = (data: NotificationData[], role: Role) =
     // Initialize the date group if it doesn't exist
     if (!acc[dateKey]) {
       acc[dateKey] = {
-        date: FormatIDTime(item.createdAt),
+        date: FormatIDTime(item.createdAt) as string,
         items: []
       };
     }

@@ -3,12 +3,12 @@ import { MESSAGE_CODE } from "../../utils/ErrorCode";
 import { HandleResponse } from "../../utils/HandleResponse";
 import { ErrorApp } from "../../utils/HttpError";
 import { MESSAGES } from "../../utils/Messages";
-import { createAcaraService, deleteAcaraService, getAcaraService, getDetailAcaraService, updateAcaraService } from "./eventService";
+import { createEventService, deleteEventService, getEventService, getDetailEventService, updateEventService } from "./eventService";
 import { createEventSchema } from "./eventRequest";
 
 
 
-export const createAcaraController = async (
+export const createEventController = async (
     req: Request & {
         file: Express.Multer.File
     },
@@ -23,7 +23,7 @@ export const createAcaraController = async (
         next(new ErrorApp(validate.error.message.replace(/"/g, ''), 400, MESSAGE_CODE.BAD_REQUEST))
         return
     }
-    const acara = await createAcaraService(combine);
+    const acara = await createEventService(combine);
     if (acara instanceof ErrorApp) {
         next(acara)
         return
@@ -31,16 +31,11 @@ export const createAcaraController = async (
     HandleResponse(res, 201, MESSAGE_CODE.SUCCESS, MESSAGES.CREATED.ACARA)
 }
 
-export const getAcaraController = async (req: Request, res: Response, next: NextFunction) => {
+export const getEventController = async (req: Request, res: Response, next: NextFunction) => {
 
-    const { search,  openRegister, page, perPage } = req.query
+    const { query } = req
 
-    const acara = await getAcaraService({
-        search: search as string,
-        page: page ? Number(page) : undefined,
-        perPage: perPage ? Number(perPage) : undefined,
-        openRegister: openRegister as string
-    });
+    const acara = await getEventService(query);
 
     if (acara instanceof ErrorApp) {
         next(acara)
@@ -51,17 +46,17 @@ export const getAcaraController = async (req: Request, res: Response, next: Next
 
 }
 
-export const deleteAcaraController = async (req: Request, res: Response) => {
+export const deleteEventController = async (req: Request, res: Response) => {
     const { id } = req.params;
 
-    const acara = await deleteAcaraService({ id });
+    const acara = await deleteEventService(id);
     if (acara instanceof ErrorApp) {
         return HandleResponse(res, acara.statusCode, acara.code, acara.message)
     }
     HandleResponse(res, 200, MESSAGE_CODE.SUCCESS, MESSAGES.SUCCESS.ACARA.DELETE)
 }
 
-export const updateAcaraController = async (
+export const updateEventController = async (
     req: Request & {
         file: Express.Multer.File
     },
@@ -70,17 +65,17 @@ export const updateAcaraController = async (
     // const { name, description, endTime, isOpenAbsen, isOpenRegister, startTime, } = req.body 
     const { body } = req
 
-    const acara = await updateAcaraService({ ...body, id, image: req.file });
+    const acara = await updateEventService({ ...body, id, image: req.file });
     if (acara instanceof ErrorApp) {
         return HandleResponse(res, acara.statusCode, acara.code, acara.message)
     }
     HandleResponse(res, 200, MESSAGE_CODE.SUCCESS, MESSAGES.SUCCESS.ACARA.UPDATE)
 }
 
-export const getDetailAcaraController = async (req: Request, res: Response, next: NextFunction) => {
+export const getDetailEventController = async (req: Request, res: Response, next: NextFunction) => {
     const { id } = req.params
 
-    const acara = await getDetailAcaraService(id as string)
+    const acara = await getDetailEventService(id as string)
     if (acara instanceof ErrorApp) {
         next(acara)
         return

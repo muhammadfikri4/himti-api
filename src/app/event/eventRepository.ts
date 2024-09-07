@@ -1,8 +1,9 @@
 import { prisma } from "../../config";
+import { Query } from "../../interface/Query";
 import { CreateEventBodyRequest, EventBodyDTO } from "./eventDTO";
-import { IFilterEvent } from "./eventTypes";
+import { openValue } from "./eventService";
 
-export const createEvent = async ({ description, endTime, image,isOpen , name, startTime }: CreateEventBodyRequest) => {
+export const createEvent = async ({ description, endTime, image, isOpen, name, startTime }: CreateEventBodyRequest) => {
     return await prisma.event.create({
         data: {
             name: name as string,
@@ -20,13 +21,14 @@ export const createEvent = async ({ description, endTime, image,isOpen , name, s
 
 
 
-export const getEvents = async ({ page, perPage, search, openRegister }: IFilterEvent) => {
+export const getEvents = async (query: Query) => {
+    const { isOpen, page, perPage, search } = query
     return await prisma.event.findMany({
         where: {
             name: {
                 contains: search,
             },
-            isOpen: openRegister as boolean,
+            isOpen: openValue(isOpen as string),
             deletedAt: null
         },
         orderBy: {
@@ -40,18 +42,19 @@ export const getEvents = async ({ page, perPage, search, openRegister }: IFilter
             isOpen: true,
             image: true,
         },
-        take: perPage,
+        take: Number(perPage),
         skip: (Number(page) - 1) * Number(perPage)
     })
 }
 
-export const getEventCount = async ({ search, openRegister }: IFilterEvent) => {
+export const getEventCount = async (query: Query) => {
+    const {search,isOpen} = query
     return await prisma.event.count({
         where: {
             name: {
                 contains: search,
             },
-            isOpen: openRegister as boolean,
+            isOpen: openValue(isOpen),
         },
     })
 }
@@ -83,7 +86,7 @@ export const deleteEvent = async (id: string) => {
     })
 }
 
-export const sofDeleteEvent = async(id:string) => {
+export const sofDeleteEvent = async (id: string) => {
     return await prisma.event.update({
         where: {
             id
@@ -96,7 +99,7 @@ export const sofDeleteEvent = async(id:string) => {
             id: true
         }
     })
-} 
+}
 
 export const updateEvent = async (data: EventBodyDTO, id: string) => {
     return await prisma.event.update({

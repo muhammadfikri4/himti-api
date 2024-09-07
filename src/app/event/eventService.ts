@@ -1,5 +1,6 @@
 import { Event } from '@prisma/client'
 import dotenv from 'dotenv'
+import { Query } from 'interface/Query'
 import { environment } from '../../libs'
 import { MESSAGE_CODE } from '../../utils/ErrorCode'
 import { ErrorApp } from '../../utils/HttpError'
@@ -9,7 +10,6 @@ import { BUCKET_FOLDER, FileType, RemoveFileFromStorage, UploadFileToStorage } f
 import { CreateEventBodyRequest, EventBodyDTO } from './eventDTO'
 import { eventDTOMapper, eventsDTOMapper } from './eventMapper'
 import { createEvent, getEventById, getEventCount, getEvents, sofDeleteEvent, updateEvent } from './eventRepository'
-import {  IFilterEvent } from './eventTypes'
 
 dotenv.config();
 
@@ -23,7 +23,7 @@ export const openValue = (open?: string) => {
 }
 
 
-export const createAcaraService = async ({ name, description, endTime, image, isOpen, startTime }: CreateEventBodyRequest) => {
+export const createEventService = async ({ name, description, endTime, image, isOpen, startTime }: CreateEventBodyRequest) => {
     let filename
     if (isOpen && !startTime) {
         return new ErrorApp(MESSAGES.ERROR.REQUIRED.START_DATE, 400, MESSAGE_CODE.BAD_REQUEST)
@@ -64,13 +64,14 @@ export const createAcaraService = async ({ name, description, endTime, image, is
     }
 }
 
-export const getAcaraService = async ({ search, page = 1, perPage = 10, openRegister = undefined }: IFilterEvent) => {
+export const getEventService = async (query: Query) => {
 
-    const regist = openValue(openRegister as string)
+    const { page = '1', perPage = '10'} = query
+
 
     const [acara, totalData] = await Promise.all([
-        getEvents({ search, page, perPage, openRegister: regist }),
-        getEventCount({ search, openRegister: regist })
+        getEvents(query),
+        getEventCount(query)
     ])
 
     const data = eventsDTOMapper(acara as Event[])
@@ -78,11 +79,18 @@ export const getAcaraService = async ({ search, page = 1, perPage = 10, openRegi
         return new ErrorApp(MESSAGES.ERROR.NOT_FOUND.ACARA, 404, MESSAGE_CODE.NOT_FOUND)
 
     }
-    const response = { data, meta: Meta(page, perPage, totalData) }
+    const response = {
+        data,
+        meta: Meta(
+            Number(page),
+            Number(perPage),
+            totalData
+        )
+    }
     return response
 }
 
-export const deleteAcaraService = async ({ id }: EventBodyDTO) => {
+export const deleteEventService = async (id:string) => {
 
     const acara = await getEventById(id as string)
 
@@ -93,7 +101,7 @@ export const deleteAcaraService = async ({ id }: EventBodyDTO) => {
     const response = await sofDeleteEvent(id as string)
     return response;
 }
-export const updateAcaraService = async ({ id, name, image, description, endTime, isOpen, startTime, }: CreateEventBodyRequest) => {
+export const updateEventService = async ({ id, name, image, description, endTime, isOpen, startTime, }: CreateEventBodyRequest) => {
 
     const matchAcara = await getEventById(id as string)
 
@@ -129,7 +137,7 @@ export const updateAcaraService = async ({ id, name, image, description, endTime
     return response;
 }
 
-export const getDetailAcaraService = async (id: string) => {
+export const getDetailEventService = async (id: string) => {
 
 
     const acara = await getEventById(id)
