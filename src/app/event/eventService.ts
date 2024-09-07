@@ -10,7 +10,6 @@ import { CreateEventBodyRequest, EventBodyDTO } from './eventDTO'
 import { eventDTOMapper, eventsDTOMapper } from './eventMapper'
 import { createEvent, deleteAcara, getEventById, getEventCount, getEvents, updateAcara } from './eventRepository'
 import { AcaraModelTypes, IFilterEvent } from './eventTypes'
-import { acaraValidate } from './eventValidate'
 
 dotenv.config();
 
@@ -24,27 +23,45 @@ export const openValue = (open?: string) => {
 }
 
 
-export const createAcaraService = async ({ name, description, endTime, image, isOpenAbsen, isOpenRegister, startTime }: CreateEventBodyRequest) => {
-    const openRegist = typeof isOpenRegister !== 'undefined' ? JSON.parse(String(isOpenRegister)) : undefined
-    const openAbsen = typeof isOpenAbsen !== 'undefined' ? JSON.parse(String(isOpenAbsen)) : undefined
-    const img = image as Express.Multer.File
-    const filename = `${img?.originalname.replace(FileType[img.mimetype], "")} - ${+new Date()}${FileType[img?.mimetype as string]}`
-    const validate = await acaraValidate({ name: name as string, image, endTime, startTime, isOpenRegister: openRegist, isOpenAbsen: openAbsen })
-    if (validate instanceof ErrorApp) {
-        return new ErrorApp(validate.message, validate.statusCode, validate.code)
+export const createAcaraService = async ({ name, description, endTime, image, isOpen, startTime }: CreateEventBodyRequest) => {
+    let filename
+    if (isOpen && !startTime) {
+        return new ErrorApp(MESSAGES.ERROR.REQUIRED.START_DATE, 400, MESSAGE_CODE.BAD_REQUEST)
     }
-    console.log({ image })
 
-    await UploadFileToStorage({
-        Bucket: environment.STORAGE.BUCKET,
-        Key: `assets/acara/${filename}`,
-        Body: img?.buffer as Buffer,
-        ContentType: img?.mimetype as string,
-        ACL: 'public-read',
-    })
-    // const path = (image as unknown as Express.Multer.File).path
-    const response = await createEvent({ name, image: filename, description, isOpenRegister: openRegist, endTime: new Date(endTime as Date), startTime: new Date(startTime as Date), isOpenAbsen: openAbsen })
-    return response
+    if (isOpen && !endTime) {
+        return new ErrorApp(MESSAGES.ERROR.REQUIRED.END_DATE, 400, MESSAGE_CODE.BAD_REQUEST)
+    }
+
+    if ((image as unknown as Express.Multer.File)?.size as number > 5242880) {
+        return new ErrorApp(MESSAGES.ERROR.INVALID.IMAGE_SIZE, 400, MESSAGE_CODE.BAD_REQUEST)
+    }
+    try {
+        const open = typeof isOpen !== 'undefined' ? JSON.parse(String(isOpen)) : undefined
+        
+        const img = image as Express.Multer.File
+        filename = `${img?.originalname.replace(FileType[img.mimetype], "")} - ${+new Date()}${FileType[img?.mimetype as string]}`
+        await UploadFileToStorage({
+            Bucket: environment.STORAGE.BUCKET,
+            Key: `dev/event/${filename}`,
+            Body: img?.buffer as Buffer,
+            ContentType: img?.mimetype as string,
+            ACL: 'public-read',
+        })
+
+        const response = await createEvent({ name, image: filename, description, isOpen: open, endTime: new Date(endTime as Date), startTime: new Date(startTime as Date) })
+        return response
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (error:any) {
+        if (error) {
+            if (image) {
+                    await RemoveFileFromStorage(
+                        `${environment.STORAGE.ENDPOINT}/images/${filename}`,
+                    )
+            }
+            return new ErrorApp(MESSAGE_CODE.BAD_REQUEST, 400, `${error?.message}`)
+        }
+    }
 }
 
 export const getAcaraService = async ({ search, page = 1, perPage = 10, openRegister = undefined }: IFilterEvent) => {
@@ -76,7 +93,7 @@ export const deleteAcaraService = async ({ id }: EventBodyDTO) => {
     const response = await deleteAcara(id as string)
     return response;
 }
-export const updateAcaraService = async ({ id, name, image, description, endTime, isOpenAbsen, isOpenRegister, startTime, }: CreateEventBodyRequest) => {
+export const updateAcaraService = async ({ id, name, image, description, endTime, isOpen, startTime, }: CreateEventBodyRequest) => {
 
     const matchAcara = await getEventById(id as string)
 
@@ -103,8 +120,8 @@ export const updateAcaraService = async ({ id, name, image, description, endTime
     if (name) updateFields.name = name;
     if (description) updateFields.description = description;
     if (image) updateFields.image = filename;
-    if (typeof isOpenRegister !== 'undefined') updateFields.isOpen = openValue(String(isOpenRegister));
-    if (typeof isOpenAbsen !== 'undefined') updateFields.isOpenAbsen = openValue(String(isOpenAbsen));
+    if (typeof isOpen !== 'undefined') updateFields.isOpen = openValue(String(isOpen));
+
     if (startTime) updateFields.startTime = new Date(startTime as Date);
     if (endTime) updateFields.endTime = new Date(endTime as Date);
     console.log(updateFields)

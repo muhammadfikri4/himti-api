@@ -4,7 +4,7 @@ export interface EventBodyDTO {
     name?: string
     description?: string,
     image?: string,
-    isOpenRegister?: boolean,
+    isOpen?: boolean,
     startTime?: Date,
     endTime?: Date
 }
@@ -13,8 +13,7 @@ export interface CreateEventBodyRequest {
     name?: string
     description?: string,
     image?: Express.Multer.File | string,
-    isOpenRegister?: boolean,
-    isOpenAbsen?: boolean,
+    isOpen?: boolean,
     startTime?: Date | string,
     endTime?: Date | string
 }

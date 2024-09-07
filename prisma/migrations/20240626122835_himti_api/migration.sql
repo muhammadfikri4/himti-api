@@ -1,8 +1,0 @@
--- AlterTable
-ALTER TABLE "Anggota" ALTER COLUMN "nim" SET DATA TYPE TEXT;
-
--- AlterTable
-ALTER TABLE "Angkatan" ALTER COLUMN "year" SET DATA TYPE TEXT;
-
--- AlterTable
-ALTER TABLE "Dosen" ALTER COLUMN "nidn" SET DATA TYPE TEXT;

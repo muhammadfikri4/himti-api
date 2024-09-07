@@ -37,19 +37,16 @@ export const getAllMember = async ({ page, perPage, search, year, status }: IFil
             {
                 name: {
                     contains: search,
-                    mode: 'insensitive'
                 },
             },
             {
                 email: {
                     contains: search,
-                    mode: 'insensitive'
                 },
             },
             {
                 nim: {
                     contains: search,
-                    mode: 'insensitive'
                 },
             },
 
@@ -95,19 +92,16 @@ export const getMemberCount = async ({ search, year }: IFilterAnggota, status?: 
             {
                 name: {
                     contains: search,
-                    mode: 'insensitive'
                 },
             },
             {
                 email: {
                     contains: search,
-                    mode: 'insensitive'
                 },
             },
             {
                 nim: {
                     contains: search,
-                    mode: 'insensitive'
                 },
             },
 

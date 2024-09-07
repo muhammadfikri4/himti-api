@@ -74,6 +74,10 @@
     "lint": "npx eslint ./src --ext .ts",
     "lint:fix": "npx eslint ./src --ext .ts --fix",
     "postinstall": "prisma generate",
-    "deploy:dev": "gcloud app deploy app.yaml --project=personal-fikri"
+    "deploy:dev": "gcloud app deploy app.yaml --project=personal-fikri",
+    "pr.generate": "npx prisma generate",
+    "pr.migrate": "npx prisma migrate dev",
+    "pr.reset": "npx prisma migrate reset",
+    "pr.push": "npx prisma db push"
   }
 }

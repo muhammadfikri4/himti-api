@@ -18,7 +18,7 @@ export const getGenerations = async ({ page, perPage, search }: IFilterGeneratio
     return await prisma.generation.findMany({
         where: {
             year: {
-                contains: search, mode: 'insensitive'
+                contains: search,
             },
         },
         orderBy: {
@@ -58,7 +58,6 @@ export const getGenerationCount = async ({ search }: IFilterGeneration) => {
         where: {
             year: {
                 contains: search,
-                mode: 'insensitive'
             },
             // isActive: status
         }

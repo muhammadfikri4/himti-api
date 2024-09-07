@@ -45,7 +45,7 @@ export const getNotificationDTOMapper = (data: NotificationData[], role: Role) =
         name: item.EventMeeting.name
       } : null,
       createdAt: FormatIDTime(item.createdAt),
-      updatedAt: FormatIDTime(item.updateAt)
+      updatedAt: FormatIDTime(item.updatedAt)
     };
 
     // Push the mapped item into the correct date group

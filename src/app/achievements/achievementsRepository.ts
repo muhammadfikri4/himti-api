@@ -1,7 +1,6 @@
 import { prisma } from "../../config"
 import { Query } from "../../interface/Query"
 
-type Mode = 'insensitive' | 'default'
 
 export const queryPagination = (query: Query) => {
 
@@ -17,7 +16,6 @@ export const querySearch = (query: Query) => {
     return {
         title: {
             contains: search,
-            mode: 'insensitive' as Mode
         }
     }
 }

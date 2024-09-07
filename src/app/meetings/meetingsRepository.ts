@@ -107,7 +107,6 @@ export const getMeetings = async (query: Query) => {
       EventMeeting: {
         name: {
           contains: search,
-          mode: 'insensitive'
         }
       }
     },
@@ -150,7 +149,6 @@ export const getMeetingsCount = async (query:Query) => {
       EventMeeting: {
         name: {
           contains: search,
-          mode: 'insensitive'
         }
       }
     },

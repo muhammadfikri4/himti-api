@@ -2,13 +2,13 @@ import { prisma } from "../../config";
 import { CreateEventBodyRequest, EventBodyDTO } from "./eventDTO";
 import { IFilterEvent } from "./eventTypes";
 
-export const createEvent = async ({ description, endTime, image, isOpenRegister, name, startTime }: CreateEventBodyRequest) => {
+export const createEvent = async ({ description, endTime, image,isOpen , name, startTime }: CreateEventBodyRequest) => {
     return await prisma.event.create({
         data: {
             name: name as string,
             description,
             endTime,
-            isOpen: isOpenRegister,
+            isOpen,
             startTime,
             image: image as string
         },
@@ -25,7 +25,6 @@ export const getEvents = async ({ page, perPage, search, openRegister }: IFilter
         where: {
             name: {
                 contains: search,
-                mode: 'insensitive'
             },
             isOpen: openRegister as boolean,
         },
@@ -50,7 +49,6 @@ export const getEventCount = async ({ search, openRegister }: IFilterEvent) => {
         where: {
             name: {
                 contains: search,
-                mode: 'insensitive'
             },
             isOpen: openRegister as boolean,
         },

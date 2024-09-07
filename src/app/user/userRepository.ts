@@ -48,19 +48,16 @@ export const getUsers = async ({ page, perPage, search, role }: IFilterUser) => 
             {
                 name: {
                     contains: search,
-                    mode: 'insensitive'
                 },
             },
             {
                 email: {
                     contains: search,
-                    mode: 'insensitive'
                 },
             },
             {
                 nim: {
                     contains: search,
-                    mode: 'insensitive'
                 },
             },
             {
@@ -97,19 +94,16 @@ export const getUsersCount = async ({ search }: IFilterUser) => {
             {
                 name: {
                     contains: search,
-                    mode: 'insensitive'
                 },
             },
             {
                 email: {
                     contains: search,
-                    mode: 'insensitive'
                 },
             },
             {
                 nim: {
                     contains: search,
-                    mode: 'insensitive'
                 },
             },
 

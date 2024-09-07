@@ -44,7 +44,6 @@ export const getMerchandises = async ({ page, perPage, search, }: IFilterBusines
             type: 'MERCHANDISE',
             title: {
                 contains: search,
-                mode: 'insensitive'
             }
         },
         orderBy: {
@@ -61,7 +60,6 @@ export const getMerchandisesCount = async ({ search, }: IFilterBusiness) => {
             type: 'MERCHANDISE',
             title: {
                 contains: search,
-                mode: 'insensitive'
             }
         }
     })
@@ -72,7 +70,6 @@ export const getServices = async ({ page, perPage, search, }: IFilterBusiness) =
             type: 'SERVICE',
             title: {
                 contains: search,
-                mode: 'insensitive'
             }
         },
         orderBy: {
@@ -89,7 +86,6 @@ export const getServicesCount = async ({ search }: IFilterBusiness) => {
             type: 'SERVICE',
             title: {
                 contains: search,
-                mode: 'insensitive'
             }
         }
     })

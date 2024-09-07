@@ -28,19 +28,16 @@ export const getDosen = async ({ page, perPage, search }: IFilterLecturer) => {
             {
                 email: {
                     contains: search,
-                    mode: 'insensitive'
                 }
             },
             {
                 name: {
                     contains: search,
-                    mode: 'insensitive'
                 }
             },
             {
                 nidn: {
                     contains: search,
-                    mode: 'insensitive'
                 }
             }
         ]
@@ -73,19 +70,16 @@ export const getDosenCount = async ({ search }: IFilterLecturer) => {
             {
                 email: {
                     contains: search,
-                    mode: 'insensitive'
                 }
             },
             {
                 name: {
                     contains: search,
-                    mode: 'insensitive'
                 }
             },
             {
                 nidn: {
                     contains: search,
-                    mode: 'insensitive'
                 }
             }
         ]
