@@ -21,7 +21,7 @@ export const environment = {
     EMAIL_SENDER: env.EMAIL_SENDER,
     FIREBASE: {
         CLIENT_EMAIL: env.FIREBASE_CLIENT_EMAIL,
-        PRIVATE_KEY: env.FIREBASE_PRIVATE_KEY,
+        PRIVATE_KEY: env.FIREBASE_PRIVATE_KEY ?? '',
         PROJECT_ID: env.FIREBASE_PROJECT_ID
     },
     TESTING_FCM: env.TESTING_FCM,

@@ -5,7 +5,7 @@ import { environment } from '../libs';
 export const firebase = admin.initializeApp({
     credential: admin.credential.cert({
         clientEmail: environment.FIREBASE.CLIENT_EMAIL,
-        privateKey: environment.FIREBASE.PRIVATE_KEY,
+        privateKey: environment.FIREBASE.PRIVATE_KEY.replace(/\\n/g, '\n'),
         projectId: environment.FIREBASE.PROJECT_ID
     })
 })
