@@ -8,8 +8,7 @@ export const createEventSchema = Joi.object({
     description: Joi.string().required().messages({
         "any.string": MESSAGES.ERROR.REQUIRED.DESCRIPTION
     }),
-    isOpenRegister: Joi.optional(),
-    isOpenAbsen: Joi.optional(),
+    isOpen: Joi.optional(),
     startTime: Joi.date().required().messages({
         "any.required": MESSAGES.ERROR.REQUIRED.START_TIME,
         "date.base": MESSAGES.ERROR.INVALID.DATE

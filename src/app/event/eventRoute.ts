@@ -1,8 +1,8 @@
 import { Router } from "express";
-import { upload as UploadFile } from "../../utils/UploadFileToStorage";
 import { VerifyToken } from "../../middleware/verifyToken";
 import { CatchWrapper } from "../../utils/CatchWrapper";
-import { createEventController, deleteEventController, getEventController, getDetailEventController, updateEventController } from "./eventController";
+import { upload as UploadFile } from "../../utils/UploadFileToStorage";
+import { createEventController, deleteEventController, getDetailEventController, getEventController, updateEventController } from "./eventController";
 
 const route = Router()
 

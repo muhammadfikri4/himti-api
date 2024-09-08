@@ -22,7 +22,7 @@ export const createEvent = async ({ description, endTime, image, isOpen, name, s
 
 
 export const getEvents = async (query: Query) => {
-    const { isOpen, page, perPage, search } = query
+    const { isOpen, page = '1', perPage = '10', search } = query
     return await prisma.event.findMany({
         where: {
             name: {

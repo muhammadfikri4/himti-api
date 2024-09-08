@@ -68,7 +68,6 @@ export const getEventService = async (query: Query) => {
 
     const { page = '1', perPage = '10'} = query
 
-
     const [acara, totalData] = await Promise.all([
         getEvents(query),
         getEventCount(query)

@@ -3,8 +3,8 @@ import { MESSAGE_CODE } from "../../utils/ErrorCode";
 import { HandleResponse } from "../../utils/HandleResponse";
 import { ErrorApp } from "../../utils/HttpError";
 import { MESSAGES } from "../../utils/Messages";
-import { createEventService, deleteEventService, getEventService, getDetailEventService, updateEventService } from "./eventService";
 import { createEventSchema } from "./eventRequest";
+import { createEventService, deleteEventService, getDetailEventService, getEventService, updateEventService } from "./eventService";
 
 
 
@@ -15,10 +15,14 @@ export const createEventController = async (
     res: Response,
     next: NextFunction) => {
 
-    const {body} = req
+    const { body } = req
     const file = req.file
-    const combine = { ...body, image: file }
+    const combine = { ...body }
+    if(file) {
+        combine.image = file
+    }
     const validate = createEventSchema.validate(combine)
+    console.log(validate)
     if (validate.error) {
         next(new ErrorApp(validate.error.message.replace(/"/g, ''), 400, MESSAGE_CODE.BAD_REQUEST))
         return
