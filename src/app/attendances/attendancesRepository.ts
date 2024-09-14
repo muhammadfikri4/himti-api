@@ -103,6 +103,7 @@ export const getAttendanceByUserId = (userId: string, eventMeetingId?: string) =
             image:true,
             meetingId: true,
             eventMeetingId: true,
+            attendanceTime: true,
             Meeting: {
                 select: {
                     id: true,
