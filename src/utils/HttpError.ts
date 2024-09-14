@@ -1,3 +1,4 @@
+import { CODE } from "../interface";
 
 export interface HttpError extends Error {
     statusCode: number;
@@ -17,8 +18,8 @@ export const AppError = (message: string, statusCode: number, code: string) => {
 export class ErrorApp extends Error {
     message: string
     statusCode: number
-    code: string
-    constructor(message: string, statusCode: number, code: string) {
+    code: CODE
+    constructor(message: string, statusCode: number, code: CODE) {
         super(message)
         this.statusCode = statusCode
         this.code = code

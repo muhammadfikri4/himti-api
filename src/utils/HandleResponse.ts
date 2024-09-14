@@ -1,11 +1,11 @@
 import { type Response } from 'express'
-import { MetaResponse } from '../interface/ResponseInterface'
+import { CODE, MetaResponse } from '../interface/ResponseInterface'
 import { ApiResponse } from './ApiResponse'
 
 export function HandleResponse<Res = unknown>(
     res: Response,
     status: number,
-    code: string,
+    code: CODE,
     message: string,
     data?: Res,
     meta?: MetaResponse

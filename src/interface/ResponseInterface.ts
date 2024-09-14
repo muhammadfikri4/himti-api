@@ -1,4 +1,4 @@
-export type CODE = "UNAUTHORIZED" | "NOT FOUND" | "BAD REQUEST" | "INTERNAL SERVER ERROR" | "SUCCESS" | "CREATED"
+export type CODE = "UNAUTHORIZED" | "NOT FOUND" | "BAD REQUEST" | "INTERNAL SERVER ERROR" | "SUCCESS" | "CREATED" | "FORBIDDEN"
 
 export interface MetaResponse {
     page: number,

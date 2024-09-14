@@ -59,7 +59,7 @@ export const createEventService = async ({ name, description, endTime, image, is
                     `${environment.STORAGE.BUCKET_FOLDER}/${BUCKET_FOLDER.event}/${filename}`,
                 )
             }
-            return new ErrorApp(MESSAGE_CODE.BAD_REQUEST, 400, `${error?.message}`)
+            return new ErrorApp(MESSAGE_CODE.BAD_REQUEST, 400, error?.message)
         }
     }
 }
