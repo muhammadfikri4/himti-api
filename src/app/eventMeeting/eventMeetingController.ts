@@ -44,7 +44,7 @@ export const getEventMeetingWithMeetingController = async(
 ) => {
 
   const {query, userId} = req
-
+console.log({userId})
   const result = await getEventMeetingWithMeetingService(query, userId as string)
 
   if (result instanceof ErrorApp) {

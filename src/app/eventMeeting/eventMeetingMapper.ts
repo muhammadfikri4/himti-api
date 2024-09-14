@@ -24,14 +24,17 @@ export const getEventMeetingWithMeetingDTOMapper = (data: EventMeetingData[], us
       id: item.id,
       name: item.name,
     },
-    meeting: item.Meeting.map(subitem => ({
-      id: subitem.id,
-      name: subitem.name,
-      description: subitem.description as string,
-      startTime: subitem.startTime as Date,
-      endTime: subitem.endTime as Date,
-      isOpen: generateOpen(subitem.startTime, subitem.endTime),
-      isAlreadyAttend: !!subitem.Attendance.find((item) => item.userId === userId)
-    }))
+    meeting: item.Meeting.map(subitem => {
+      console.log(subitem)
+      return {
+        id: subitem.id,
+        name: subitem.name,
+        description: subitem.description as string,
+        startTime: subitem.startTime as Date,
+        endTime: subitem.endTime as Date,
+        isOpen: generateOpen(subitem.startTime, subitem.endTime),
+        isAlreadyAttend: !!subitem.Attendance.find((item) => item.userId === userId)
+      }
+    })
   }))
 }
