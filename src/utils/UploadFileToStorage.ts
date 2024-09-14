@@ -28,6 +28,7 @@ export const FileType: Record<string, string> = {
     'image/jpeg': '.jpeg',
     'image/jpg': '.jpg',
     'application/pdf': '.pdf',
+    'application/octet-stream': '.jpg'
 }
 
 export const storage = multer.memoryStorage()

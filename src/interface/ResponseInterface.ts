@@ -8,7 +8,7 @@ export interface MetaResponse {
 }
 
 export interface ResponseInterface<Res = unknown> {
-    code: string,
+    code: CODE,
     status: number,
     data?: Res,
     message: string,
