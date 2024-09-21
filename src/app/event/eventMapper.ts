@@ -1,6 +1,7 @@
 import { Attendance, Event, Meeting } from "@prisma/client";
 import { ImagePath } from "../../utils/ImagePath";
 import { EventDTO } from "./eventDTO";
+import { generateOpen } from "../../utils/GenerateOpen";
 
 export interface AttendanceMeetingData extends Meeting {
     attendance: Attendance[]
@@ -15,7 +16,7 @@ export const eventsDTOMapper = (acaras: Event[]): EventDTO[] => {
             image: acara.image.includes('https') ? acara.image : ImagePath(`event/${acara.image}`),
             name: acara.name,
             startTime: acara.startTime as Date,
-            isOpen: acara.isOpen,
+            isOpen: generateOpen(acara.startTime as Date, acara.endTime as Date),
         }
     })
 }
@@ -27,7 +28,7 @@ export const eventDTOMapper = (event: Event): EventDTO => {
         image: event.image.includes('https') ? event.image : ImagePath(`event/${event.image}`),
         startTime: event.startTime as Date,
         endTime: event.endTime as Date,
-        isOpen: event.isOpen,
+        isOpen: generateOpen(event.startTime as Date, event.endTime as Date),
     }
 }
 
