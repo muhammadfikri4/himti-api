@@ -41,16 +41,17 @@ export const getEventMeetings = async (query: Query) => {
       id: true,
       name: true,
       Meeting: {
+        orderBy: {
+          createdAt: 'desc',
+        },
         select: {
           id: true,
           name: true,
           description: true,
           startTime: true,
           endTime: true,
+          createdAt: true,
           Attendance: {
-            orderBy: {
-              createdAt: 'desc',
-            },
             select: {
               userId: true
             }
