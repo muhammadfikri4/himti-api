@@ -12,6 +12,7 @@ export const VerifySuperAdmin = (req: Request, res: Response, next: NextFunction
         return HandleResponse(res, 401, MESSAGE_CODE.UNAUTHORIZED, MESSAGES.ERROR.UNAUTHORIZED.FORBIDDEN)
     }
     const token = req.headers.authorization.replace("Bearer ", "")
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     verify(token, environment.JWT_SECRET as string, async (err: any) => {
         if (err) {
             if (err instanceof TokenExpiredError) {

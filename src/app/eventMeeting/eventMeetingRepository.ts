@@ -48,6 +48,9 @@ export const getEventMeetings = async (query: Query) => {
           startTime: true,
           endTime: true,
           Attendance: {
+            orderBy: {
+              createdAt: 'desc',
+            },
             select: {
               userId: true
             }

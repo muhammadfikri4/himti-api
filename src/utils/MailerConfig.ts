@@ -1,4 +1,4 @@
-import nodemailer from 'nodemailer';
+import nodemailer, {type TransportOptions} from 'nodemailer';
 import { environment } from '../libs';
 
 export const message = (name: string, otp: number) => {
@@ -16,7 +16,7 @@ export const transporter = nodemailer.createTransport({
         user: environment.SMTP_LOGIN,
         pass: environment.SMTP_PASSWORD
     }
-} as any);
+} as TransportOptions);
 // export const transporter = nodemailer.createTransport({
 //     service: 'gmail',
 //     host: 'smtp.gmail.com',
