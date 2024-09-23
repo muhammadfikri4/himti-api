@@ -134,14 +134,14 @@ model EventMeeting {
 model Meeting {
   id             String       @id @unique @default(uuid())
   name           String       @db.VarChar(155)
-  description    String?      @db.VarChar(500)
+  description    String?      @db.LongText
   startTime      DateTime     @map("start_time") @db.Timestamp(0)
   endTime        DateTime     @map("end_time") @db.Timestamp(0)
   eventMeetingId String       @map("event_meeting_id") @db.VarChar(110)
   EventMeeting   EventMeeting @relation(fields: [eventMeetingId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   createdAt      DateTime     @default(now()) @map("created_at") @db.Timestamp(0)
   updatedAt      DateTime     @updatedAt @map("updated_at") @db.Timestamp(0)
-  resume         String?      @db.VarChar(650)
+  resume         String?      @db.LongText
   Attendance     Attendance[]
 
   @@index([eventMeetingId], map: "meeting_fk_1")
