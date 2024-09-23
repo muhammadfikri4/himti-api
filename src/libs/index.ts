@@ -1,0 +1,41 @@
+import dotenv from 'dotenv'
+
+dotenv.config()
+
+const env = process.env
+
+export const environment = {
+    DB_URL: env.DB_URL,
+    PORT: env.PORT,
+    JWT_SECRET: env.JWT_SECRET,
+    JWT_EXPIRES: env.JWT_EXPIRES ?? '14d',
+    CLOUDINARY_API_KEY: env.CLOUDINARY_API_KEY,
+    CLOUDINARY_API_SECRET: env.CLOUDINARY_API_SECRET,
+    CLOUDINARY_CLOUD_NAME: env.CLOUDINARY_CLOUD_NAME,
+    ANGGOTA_CODE: env.ANGGOTA_CODE,
+    SMTP_USER: env.SMTP_USER,
+    SMTP_PASSWORD: env.SMTP_PASSWORD,
+    SMTP_HOST: env.SMTP_HOST,
+    SMTP_PORT: env.SMTP_PORT,
+    SMTP_LOGIN: env.SMTP_LOGIN,
+    EMAIL_SENDER: env.EMAIL_SENDER,
+    FIREBASE: {
+        CLIENT_EMAIL: env.FIREBASE_CLIENT_EMAIL,
+        PRIVATE_KEY: env.FIREBASE_PRIVATE_KEY ?? '',
+        PROJECT_ID: env.FIREBASE_PROJECT_ID
+    },
+    TESTING_FCM: env.TESTING_FCM,
+    REDIS: {
+        PASSWORD: env.REDIS_PASSWORD,
+        HOST: env.REDIS_HOST,
+        PORT: env.REDIS_PORT
+    },
+    STORAGE: {
+        BUCKET: env.AWS_STORAGE_BUCKET ?? '',
+        ENDPOINT: env.AWS_STORAGE_ENDPOINT ?? '',
+        REGION: env.AWS_STORAGE_REGION ?? '',
+        ACCESS_KEY: env.AWS_STORAGE_ACCESS_KEY ?? '',
+        SECRET_KEY: env.AWS_STORAGE_SECRET_KEY ?? '',
+        BUCKET_FOLDER: env.AWS_STORAGE_BUCKET_FOLDER ?? ''
+    }
+}

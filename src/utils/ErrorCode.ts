@@ -1,0 +1,11 @@
+import { CODE } from "../interface";
+
+export const MESSAGE_CODE: Record<string, CODE> = {
+    NOT_FOUND: "NOT FOUND",
+    UNAUTHORIZED: "UNAUTHORIZED",
+    FORBIDDEN: "FORBIDDEN",
+    BAD_REQUEST: "BAD REQUEST",
+    CREATED: "CREATED",
+    SUCCESS: "SUCCESS",
+    INTERNAL_SERVER_ERROR: "INTERNAL SERVER ERROR"
+}

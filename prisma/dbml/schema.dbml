@@ -1,0 +1,247 @@
+//// ------------------------------------------------------
+//// THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+//// ------------------------------------------------------
+
+Table user {
+  id String [pk]
+  name String [not null]
+  email String [unique, not null]
+  password String [not null]
+  role Role [default: 'ADMIN']
+  nim String
+  memberId String
+  Attendance attendance [not null]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  isLogin Boolean [not null, default: false]
+  Member member
+  Point points [not null]
+  UserFCM user_fcm [not null]
+  NotificationHistory notification_history [not null]
+}
+
+Table user_fcm {
+  id String [pk]
+  userId String [not null]
+  fcmToken String [not null]
+  User user [not null]
+}
+
+Table lecturer {
+  id String [pk]
+  nidn String [unique, not null]
+  name String [not null]
+  email String [unique]
+  numberPhone String
+  lesson String
+  isActive Boolean [not null, default: true]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+}
+
+Table generation {
+  id String [pk]
+  year String [not null]
+  isActive Boolean [not null, default: true]
+  member member [not null]
+  createdAt DateTime [default: `now()`]
+  updatedAt DateTime
+}
+
+Table member {
+  id String [pk]
+  name String [not null]
+  email String
+  nim String [unique]
+  generationId String [not null]
+  isActive Boolean [default: true]
+  instagram String
+  facebook String
+  twitter String
+  linkedin String
+  Generation generation [not null]
+  Structural structural [not null]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  User user [not null]
+}
+
+Table structural {
+  id String [pk]
+  jabatan Jabatan [not null]
+  image String [not null]
+  memberId String [not null]
+  isActive Boolean [not null, default: true]
+  Member member [not null]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+}
+
+Table event {
+  id String [pk]
+  name String [not null]
+  description String
+  image String [not null]
+  isOpen Boolean [not null, default: true]
+  endTime DateTime [default: `now()`]
+  startTime DateTime [default: `now()`]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  deletedAt DateTime
+  NotificationHistory notification_history [not null]
+}
+
+Table event_meeting {
+  id String [pk]
+  name String [not null]
+  description String
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  Meeting meeting [not null]
+  NotificationHistory notification_history [not null]
+  Attendance attendance [not null]
+}
+
+Table meeting {
+  id String [pk]
+  name String [not null]
+  description String
+  startTime DateTime [not null]
+  endTime DateTime [not null]
+  eventMeetingId String [not null]
+  EventMeeting event_meeting [not null]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  resume String
+  Attendance attendance [not null]
+}
+
+Table attendance {
+  id Int [pk, increment]
+  image String [not null]
+  userId String [not null]
+  meetingId String [not null]
+  eventMeetingId String [not null]
+  coordinate String [not null]
+  address String
+  attendanceTime String
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  User user [not null]
+  Meeting meeting [not null]
+  EventMeeting event_meeting [not null]
+  Point points [not null]
+}
+
+Table achievement {
+  id Int [pk, increment]
+  image String [not null]
+  title String [not null]
+  description String
+  timeDate DateTime
+  timeString String
+  createdAt DateTime [default: `now()`]
+  updatedAt DateTime
+}
+
+Table business {
+  id Int [pk, increment]
+  image String [not null]
+  title String [not null]
+  description String
+  price String [not null]
+  type BussinessType [default: 'MERCHANDISE']
+  createdAt DateTime [default: `now()`]
+  updatedAt DateTime
+}
+
+Table otps {
+  id String [pk]
+  email String [not null]
+  otp String [not null]
+  isVerified Boolean [not null, default: false]
+  expired DateTime
+  createdAt DateTime [default: `now()`]
+  updatedAt DateTime
+}
+
+Table points {
+  id Int [pk, increment]
+  point Int [not null]
+  userId String [not null]
+  user user [not null]
+  attendanceId Int [not null]
+  attendance attendance [not null]
+  createdAt DateTime [default: `now()`]
+  updatedAt DateTime
+}
+
+Table notification_history {
+  id String [pk]
+  eventId String
+  userId String [not null]
+  eventMeetingId String
+  Event event
+  User user [not null]
+  EventMeeting event_meeting
+  title String [not null]
+  body String [not null]
+  isRead Boolean [not null]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+}
+
+Table version {
+  id Int [pk, increment]
+  androidVersion String
+  iosVersion String
+  playstoreLink String
+  appStoreLink String
+  notes String
+}
+
+Enum Jabatan {
+  KETUA_HIMPUNAN
+  WAKIL_KETUA_HIMPUNAN
+  BENDAHARA
+  SEKRETARIS
+  KETUA_DEPARTMENT
+}
+
+Enum Role {
+  SUPER_ADMIN
+  ADMIN
+  USER
+  ANGGOTA
+}
+
+Enum BussinessType {
+  MERCHANDISE
+  SERVICE
+}
+
+Ref: user.memberId > member.id [delete: No Action]
+
+Ref: user_fcm.userId > user.id [delete: No Action]
+
+Ref: member.generationId > generation.id
+
+Ref: structural.memberId > member.id
+
+Ref: meeting.eventMeetingId > event_meeting.id [delete: No Action]
+
+Ref: attendance.userId > user.id [delete: No Action]
+
+Ref: attendance.meetingId > meeting.id [delete: No Action]
+
+Ref: attendance.eventMeetingId > event_meeting.id [delete: No Action]
+
+Ref: points.userId > user.id [delete: No Action]
+
+Ref: points.attendanceId > attendance.id [delete: No Action]
+
+Ref: notification_history.eventId > event.id [delete: No Action]
+
+Ref: notification_history.userId > user.id [delete: No Action]
+
+Ref: notification_history.eventMeetingId > event_meeting.id [delete: No Action]

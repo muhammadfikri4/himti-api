@@ -1,0 +1,274 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                  String                @id @default(uuid())
+  name                String                @db.VarChar(255)
+  email               String                @unique @db.VarChar(110)
+  password            String                @db.VarChar(110)
+  role                Role?                 @default(ADMIN)
+  nim                 String?               @db.VarChar(20)
+  memberId            String?               @map("member_id") @db.VarChar(110)
+  Attendance          Attendance[]
+  createdAt           DateTime              @default(now()) @map("created_at") @db.DateTime(0)
+  updatedAt           DateTime              @updatedAt @map("updated_at") @db.DateTime(0)
+  isLogin             Boolean               @default(false) @map("is_login")
+  Member              Member?               @relation(fields: [memberId], references: [id], onDelete: NoAction)
+  Point               Point[]
+  UserFCM             UserFCM[]
+  NotificationHistory NotificationHistory[]
+
+  @@index([memberId], map: "user_fk_1")
+  @@index([email], map: "user_fk_2")
+  @@map("user")
+}
+
+model UserFCM {
+  id       String @id @unique @default(uuid())
+  userId   String @map("user_id") @db.VarChar(110)
+  fcmToken String @map("fcm_token") @db.VarChar(255)
+  User     User   @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@index([userId], map: "user_fcm_fk_1")
+  @@map("user_fcm")
+}
+
+model Lecturer {
+  id          String    @id @default(uuid())
+  nidn        String    @unique @db.VarChar(50)
+  name        String    @db.VarChar(255)
+  email       String?   @unique @db.VarChar(50)
+  numberPhone String?   @map("number_phone") @db.VarChar(50)
+  lesson      String?   @db.VarChar(50)
+  isActive    Boolean   @default(true) @map("is_active")
+  createdAt   DateTime @default(now()) @map("created_at") @db.Timestamp(0)
+  updatedAt   DateTime @updatedAt @map("updated_at") @db.Timestamp(0)
+
+  @@index([name], map: "lecturer_fk_1")
+  @@index([nidn], map: "lecturer_fk_2")
+  @@map("lecturer")
+}
+
+model Generation {
+  id        String    @id @default(uuid())
+  year      String    @db.VarChar(20)
+  isActive  Boolean   @default(true) @map("is_active")
+  member    Member[]
+  createdAt DateTime? @default(now()) @map("created_at") @db.Timestamp(0)
+  updatedAt DateTime? @updatedAt @map("updated_at") @db.Timestamp(0)
+
+  @@index([year], map: "generation_fk_1")
+  @@map("generation")
+}
+
+model Member {
+  id           String       @id @default(uuid())
+  name         String       @db.VarChar(255)
+  email        String?      @db.VarChar(55)
+  nim          String?      @unique @db.VarChar(110)
+  generationId String       @map("generation_id")
+  isActive     Boolean?     @default(true) @map("is_active")
+  instagram    String?      @db.VarChar(50)
+  facebook     String?      @db.VarChar(50)
+  twitter      String?      @db.VarChar(50)
+  linkedin     String?      @db.VarChar(50)
+  Generation   Generation   @relation(fields: [generationId], references: [id])
+  Structural   Structural[]
+  createdAt    DateTime     @default(now()) @map("created_at") @db.Timestamp(0)
+  updatedAt    DateTime     @updatedAt @map("updated_at") @db.Timestamp(0)
+  User         User[]
+
+  @@index([generationId], map: "member_fk_1")
+  @@map("member")
+}
+
+model Structural {
+  id        String   @id @unique @default(uuid())
+  jabatan   Jabatan
+  image     String   @db.VarChar(255)
+  memberId  String   @map("member_id") @db.VarChar(110)
+  isActive  Boolean  @default(true) @map("is_active")
+  Member    Member   @relation(fields: [memberId], references: [id])
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamp(0)
+  updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamp(0)
+
+  @@index([memberId], map: "struktural_fk_1")
+  @@map("structural")
+}
+
+model Event {
+  id                  String                @id @unique @default(uuid())
+  name                String                @db.VarChar(255)
+  description         String?               @db.Text
+  image               String                @db.VarChar(255)
+  isOpen              Boolean               @default(true) @map("is_open")
+  endTime             DateTime?             @default(now()) @map("end_time")
+  startTime           DateTime?             @default(now()) @map("start_time")
+  createdAt           DateTime              @default(now()) @map("created_at") @db.Timestamp(0)
+  updatedAt           DateTime              @updatedAt @map("updated_at") @db.Timestamp(0)
+  deletedAt           DateTime?             @map("deleted_at")
+  NotificationHistory NotificationHistory[]
+
+  @@map("event")
+}
+
+model EventMeeting {
+  id                  String                @id @unique @default(uuid())
+  name                String                @db.VarChar(155)
+  description         String?               @db.VarChar(500)
+  createdAt           DateTime              @default(now()) @map("created_at") @db.Timestamp(0)
+  updatedAt           DateTime              @updatedAt @map("updated_at") @db.Timestamp(0)
+  Meeting             Meeting[]
+  NotificationHistory NotificationHistory[]
+  Attendance          Attendance[]
+
+  @@map("event_meeting")
+}
+
+model Meeting {
+  id             String       @id @unique @default(uuid())
+  name           String       @db.VarChar(155)
+  description    String?      @db.LongText
+  startTime      DateTime     @map("start_time") @db.Timestamp(0)
+  endTime        DateTime     @map("end_time") @db.Timestamp(0)
+  eventMeetingId String       @map("event_meeting_id") @db.VarChar(110)
+  EventMeeting   EventMeeting @relation(fields: [eventMeetingId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  createdAt      DateTime     @default(now()) @map("created_at") @db.Timestamp(0)
+  updatedAt      DateTime     @updatedAt @map("updated_at") @db.Timestamp(0)
+  resume         String?      @db.LongText
+  Attendance     Attendance[]
+
+  @@index([eventMeetingId], map: "meeting_fk_1")
+  @@map("meeting")
+}
+
+model Attendance {
+  id             Int          @id @unique @default(autoincrement())
+  image          String       @db.VarChar(255)
+  userId         String       @map("user_id") @db.VarChar(110)
+  meetingId      String       @map("meeting_id") @db.VarChar(110)
+  eventMeetingId String       @map("event_meeting_id") @db.VarChar(110)
+  coordinate     String       @db.VarChar(110)
+  address        String?      @db.VarChar(255)
+  attendanceTime String?      @map("attendance_time") @db.VarChar(150)
+  createdAt      DateTime     @default(now()) @map("created_at") @db.Timestamp(0)
+  updatedAt      DateTime     @updatedAt @map("updated_at") @db.Timestamp(0)
+  User           User         @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  Meeting        Meeting      @relation(fields: [meetingId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  EventMeeting   EventMeeting @relation(fields: [eventMeetingId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  Point          Point[]
+
+  @@index([userId], map: "attendance_fk_1")
+  @@index([meetingId], map: "attendance_fk_2")
+  @@index([eventMeetingId], map: "attendance_fk_3")
+  @@map("attendance")
+}
+
+model Achievement {
+  id          Int       @id @unique @default(autoincrement())
+  image       String    @db.VarChar(255)
+  title       String    @db.VarChar(255)
+  description String?   @db.Text
+  timeDate    DateTime? @map("time_date") @db.Timestamp(0)
+  timeString  String?   @map("time_string") @db.VarChar(50)
+  createdAt   DateTime? @default(now()) @map("created_at") @db.Timestamp(0)
+  updatedAt   DateTime? @updatedAt @map("updated_at") @db.Timestamp(0)
+
+  @@map("achievement")
+}
+
+model Bussiness {
+  id          Int            @id @unique @default(autoincrement())
+  image       String         @db.VarChar(255)
+  title       String         @db.VarChar(110)
+  description String?        @db.Text
+  price       String         @db.VarChar(50)
+  type        BussinessType? @default(MERCHANDISE)
+  createdAt   DateTime?      @default(now()) @map("created_at") @db.Timestamp(0)
+  updatedAt   DateTime?      @updatedAt @map("updated_at") @db.Timestamp(0)
+
+  @@map("business")
+}
+
+model OTP {
+  id         String    @id @unique @default(uuid())
+  email      String    @db.VarChar(50)
+  otp        String    @db.VarChar(500)
+  isVerified Boolean   @default(false) @map("is_verified")
+  expired    DateTime? @db.Timestamp(0)
+  createdAt  DateTime? @default(now()) @map("created_at") @db.Timestamp(0)
+  updatedAt  DateTime? @updatedAt @map("updated_at") @db.Timestamp()
+
+  @@map("otps")
+}
+
+model Point {
+  id           Int        @id @unique @default(autoincrement())
+  point        Int
+  userId       String
+  user         User       @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  attendanceId Int
+  attendance   Attendance @relation(fields: [attendanceId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  createdAt    DateTime?  @default(now()) @map("created_at")
+  updatedAt    DateTime?  @updatedAt @map("updated_at")
+
+  @@index([userId], map: "point_fk_1")
+  @@index([attendanceId], map: "point_fk_2")
+  @@map("points")
+}
+
+model NotificationHistory {
+  id             String        @id @unique @default(uuid())
+  eventId        String?       @map("acara_id") @db.VarChar(110)
+  userId         String        @map("user_id") @db.VarChar(110)
+  eventMeetingId String?       @map("event_meeting_id") @db.VarChar(110)
+  Event          Event?        @relation(fields: [eventId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  User           User          @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  EventMeeting   EventMeeting? @relation(fields: [eventMeetingId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  title          String        @db.VarChar(155)
+  body           String        @db.VarChar(500)
+  isRead         Boolean
+  createdAt      DateTime      @default(now()) @map("created_at") @db.Timestamp(0)
+  updatedAt      DateTime      @updatedAt @map("updated_at") @db.Timestamp(0)
+
+  @@index([eventId], map: "notification_history_fk_1")
+  @@index([userId], map: "notification_history_fk_2")
+  @@map("notification_history")
+}
+
+model Version {
+  id             Int     @id @default(autoincrement())
+  androidVersion String? @map("android_version") @db.VarChar(110)
+  iosVersion     String? @map("ios_version") @db.VarChar(110)
+  playstoreLink  String? @map("play_store_link") @db.VarChar(300)
+  appStoreLink   String? @map("app_store_link") @db.VarChar(300)
+  notes          String? @db.VarChar(500)
+
+  @@map("version")
+}
+
+enum Jabatan {
+  KETUA_HIMPUNAN
+  WAKIL_KETUA_HIMPUNAN
+  BENDAHARA
+  SEKRETARIS
+  KETUA_DEPARTMENT
+}
+
+enum Role {
+  SUPER_ADMIN
+  ADMIN
+  USER
+  ANGGOTA
+}
+
+enum BussinessType {
+  MERCHANDISE
+  SERVICE
+}

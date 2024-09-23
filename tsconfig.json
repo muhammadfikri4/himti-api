@@ -3,6 +3,7 @@
     /* Language and Environment */
     "baseUrl": "./src", /* Set to the root of your source files */
     "target": "ES2017",
+    "resolveJsonModule": true,
     /* Modules */
     "module": "commonjs",
     "outDir": "./dist",
@@ -12,11 +13,6 @@
     "skipLibCheck": true,
     "incremental": true,
     "tsBuildInfoFile": "./dist/.tsbuildinfo",
-    "paths": {
-      "@app/*": ["app/*"],
-      "@model/*": ["config/model/*"],
-      "@utils/*": ["utils/*"]
-    }
   },
-  "include": ["src"]
+  "include": ["src"],
 }
