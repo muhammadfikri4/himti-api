@@ -21,5 +21,6 @@ export const getVersionService = async () => {
         return new ErrorApp(MESSAGES.ERROR.NOT_FOUND.VERSION, 404, MESSAGE_CODE.NOT_FOUND)
     }
     const { id, ...rest } = version
+    id.toString();
     return rest
 }
