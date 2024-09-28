@@ -40,9 +40,9 @@ export const getMembersService = async ({ search, page = 1, perPage = 10, year, 
     const meta = Meta(page, perPage, totalData)
 
 
-    if (!data.length && !meta.totalPages && !meta.totalData) {
-        return new ErrorApp(MESSAGES.ERROR.NOT_FOUND.ANGGOTA, 404, MESSAGE_CODE.NOT_FOUND)
-    }
+    // if (!data.length && !meta.totalPages && !meta.totalData) {
+    //     return new ErrorApp(MESSAGES.ERROR.NOT_FOUND.ANGGOTA, 404, MESSAGE_CODE.NOT_FOUND)
+    // }
 
     return {
         data,

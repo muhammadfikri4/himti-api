@@ -1,8 +1,7 @@
-import { FormatIDTime } from "./FormatIDTime"
 
 export const generateOpen = (startTime: Date, endTime: Date): boolean => {
 
-  const now = FormatIDTime(new Date(), 'date')
+  const now = new Date()
   const isExpiredEnd = new Date(endTime as Date) < new Date(now)
   const isExpiredStart = new Date(startTime as Date) < new Date(now)
 
