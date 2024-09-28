@@ -1,14 +1,14 @@
 import { prisma } from "../../config"
 import { NotificationBodyRequest } from "./notificationDTO"
 
-export const createNotification = async ({ body, title, eventId, eventMeetingId, userId }: NotificationBodyRequest) => {
+export const createNotification = async ({ body, title, eventId, meetingId, userId }: NotificationBodyRequest) => {
     return await prisma.notificationHistory.create({
         data: {
             title,
             body,
             eventId: eventId ? eventId : null,
             isRead: false,
-            eventMeetingId: eventMeetingId ? eventMeetingId : null,
+            meetingId: meetingId ? meetingId : null,
             userId: userId as string
         },
         select: {
@@ -31,7 +31,7 @@ export const getNotifications = async (userId: string) => {
                     name: true,
                 }
             },
-            EventMeeting: true
+            Meeting: true
 
         },
         orderBy: {
