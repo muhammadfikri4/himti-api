@@ -10,12 +10,5 @@ export const generationMapper = (generations: Generation[]) => {
       isActive: Number(generation.year) <= now - 5 ? false : true,
     };
   });
-  return [
-    {
-      id: "all",
-      year: "all",
-      isActive: true,
-    },
-    ...data,
-  ];
+  return data;
 };
