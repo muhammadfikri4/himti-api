@@ -15,6 +15,8 @@ export interface MeetingEv {
   description: string
   startTime: Date
   endTime: Date
+  startTimeID: Date
+  endTimeID: Date
   isOpen:boolean
   isAlreadyAttend: boolean
 }
