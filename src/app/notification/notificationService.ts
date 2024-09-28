@@ -17,7 +17,7 @@ export const sendNotificationService = async (
     title: string = 'testing title notification',
     body: string = 'testing body notification',
     eventId?: string,
-    eventMeetingId?: string
+    meetingId?: string
 ) => {
 
     const fcm = await getAllFCMUser(1, 99999999)
@@ -26,8 +26,8 @@ export const sendNotificationService = async (
         return new ErrorApp(MESSAGES.ERROR.NOT_FOUND.USER.FCM_USER, 404, MESSAGE_CODE.NOT_FOUND)
     }
 
-    if (eventMeetingId) {
-        const sub = await getEventMeetingById(eventMeetingId)
+    if (meetingId) {
+        const sub = await getEventMeetingById(meetingId)
         if (!sub) {
             return new ErrorApp(MESSAGES.ERROR.NOT_FOUND.EVENT_MEETING, 404, MESSAGE_CODE.NOT_FOUND)
         }
@@ -39,7 +39,7 @@ export const sendNotificationService = async (
 
             const message = NotificationMessage(title, body, item.fcmToken) as FirebaseNotificationMessage
             const user = await getUserById(item.userId)
-            if (user?.role === 'USER' && eventMeetingId) {
+            if (user?.role === 'USER' && meetingId) {
                 return
             }
             await SendFirebaseNotification(message)
@@ -47,7 +47,7 @@ export const sendNotificationService = async (
                 body,
                 title,
                 eventId: eventId ? eventId : undefined,
-                eventMeetingId: eventMeetingId ? eventMeetingId : undefined,
+                meetingId: meetingId ? meetingId : undefined,
                 userId: item.userId
             })
 
@@ -126,14 +126,14 @@ export const readNotificationService = async (notificationId: string, userId: st
 
 export const sendNotificationByFcmIdService = async (
     fcmId: string,
-    { body, title, eventId, eventMeetingId }: NotificationBodyRequest
+    { body, title, eventId, meetingId }: NotificationBodyRequest
 ) => {
     const fcm = await getFCMUserById(fcmId)
     if (!fcm) {
         return new ErrorApp(MESSAGES.ERROR.NOT_FOUND.USER.FCM, 404, MESSAGE_CODE.NOT_FOUND)
     }
-    if (eventMeetingId) {
-        const sub = await getEventMeetingById(eventMeetingId)
+    if (meetingId) {
+        const sub = await getEventMeetingById(meetingId)
         if (!sub) {
             return new ErrorApp(MESSAGES.ERROR.NOT_FOUND.SUB_ACARA, 404, MESSAGE_CODE.NOT_FOUND)
         }
@@ -153,7 +153,7 @@ export const sendNotificationByFcmIdService = async (
         body,
         title,
         eventId: eventId ? eventId : undefined,
-        eventMeetingId: eventMeetingId ? eventMeetingId : undefined,
+        meetingId: meetingId ? meetingId : undefined,
         userId: fcm.userId
     })
 }

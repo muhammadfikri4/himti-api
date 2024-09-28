@@ -2,6 +2,6 @@ export interface NotificationBodyRequest {
     title: string,
     body: string,
     eventId?: string,
-    eventMeetingId?: string
+    meetingId?: string
     userId?: string
 }

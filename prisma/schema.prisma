@@ -40,13 +40,13 @@ model UserFCM {
 }
 
 model Lecturer {
-  id          String    @id @default(uuid())
-  nidn        String    @unique @db.VarChar(50)
-  name        String    @db.VarChar(255)
-  email       String?   @unique @db.VarChar(50)
-  numberPhone String?   @map("number_phone") @db.VarChar(50)
-  lesson      String?   @db.VarChar(50)
-  isActive    Boolean   @default(true) @map("is_active")
+  id          String   @id @default(uuid())
+  nidn        String   @unique @db.VarChar(50)
+  name        String   @db.VarChar(255)
+  email       String?  @unique @db.VarChar(50)
+  numberPhone String?  @map("number_phone") @db.VarChar(50)
+  lesson      String?  @db.VarChar(50)
+  isActive    Boolean  @default(true) @map("is_active")
   createdAt   DateTime @default(now()) @map("created_at") @db.Timestamp(0)
   updatedAt   DateTime @updatedAt @map("updated_at") @db.Timestamp(0)
 
@@ -125,24 +125,24 @@ model EventMeeting {
   createdAt           DateTime              @default(now()) @map("created_at") @db.Timestamp(0)
   updatedAt           DateTime              @updatedAt @map("updated_at") @db.Timestamp(0)
   Meeting             Meeting[]
-  NotificationHistory NotificationHistory[]
   Attendance          Attendance[]
 
   @@map("event_meeting")
 }
 
 model Meeting {
-  id             String       @id @unique @default(uuid())
-  name           String       @db.VarChar(155)
-  description    String?      @db.LongText
-  startTime      DateTime     @map("start_time") @db.Timestamp(0)
-  endTime        DateTime     @map("end_time") @db.Timestamp(0)
-  eventMeetingId String       @map("event_meeting_id") @db.VarChar(110)
-  EventMeeting   EventMeeting @relation(fields: [eventMeetingId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  createdAt      DateTime     @default(now()) @map("created_at") @db.Timestamp(0)
-  updatedAt      DateTime     @updatedAt @map("updated_at") @db.Timestamp(0)
-  resume         String?      @db.LongText
-  Attendance     Attendance[]
+  id                  String                @id @unique @default(uuid())
+  name                String                @db.VarChar(155)
+  description         String?               @db.LongText
+  startTime           DateTime              @map("start_time") @db.Timestamp(0)
+  endTime             DateTime              @map("end_time") @db.Timestamp(0)
+  eventMeetingId      String                @map("event_meeting_id") @db.VarChar(110)
+  EventMeeting        EventMeeting          @relation(fields: [eventMeetingId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  createdAt           DateTime              @default(now()) @map("created_at") @db.Timestamp(0)
+  updatedAt           DateTime              @updatedAt @map("updated_at") @db.Timestamp(0)
+  resume              String?               @db.LongText
+  Attendance          Attendance[]
+  NotificationHistory NotificationHistory[]
 
   @@index([eventMeetingId], map: "meeting_fk_1")
   @@map("meeting")
@@ -227,12 +227,12 @@ model NotificationHistory {
   id             String        @id @unique @default(uuid())
   eventId        String?       @map("acara_id") @db.VarChar(110)
   userId         String        @map("user_id") @db.VarChar(110)
-  eventMeetingId String?       @map("event_meeting_id") @db.VarChar(110)
+  meetingId      String?       @map("meeting_id") @db.VarChar(110)
   Event          Event?        @relation(fields: [eventId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   User           User          @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  EventMeeting   EventMeeting? @relation(fields: [eventMeetingId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  Meeting        Meeting?      @relation(fields: [meetingId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   title          String        @db.VarChar(155)
-  body           String        @db.VarChar(500)
+  body           String        @db.Text
   isRead         Boolean
   createdAt      DateTime      @default(now()) @map("created_at") @db.Timestamp(0)
   updatedAt      DateTime      @updatedAt @map("updated_at") @db.Timestamp(0)

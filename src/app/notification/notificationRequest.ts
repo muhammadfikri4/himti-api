@@ -9,5 +9,5 @@ export const sendNotificationSchema = Joi.object({
     "any.required": MESSAGES.ERROR.REQUIRED.BODY
   }),
   eventId: Joi.string().optional().allow(null),
-  eventMeetingId: Joi.string().optional().allow(null)
+  meetingId: Joi.string().optional().allow(null)
 })
