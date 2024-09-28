@@ -25,12 +25,13 @@ export const createAnggotaService = async ({ name, nim, email, generationId, isA
 
 export const getMembersService = async ({ search, page = 1, perPage = 10, year, status }: IFilterAnggota) => {
     const st = statusValue(status as string)
+    const gen = year && year.toLowerCase() == 'all' ? undefined : year
     const [member, totalData] = await Promise.all([
         getAllMember({
             search,
             page,
             perPage,
-            year,
+            year: gen,
             status: st
         }),
         getMemberCount({ search, year, status: st as unknown as string }, st)])
