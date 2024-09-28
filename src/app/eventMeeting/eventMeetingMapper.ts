@@ -1,7 +1,7 @@
 import { Attendance, EventMeeting, Meeting } from "@prisma/client";
 import { EventMeetingDTO, EventMeetingWithMeetingDTO } from "./eventMeetingDTO";
 import { generateOpen } from "../../utils/GenerateOpen";
-import { FormatIDTime } from "utils/FormatIDTime";
+import { FormatIDTime } from "../../utils/FormatIDTime";
 
 interface MeetingData extends Meeting {
   Attendance: Attendance[]
