@@ -12,7 +12,7 @@ import { NotificationBodyRequest } from "./notificationDTO"
 import { NotificationData, getNotificationDTOMapper } from "./notificationMapper"
 import { createNotification, getNotificationById, getNotifications, updateStatusNotification } from "./notificationRepository"
 import { getEventMeetingById } from "../eventMeeting/eventMeetingRepository"
-import { getMeetingById } from "app/meetings/meetingsRepository"
+import { getMeetingById } from "../meetings/meetingsRepository"
 
 export const sendNotificationService = async (
     title: string = 'testing title notification',
