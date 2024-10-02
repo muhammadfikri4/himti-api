@@ -20,18 +20,10 @@ app.use(cors({
     credentials: true,
     preflightContinue: false
 }));
-app.use((req, res, next) => {
-    if (['POST', 'PUT', 'PATCH', 'DELETE'].includes(req.method)) {
-        express.json()(req, res, next);
-    } else {
-        next();
-    }
-});
-// app.use(compression())
 
 app.use(cookieParser())
 // app.use(bodyParser.json())
-// app.use(express.json())
+app.use(express.json())
 app.use(routes);
 app.use(HandlingError)
 
