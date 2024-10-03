@@ -23,6 +23,7 @@ export const meetingsDTOMapper = (data: MeetingData[], userId: string): Meetings
     description: item.description as string,
     startTime: item.startTime as Date,
     endTime: item.endTime as Date,
+    isOpen: generateOpen(item.startTime, item.endTime),
     isAlreadyAttend: !!item.Attendance.find((item) => item.userId === userId)
   }))
   return {

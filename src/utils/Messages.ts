@@ -111,6 +111,8 @@ export const MESSAGES = {
             MINIMAL_TIME: "Start time and end time has to be at least 1 hour",
             ABSENSI_NOT_OPEN: "Absensi is not open",
             DATE: "Date is invalid",
+            START_TIME: 'Start Time must be date time',
+            END_TIME: 'End Time must be date'
         },
         UNAUTHORIZED: {
             AUTH: "If you are not logged in, please log in first",
@@ -130,7 +132,7 @@ export const MESSAGES = {
             ANGKATAN_ID: "Angkatan Id is required",
             IMAGE: "Image is required",
             JABATAN: "Jabatan is required",
-            ANGGOTA_ID: "Anggota Id is required",
+            ANGGOTA_ID: "Member Id is required",
             COMPANY: "Company is required",
             START_DATE: "First Date is required when acara is open",
             END_DATE: "End Date is required when acara is open",

@@ -1,5 +1,4 @@
 import dotenv from 'dotenv'
-import { type Request } from 'express'
 import { MESSAGE_CODE } from '../../utils/ErrorCode'
 import { ErrorApp } from '../../utils/HttpError'
 import { MESSAGES } from '../../utils/Messages'
@@ -8,6 +7,8 @@ import { StructuralBodyDTO } from './strukturalDTO'
 import { createStructural, deleteStructural, getStructural, getStructuralByAnggotaId, getStructuralById, getStructuralByJabatan, getStructuralCount, updateStructural } from './strukturalRepository'
 // import { strukturalMapper } from './strukturalResponse'
 import { Jabatan } from '@prisma/client'
+import { environment } from 'libs'
+import { BUCKET_FOLDER, FileType, UploadFileToStorage } from '../../utils/UploadFileToStorage'
 import { structuralMapper } from './strukturalMapper'
 import { IFilterStructural } from './strukturalTypes'
 import { strukturalValidate } from './strukturalValidate'
@@ -18,18 +19,30 @@ export const jabatanChecker = (jabatan: string) => {
     return (jabatan === 'KETUA_HIMPUNAN') || (jabatan === 'WAKIL_KETUA_HIMPUNAN') || jabatan === 'SEKRETARIS' || jabatan === 'BENDAHARA' || jabatan === 'KETUA_DEPARTMENT'
 }
 
-export const createStrukturalService = async ({ memberId, jabatan, isActive }: StructuralBodyDTO, req: Request) => {
+export const createStrukturalService = async ({ memberId, jabatan, isActive,image }: StructuralBodyDTO) => {
     const replaceJabatan = jabatan?.toUpperCase().replace(/ /g, '_')
-    const validate = await strukturalValidate({ memberId, image: req.file?.path, jabatan: replaceJabatan as Jabatan })
+    const validate = await strukturalValidate({ memberId, jabatan: replaceJabatan as Jabatan })
     if (validate instanceof ErrorApp) {
         return new ErrorApp(validate.message, validate.statusCode, validate.code)
     }
 
-    const { path } = req.file as Express.Multer.File
+    const img = image as Express.Multer.File;
+    let filename;
+  
+    if (image) {
+      filename = `${img?.originalname.replace(FileType[img.mimetype], "")} - ${+new Date()}${FileType[img?.mimetype as string]}`;
+      await UploadFileToStorage({
+        Bucket: environment.STORAGE.BUCKET,
+        Key: `${environment.STORAGE.BUCKET_FOLDER}/${BUCKET_FOLDER.structural}/${filename}`,
+        Body: img?.buffer as Buffer,
+        ContentType: img?.mimetype as string,
+        ACL: "public-read",
+      });
+    }
 
     const status = typeof isActive !== 'undefined' ? JSON.parse(String(isActive)) : undefined
 
-    const response = await createStructural({ isActive: status, memberId, image: path, jabatan: replaceJabatan as Jabatan })
+    const response = await createStructural({ isActive: status, memberId, image: filename, jabatan: replaceJabatan as Jabatan })
     return response
 }
 

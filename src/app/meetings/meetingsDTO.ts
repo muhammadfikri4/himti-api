@@ -8,6 +8,14 @@ export interface CreateMeetingBodyRequest {
   eventMeetingId: string
 }
 
+export interface UpdateMeetingBodyRequest {
+  meetingId: string
+  name?: string
+  description?: string
+  startTime?: Date
+  endTime?: Date
+}
+
 export interface FilterMeeting extends Query {
   eventMeetingId: string
 }
@@ -36,5 +44,6 @@ export interface MeetingsDTO {
     isAlreadyAttend: boolean
     startTime: Date
     endTime: Date
+    isOpen: boolean
   }[]
 }
