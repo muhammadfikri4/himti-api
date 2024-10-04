@@ -154,6 +154,9 @@ export const MESSAGES = {
             EVENT_MEETING_ID: "Event Meeting Id is required",
             BODY: "Body is required",   
         },
+        FAILED: {
+EVENT_MEETING: "Failed To Delete Event Meeting"
+        },
         RELATION: {
             ANGKATAN: "Angkatan cannot be deleted because it has a relationship"
         },

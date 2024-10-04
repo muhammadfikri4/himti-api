@@ -13,7 +13,7 @@ export const createMemberSchema = Joi.object({
         "any.required": MESSAGES.ERROR.REQUIRED.EMAIL,
         "string.email": MESSAGES.ERROR.INVALID.GLOBAL.EMAIL
     }),
-    angkatanId: Joi.string().required().messages({
+    generationId: Joi.string().required().messages({
         "any.required": MESSAGES.ERROR.REQUIRED.ANGKATAN_ID
     }),
     isActive: Joi.boolean().optional().messages({

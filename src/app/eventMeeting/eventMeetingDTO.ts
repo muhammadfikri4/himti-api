@@ -1,11 +1,17 @@
 export interface CreateEventMeetingBodyRequest {
-  name: string
-  description: string
+  name?: string
+  description?: string
+}
+export interface UpdateEventMeetingRequest {
+  name?: string
+  eventMeetingId: string
+  description?: string
 }
 
 export interface EventMeetingDTO {
   id: string
   name: string
+  description?: string
   meetingCount: number
 }
 

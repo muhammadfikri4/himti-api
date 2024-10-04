@@ -1,8 +1,11 @@
 import { NextFunction, type Response, type Request } from "express";
 import {
   createEventMeetingService,
+  deleteEventMeetingService,
+  getEventMeetingByIdService,
   getEventMeetingWithMeetingService,
   getEventMeetingsService,
+  updateEventMeetingService,
 } from "./eventMeetingService";
 import { ErrorApp } from "../../utils/HttpError";
 import { HandleResponse } from "../../utils/HandleResponse";
@@ -28,6 +31,31 @@ export const createEventMeetingController = async (
     201,
     MESSAGE_CODE.SUCCESS,
     MESSAGES.CREATED.EVENT_MEETING
+  );
+};
+
+export const updateEventMeetingController = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const { body, params } = req;
+  const { eventMeetingId } = params;
+
+  const result = await updateEventMeetingService({
+    ...body,
+    eventMeetingId,
+  });
+
+  if (result instanceof ErrorApp) {
+    next(result);
+    return;
+  }
+  HandleResponse(
+    res,
+    201,
+    MESSAGE_CODE.SUCCESS,
+    MESSAGES.SUCCESS.EVENT_MEETING.UPDATE
   );
 };
 
@@ -78,3 +106,47 @@ export const getEventMeetingWithMeetingController = async (
     result?.meta
   );
 };
+
+export const getEventMeetingByIdController = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const { params } = req;
+  const { eventMeetingId } = params;  
+  const result = await getEventMeetingByIdService(eventMeetingId as string);
+  if (result instanceof ErrorApp) {
+    next(result);
+    return;
+  }
+  HandleResponse(
+    res,
+    200,
+    MESSAGE_CODE.SUCCESS,
+    MESSAGES.SUCCESS.EVENT_MEETING.GET,
+    result
+  );
+}
+
+export const deleteEventMeetingController = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const { params } = req;
+  const { eventMeetingId } = params;  
+  const result = await deleteEventMeetingService(eventMeetingId as string);
+
+
+  if (result instanceof ErrorApp) {
+    next(result);
+    return;
+  }
+  HandleResponse(
+    res,
+    200,
+    MESSAGE_CODE.SUCCESS,
+    MESSAGES.SUCCESS.EVENT_MEETING.DELETE,
+    result
+  );
+}
