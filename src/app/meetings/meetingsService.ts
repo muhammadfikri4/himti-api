@@ -193,4 +193,3 @@ export const getMeetingByIdService = async (
 
   return data;
 };
-
