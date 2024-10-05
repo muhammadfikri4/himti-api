@@ -35,7 +35,7 @@ export const getMembersService = async ({ search, page = 1, perPage = 10, year, 
             status: st
         }),
         getMemberCount({ search, year, status: st as unknown as string }, st)])
-
+console.log(member[0])
     await updateMemberNonActive()
     const data = memberMapper(member as MemberData[])
     const meta = Meta(page, perPage, totalData)

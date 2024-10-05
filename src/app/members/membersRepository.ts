@@ -74,7 +74,8 @@ export const getAllMember = async ({ page, perPage, search, year, status }: IFil
                     year: true,
                     isActive: true
                 }
-            }
+            },
+            User: true
         },
         orderBy: {
             nim: 'desc'

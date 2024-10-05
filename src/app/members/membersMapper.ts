@@ -1,7 +1,10 @@
-import { Member, Generation } from "@prisma/client";
+import { Member, Generation, User } from "@prisma/client";
+import { ImagePath } from "utils/ImagePath";
+import { BUCKET_FOLDER } from "utils/UploadFileToStorage";
 
 export interface MemberData extends Member {
     Generation:Generation
+    User: User
 }
 
 export const memberMapper = (members: MemberData[]) => {
@@ -14,6 +17,7 @@ export const memberMapper = (members: MemberData[]) => {
             nim,
             name,
             email,
+            photo: member.User?.photo ? ImagePath(`${BUCKET_FOLDER.user}/${member.User?.photo}`) : null,
             generation: {
                 id: member.Generation.id,
                 year: member.Generation.year
