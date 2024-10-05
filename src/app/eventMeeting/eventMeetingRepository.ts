@@ -1,4 +1,4 @@
-import { Query } from "interface/Query";
+import { Query } from "../../interface/Query";
 import { prisma } from "../../config";
 import { UpdateEventMeetingRequest } from "./eventMeetingDTO";
 

@@ -1,6 +1,6 @@
 import { Event } from "@prisma/client";
 import dotenv from "dotenv";
-import { Query } from "interface/Query";
+import { Query } from "../../interface/Query";
 import sharp from "sharp";
 import { environment } from "../../libs";
 import { MESSAGE_CODE } from "../../utils/ErrorCode";
