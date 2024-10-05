@@ -15,6 +15,7 @@ export const eventMeetingsDTOMapper = (data: EventMeetingData[]): EventMeetingDT
   return data.map(item => ({
     id: item.id,
     name: item.name,
+    description: item.description as string,
     meetingCount: item.Meeting.length
   }))
 }

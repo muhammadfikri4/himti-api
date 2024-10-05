@@ -71,7 +71,12 @@ export const updateStructural = async (data: StructuralBodyDTO) => {
         where: {
             id: data.id as string
         },
-        data
+        data: {
+            image: data.image as string,
+            jabatan: data.jabatan as Jabatan,
+            memberId: data.memberId as string,
+            isActive: data.isActive,
+        }
     })
 }
 

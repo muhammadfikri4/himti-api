@@ -11,8 +11,8 @@ export const sendNotificationController = async (
   res: Response,
   next: NextFunction
 ) => {
-  const { title, body, eventId, eventMeetingId } = req.body
-  const notification = await sendNotificationService(title, body, eventId, eventMeetingId)
+  const { title, body, eventId, meetingId } = req.body
+  const notification = await sendNotificationService(title, body, eventId, meetingId)
 
   if (notification instanceof ErrorApp) {
     next(notification)

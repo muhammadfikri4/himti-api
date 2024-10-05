@@ -75,5 +75,5 @@ export const getAttendancesController = async (
         next(absensies)
         return
     }
-    HandleResponse(res, 200, MESSAGE_CODE.SUCCESS, MESSAGES.SUCCESS.ABSENSI.GET, absensies)
+    HandleResponse(res, 200, MESSAGE_CODE.SUCCESS, MESSAGES.SUCCESS.ABSENSI.GET, absensies.data, absensies.meta)
 }

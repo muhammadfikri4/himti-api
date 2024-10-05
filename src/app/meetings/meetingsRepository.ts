@@ -1,11 +1,15 @@
-import { Query } from "interface/Query"
-import { prisma } from "../../config"
-import { FilterMeeting, type CreateMeetingBodyRequest } from "./meetingsDTO"
+import { Query } from "interface/Query";
+import { prisma } from "../../config";
+import {
+  FilterMeeting,
+  UpdateMeetingBodyRequest,
+  type CreateMeetingBodyRequest,
+} from "./meetingsDTO";
 
 export const getMeetingById = async (meetingId: string) => {
   return await prisma.meeting.findUnique({
     where: {
-      id: meetingId
+      id: meetingId,
     },
     select: {
       id: true,
@@ -18,20 +22,20 @@ export const getMeetingById = async (meetingId: string) => {
       Attendance: {
         select: {
           id: true,
-          userId: true
-        }
+          userId: true,
+        },
       },
-      EventMeeting: true
-    }
-  })
-}
+      EventMeeting: true,
+    },
+  });
+};
 
 export const createMeeting = async ({
   name,
   description,
   startTime,
   endTime,
-  eventMeetingId
+  eventMeetingId,
 }: CreateMeetingBodyRequest) => {
   return await prisma.meeting.create({
     data: {
@@ -42,25 +46,28 @@ export const createMeeting = async ({
       eventMeetingId,
     },
     select: {
-      id: true
-    }
-  })
-}
+      id: true,
+    },
+  });
+};
 
-export const getMeetingByEventMeetingId = async (eventMeetingId: string, name: string) => {
+export const getMeetingByEventMeetingId = async (
+  eventMeetingId: string,
+  name: string
+) => {
   return await prisma.meeting.findFirst({
     where: {
       eventMeetingId,
-      name
-    }
-  })
-}
+      name,
+    },
+  });
+};
 
 export const getMeetingsByEventMeetingId = async (query: FilterMeeting) => {
-  const { page = '1', perPage = '10', eventMeetingId } = query
+  const { page = "1", perPage = "10", eventMeetingId } = query;
   return await prisma.meeting.findMany({
     where: {
-      eventMeetingId
+      eventMeetingId,
     },
     select: {
       id: true,
@@ -72,43 +79,47 @@ export const getMeetingsByEventMeetingId = async (query: FilterMeeting) => {
         select: {
           id: true,
           name: true,
-        }
+        },
       },
       Attendance: {
         select: {
           User: {
             select: {
-              id:true,
-              name: true
-            }
-          }
-        }
-      }
+              id: true,
+              name: true,
+            },
+          },
+        },
+      },
+    },
+    orderBy: {
+      createdAt: "desc",
     },
     take: Number(perPage),
-    skip: (Number(page) - 1) * Number(perPage)
-  })
-}
+    skip: (Number(page) - 1) * Number(perPage),
+  });
+};
 
-
-export const getMeetingsByEventMeetingIdCount = async (query: FilterMeeting) => {
-  const { eventMeetingId } = query
+export const getMeetingsByEventMeetingIdCount = async (
+  query: FilterMeeting
+) => {
+  const { eventMeetingId } = query;
   return await prisma.meeting.count({
     where: {
-      eventMeetingId
+      eventMeetingId,
     },
-  })
-}
+  });
+};
 
 export const getMeetings = async (query: Query) => {
-  const { page = '1', perPage = '10',search } = query
+  const { page = "1", perPage = "10", search } = query;
   return await prisma.meeting.findMany({
     where: {
       EventMeeting: {
         name: {
           contains: search,
-        }
-      }
+        },
+      },
     },
     select: {
       id: true,
@@ -121,37 +132,66 @@ export const getMeetings = async (query: Query) => {
         select: {
           id: true,
           name: true,
-        }
+        },
       },
       Attendance: {
         select: {
           User: {
             select: {
               id: true,
-              name: true
-            }
-          }
-        }
-      }
+              name: true,
+            },
+          },
+        },
+      },
     },
     orderBy: {
-      createdAt: 'desc',
+      createdAt: "desc",
     },
     take: Number(perPage),
-    skip: (Number(page) - 1) * Number(perPage)
-  })
-}
+    skip: (Number(page) - 1) * Number(perPage),
+  });
+};
 
-export const getMeetingsCount = async (query:Query) => {
-  const {search} = query
+export const getMeetingsCount = async (query: Query) => {
+  const { search } = query;
   return await prisma.meeting.count({
     where: {
       EventMeeting: {
         name: {
           contains: search,
-        }
-      }
+        },
+      },
     },
+  });
+};
+
+export const updateMeeting = async (data: UpdateMeetingBodyRequest) => {
+  return await prisma.meeting.update({
+    where: {
+      id: data.meetingId,
+    },
+    data: {
+      name: data.name,
+      description: data.description,
+      startTime: data.startTime,
+      endTime: data.endTime,
+    },
+  });
+};
+
+export const deleteMeetingManyByEventMeetingId = async(eventMeetingId: string) => {
+  return await prisma.meeting.deleteMany({
+    where: {
+      eventMeetingId
+    }
   })
 }
 
+export const deleteMeeting = async(meetingId: string) => {
+  return await prisma.meeting.delete({
+    where: {
+      id: meetingId
+    }
+  })
+}
