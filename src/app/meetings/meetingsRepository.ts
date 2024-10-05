@@ -187,3 +187,11 @@ export const deleteMeetingManyByEventMeetingId = async(eventMeetingId: string) =
     }
   })
 }
+
+export const deleteMeeting = async(meetingId: string) => {
+  return await prisma.meeting.delete({
+    where: {
+      id: meetingId
+    }
+  })
+}

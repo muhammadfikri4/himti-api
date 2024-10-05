@@ -1,4 +1,4 @@
-import { deleteMeetingManyByEventMeetingId } from "app/meetings/meetingsRepository";
+import { deleteMeetingManyByEventMeetingId } from "../meetings/meetingsRepository";
 import { Query } from "../../interface/Query";
 import { MESSAGE_CODE } from "../../utils/ErrorCode";
 import { ErrorApp } from "../../utils/HttpError";

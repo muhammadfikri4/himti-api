@@ -4,6 +4,7 @@ import { validateRequest } from "../../middleware/validateRequest";
 import { CatchWrapper } from "../../utils/CatchWrapper";
 import {
   createMeetingController,
+  deleteMeetingController,
   getMeetingByEventMeetingIdController,
   getMeetingByIdController,
   getMeetingsController,
@@ -32,5 +33,6 @@ route.get(
   VerifyToken,
   CatchWrapper(getMeetingByEventMeetingIdController)
 );
+route.delete('/:meetingId', VerifySuperAdmin, CatchWrapper(deleteMeetingController))
 
 export default route;

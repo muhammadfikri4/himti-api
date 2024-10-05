@@ -6,6 +6,7 @@ import { ErrorApp } from "../../utils/HttpError";
 import { MESSAGES } from "../../utils/Messages";
 import {
   createMeetingService,
+  deleteMeetingService,
   getMeetingByIdService,
   getMeetingsByEventMeetingsIdService,
   getMeetingsService,
@@ -125,3 +126,23 @@ export const updateMeetingController = async (
     MESSAGES.SUCCESS.MEETING.UPDATE
   );
 };
+
+export const deleteMeetingController = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const { params } = req;
+  const { meetingId } = params;
+  const result = await deleteMeetingService(meetingId as string);
+  if (result instanceof ErrorApp) {
+    next(result);
+    return;
+  }
+  HandleResponse(
+    res,
+    200,
+    MESSAGE_CODE.SUCCESS,
+    MESSAGES.SUCCESS.MEETING.DELETE
+  );
+}

@@ -17,6 +17,7 @@ import {
 } from "./meetingsMapper";
 import {
   createMeeting,
+  deleteMeeting,
   getMeetingByEventMeetingId,
   getMeetingById,
   getMeetings,
@@ -193,3 +194,23 @@ export const getMeetingByIdService = async (
 
   return data;
 };
+
+export const deleteMeetingService = async (meetingId: string) => {
+  const meeting = await getMeetingById(meetingId);
+  if (!meeting) {
+    return new ErrorApp(
+      MESSAGES.ERROR.NOT_FOUND.MEETING,
+      404,
+      MESSAGE_CODE.NOT_FOUND
+    );
+  }
+  if(meeting.Attendance.length > 0) {
+    return new ErrorApp(
+      MESSAGES.ERROR.RELATION.MEETING,
+      400,
+      MESSAGE_CODE.BAD_REQUEST
+    );
+  }
+  const data = await deleteMeeting(meetingId);  
+  return data;
+}
