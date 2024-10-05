@@ -1,6 +1,6 @@
-
 export interface IFilterStructural {
-    search?: string,
-    page?: number,
-    perPage?: number
+  search?: string;
+  page?: number;
+  perPage?: number;
+  angkatan?: string;
 }

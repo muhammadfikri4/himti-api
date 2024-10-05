@@ -51,12 +51,13 @@ export const getStrukturalController = async (
   res: Response,
   next: NextFunction
 ) => {
-  const { search, page, perPage } = req.query;
+  const { search, page, perPage, angkatan } = req.query;
 
   const struktural = await getStrukturalService({
     search: search as string,
     page: page ? Number(page) : undefined,
     perPage: perPage ? Number(perPage) : undefined,
+    angkatan: angkatan as string,
   });
 
   if (struktural instanceof ErrorApp) {

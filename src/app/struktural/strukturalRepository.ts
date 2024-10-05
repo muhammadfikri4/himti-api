@@ -45,10 +45,18 @@ export const getStructural = async ({
   search,
   page,
   perPage,
+  angkatan,
 }: IFilterStructural) => {
   return await prisma.structural.findMany({
     where: {
       jabatan: search as Jabatan,
+      Member: {
+        Generation: {
+          year: {
+            contains: angkatan,
+          },
+        },
+      },
     },
     include: {
       Member: {
@@ -60,6 +68,12 @@ export const getStructural = async ({
           instagram: true,
           linkedin: true,
           twitter: true,
+          Generation: {
+            select: {
+              id: true,
+              year: true,
+            },
+          },
         },
       },
     },
@@ -71,10 +85,20 @@ export const getStructural = async ({
   });
 };
 
-export const getStructuralCount = async ({ search }: IFilterStructural) => {
+export const getStructuralCount = async ({
+  search,
+  angkatan,
+}: IFilterStructural) => {
   return await prisma.structural.count({
     where: {
       jabatan: search as Jabatan,
+      Member: {
+        Generation: {
+          year: {
+            contains: angkatan,
+          },
+        },
+      },
     },
   });
 };

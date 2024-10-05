@@ -92,17 +92,15 @@ export const getStrukturalService = async ({
   search,
   page = 1,
   perPage = 10,
+  angkatan
 }: IFilterStructural) => {
   const [struktural, totalData] = await Promise.all([
-    getStructural({ search, page, perPage }),
-    getStructuralCount({ search }),
+    getStructural({ search, page, perPage, angkatan }),
+    getStructuralCount({ search,angkatan }),
   ]);
 
   const meta = Meta(page, perPage, totalData);
   const data = structuralMapper(struktural);
-  // if (!data.length && !meta.totalPages && !meta.totalData) {
-  //     return new ErrorApp(MESSAGES.ERROR.NOT_FOUND.STRUKTURAL, 404, MESSAGE_CODE.NOT_FOUND)
-  // }
 
   return { data, meta };
 };
