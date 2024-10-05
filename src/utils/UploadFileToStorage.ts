@@ -27,6 +27,7 @@ export const FileType: Record<string, string> = {
     'image/png': '.png',
     'image/jpeg': '.jpeg',
     'image/jpg': '.jpg',
+    'image/webp': '.webp',
     'application/pdf': '.pdf',
     'application/octet-stream': '.jpg'
 }
@@ -94,7 +95,7 @@ export const RemoveFileFromStorage = async (key: string) => {
 export const upload = multer({
     storage,
     limits: {
-        fileSize: 5000000,
+        fileSize: 8 * 1024 * 1024,
     },
     fileFilter: MulterFileFilter
 })

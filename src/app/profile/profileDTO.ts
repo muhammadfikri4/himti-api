@@ -5,6 +5,7 @@ export interface ProfileDTO {
     email: string
     name: string
     nim: string
+    photo?: string | Express.Multer.File
     role: Role
     instagram?: string
     facebook?: string

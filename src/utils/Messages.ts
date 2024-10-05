@@ -92,7 +92,7 @@ export const MESSAGES = {
       NEW_PASSWORD: "New password cannot be the same as the old password",
       NIM_ANGGOTA: "Anggota cannot change their NIM",
       CODE_ANGGOTA: "Code is invalid",
-      IMAGE_SIZE: "Image size must be less than 5mb",
+      IMAGE_SIZE: "Image size must be less than 7mb",
       ROLE_ADMIN: "You're not admin",
       CODE_USER: "User is not allowed to use Code",
       FILE_TYPE: "Invalid Image Type",

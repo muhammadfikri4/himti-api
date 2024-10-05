@@ -1,6 +1,7 @@
 import { Event } from "@prisma/client";
 import dotenv from "dotenv";
 import { Query } from "interface/Query";
+import sharp from "sharp";
 import { environment } from "../../libs";
 import { MESSAGE_CODE } from "../../utils/ErrorCode";
 import { ErrorApp } from "../../utils/HttpError";
@@ -59,7 +60,10 @@ export const createEventService = async ({
     );
   }
 
-  if (((image as unknown as Express.Multer.File)?.size as number) > 5242880) {
+  if (
+    ((image as unknown as Express.Multer.File)?.size as number) >
+    7 * 1024 * 1024
+  ) {
     return new ErrorApp(
       MESSAGES.ERROR.INVALID.IMAGE_SIZE,
       400,
@@ -71,12 +75,18 @@ export const createEventService = async ({
       typeof isOpen !== "undefined" ? JSON.parse(String(isOpen)) : undefined;
 
     const img = image as Express.Multer.File;
-    filename = `${img?.originalname.replace(FileType[img.mimetype], "")} - ${+new Date()}${FileType[img?.mimetype as string]}`;
+    filename = `${img?.originalname.replace(FileType[img.mimetype], "")} - ${+new Date()}.webp`;
+    const quality =
+      ((image as unknown as Express.Multer.File)?.size as number) > 5 * 1024 * 1024
+        ? 75
+        : 100;
+    const compress = await sharp(img.buffer).webp({ quality }).toBuffer();
+
     await UploadFileToStorage({
       Bucket: environment.STORAGE.BUCKET,
       Key: `${environment.STORAGE.BUCKET_FOLDER}/${BUCKET_FOLDER.event}/${filename}`,
-      Body: img?.buffer as Buffer,
-      ContentType: img?.mimetype as string,
+      Body: compress,
+      ContentType: FileType['image/webp'],
       ACL: "public-read",
     });
 
