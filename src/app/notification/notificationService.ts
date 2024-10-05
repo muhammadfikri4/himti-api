@@ -12,6 +12,7 @@ import { NotificationBodyRequest } from "./notificationDTO"
 import { NotificationData, getNotificationDTOMapper } from "./notificationMapper"
 import { createNotification, getNotificationById, getNotifications, updateStatusNotification } from "./notificationRepository"
 import { getEventMeetingById } from "../eventMeeting/eventMeetingRepository"
+import { getMeetingById } from "../meetings/meetingsRepository"
 
 export const sendNotificationService = async (
     title: string = 'testing title notification',
@@ -27,7 +28,7 @@ export const sendNotificationService = async (
     }
 
     if (meetingId) {
-        const sub = await getEventMeetingById(meetingId)
+        const sub = await getMeetingById(meetingId)
         if (!sub) {
             return new ErrorApp(MESSAGES.ERROR.NOT_FOUND.EVENT_MEETING, 404, MESSAGE_CODE.NOT_FOUND)
         }

@@ -18,7 +18,7 @@ export const validateRequest = (body: Joi.ObjectSchema, file?: Joi.ObjectSchema)
             errors.push(...bv.error.details.map(i => i.message.replace(/"/g, '')))
 
         }
-        console.log(req.body)
+        console.log(console.log(errors))
         if (errors.length) {
 
             return HandleResponse(res, 400, MESSAGE_CODE.BAD_REQUEST, errors[0]);

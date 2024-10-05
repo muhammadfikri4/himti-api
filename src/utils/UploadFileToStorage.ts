@@ -19,7 +19,7 @@ export const BUCKET_FOLDER = {
     event: 'event',
     business: 'business',
     user: 'user',
-    structural: 'structural',
+    structural: 'struktural',
 }
 
 export const FileType: Record<string, string> = {

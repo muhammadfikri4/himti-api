@@ -4,6 +4,6 @@ export interface StructuralBodyDTO {
     id?: string,
     memberId?: string,
     jabatan?: Jabatan,
-    image?: string,
+    image?: Express.Multer.File | string,
     isActive?: boolean
 }

@@ -1,11 +1,12 @@
 import { NextFunction, type Request, type Response } from "express";
-import { TokenDecodeInterface } from "interface";
+import { TokenDecodeInterface } from "../interface";
 import { TokenExpiredError, decode, verify } from 'jsonwebtoken';
 import { getUserById } from "../app/authentication/authRepository";
 import { environment } from "../libs";
 import { MESSAGE_CODE } from "../utils/ErrorCode";
 import { HandleResponse } from "../utils/HandleResponse";
 import { MESSAGES } from "../utils/Messages";
+import { Roles } from "../interface/Roles";
 
 export const VerifySuperAdmin = (req: Request, res: Response, next: NextFunction) => {
     if (!req.headers.authorization) {
@@ -31,7 +32,7 @@ export const VerifySuperAdmin = (req: Request, res: Response, next: NextFunction
                     return HandleResponse(res, 401, MESSAGE_CODE.NOT_FOUND, MESSAGES.ERROR.NOT_FOUND.USER.ACCOUNT)
                 }
 
-                if (getUser.role !== "SUPER_ADMIN") {
+                if (getUser.role !== Roles.SUPER_ADMIN) {
                     return HandleResponse(res, 401, MESSAGE_CODE.UNAUTHORIZED, MESSAGES.ERROR.INVALID.ROLE_ADMIN)
                 }
 
