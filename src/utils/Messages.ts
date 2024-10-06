@@ -112,6 +112,7 @@ export const MESSAGES = {
       DATE: "Date is invalid",
       START_TIME: "Start Time must be date time",
       END_TIME: "End Time must be date",
+      NAME_MEMBER: "The name entered must match the registered NIM"
     },
     UNAUTHORIZED: {
       AUTH: "If you are not logged in, please log in first",

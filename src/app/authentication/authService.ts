@@ -70,6 +70,19 @@ export const registerService = async ({
     );
   }
 
+  if (
+    isAnggota &&
+    code &&
+    code === environment.ANGGOTA_CODE &&
+    !isAnggota.name.includes(name)
+  ) {
+    return new ErrorApp(
+      MESSAGES.ERROR.INVALID.NAME_MEMBER,
+      400,
+      MESSAGE_CODE.BAD_REQUEST
+    );
+  }
+
   if (!isAnggota && code) {
     return new ErrorApp(
       MESSAGES.ERROR.INVALID.CODE_USER,
