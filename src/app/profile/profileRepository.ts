@@ -45,6 +45,7 @@ export const updateProfile = async (data: ProfileDTO) => {
       name: true,
       nim: true,
       role: true,
+      photo: true,
     },
   });
 };

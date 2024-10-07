@@ -24,6 +24,7 @@ import {
 } from "../../utils/UploadFileToStorage";
 import sharp from "sharp";
 import { environment } from "../../libs";
+import { ImagePath } from "../../utils/ImagePath";
 
 export const getProfileService = async (token: string) => {
   const decodeToken = decode(token);
@@ -179,7 +180,10 @@ export const updateProfileService = async (
     twitter: anggota?.twitter,
     facebook: anggota?.facebook,
   };
-  return { ...profile, ...sosmedAnggota };
+  return { 
+    ...profile, 
+        photo: profile.photo? profile.photo.includes("https") ? profile.photo : ImagePath(`${BUCKET_FOLDER.user}/${profile.photo}`) : null,
+    ...sosmedAnggota };
 };
 
 export const updatePasswordService = async (
