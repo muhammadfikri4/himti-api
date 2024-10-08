@@ -4,6 +4,7 @@ import { HandleResponse } from "../../utils/HandleResponse";
 import { ErrorApp } from "../../utils/HttpError";
 import { MESSAGES } from "../../utils/Messages";
 import {
+  deletePhotoProfile,
   getProfileService,
   updatePasswordService,
   updateProfileService,
@@ -93,4 +94,24 @@ export const updatePasswordController = async (
     MESSAGE_CODE.SUCCESS,
     MESSAGES.SUCCESS.PROFILE.UPDATE
   );
+};
+
+export const deletePhotoProfileController = async (
+  req: RequestWithAccessToken,
+  res: Response,
+  next: NextFunction
+) => {
+  const { userId } = req;
+
+  const profile = await deletePhotoProfile(userId as string);
+  if (profile instanceof ErrorApp) {
+    next(profile);
+    return;
+  }
+  HandleResponse(
+    res,
+    200,
+    MESSAGE_CODE.SUCCESS,
+    MESSAGES.SUCCESS.PROFILE.DELETE_PHOTO
+  )
 };

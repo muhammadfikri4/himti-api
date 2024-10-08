@@ -1,9 +1,18 @@
 import bcrypt from "bcrypt";
 import { decode } from "jsonwebtoken";
+import sharp from "sharp";
 import { TokenDecodeInterface } from "../../interface";
+import { environment } from "../../libs";
 import { MESSAGE_CODE } from "../../utils/ErrorCode";
 import { ErrorApp } from "../../utils/HttpError";
+import { ImagePath } from "../../utils/ImagePath";
 import { MESSAGES } from "../../utils/Messages";
+import {
+  BUCKET_FOLDER,
+  FileType,
+  RemoveFileFromStorage,
+  UploadFileToStorage,
+} from "../../utils/UploadFileToStorage";
 import {
   getUserByEmail,
   getUserById,
@@ -16,15 +25,12 @@ import {
 } from "../members/membersRepository";
 import { ChangePasswordDTO, ProfileDTO } from "./profileDTO";
 import { ProfileDTOMapper, ProfileData } from "./profileMapper";
-import { getProfile, updatePassword, updateProfile } from "./profileRepository";
 import {
-  BUCKET_FOLDER,
-  FileType,
-  UploadFileToStorage,
-} from "../../utils/UploadFileToStorage";
-import sharp from "sharp";
-import { environment } from "../../libs";
-import { ImagePath } from "../../utils/ImagePath";
+  getProfile,
+  updatePassword,
+  updatePhotoProfile,
+  updateProfile,
+} from "./profileRepository";
 
 export const getProfileService = async (token: string) => {
   const decodeToken = decode(token);
@@ -127,7 +133,7 @@ export const updateProfileService = async (
     getEmail,
     email,
   });
-  if (email &&getEmail && getEmail.id !== userId) {
+  if (email && getEmail && getEmail.id !== userId) {
     return new ErrorApp(
       MESSAGES.ERROR.ALREADY.GLOBAL.EMAIL,
       400,
@@ -180,10 +186,15 @@ export const updateProfileService = async (
     twitter: anggota?.twitter,
     facebook: anggota?.facebook,
   };
-  return { 
-    ...profile, 
-        photo: profile.photo? profile.photo.includes("https") ? profile.photo : ImagePath(`${BUCKET_FOLDER.user}/${profile.photo}`) : null,
-    ...sosmedAnggota };
+  return {
+    ...profile,
+    photo: profile.photo
+      ? profile.photo.includes("https")
+        ? profile.photo
+        : ImagePath(`${BUCKET_FOLDER.user}/${profile.photo}`)
+      : null,
+    ...sosmedAnggota,
+  };
 };
 
 export const updatePasswordService = async (
@@ -220,5 +231,27 @@ export const updatePasswordService = async (
   const hashPassword = await bcrypt.hash(newPassword, 10);
 
   const response = await updatePassword({ newPassword: hashPassword, id });
+  return response;
+};
+
+export const deletePhotoProfile = async (userId: string) => {
+  const user = await getUserById(userId);
+  if (!user) {
+    return new ErrorApp(
+      MESSAGES.ERROR.NOT_FOUND.USER.ACCOUNT,
+      404,
+      MESSAGE_CODE.NOT_FOUND
+    );
+  }
+  if (!user.photo) {
+    return new ErrorApp(
+      MESSAGES.ERROR.NOT_FOUND.USER.PHOTO,
+      404,
+      MESSAGE_CODE.NOT_FOUND
+    );
+  }
+  const key = `${environment.STORAGE.BUCKET_FOLDER}/${BUCKET_FOLDER.user}/${user.photo}`;
+  await RemoveFileFromStorage(key);
+  const response = await updatePhotoProfile(user.id, null);
   return response;
 };

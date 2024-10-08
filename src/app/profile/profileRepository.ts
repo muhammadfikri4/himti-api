@@ -63,3 +63,17 @@ export const updatePassword = async ({
     },
   });
 };
+
+export const updatePhotoProfile = async (
+  userId: string,
+  photo?: string | null
+) => {
+  return await prisma.user.update({
+    where: {
+      id: userId,
+    },
+    data: {
+      photo,
+    },
+  });
+};

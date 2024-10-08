@@ -4,12 +4,12 @@ import { VerifyToken } from "../../middleware/verifyToken";
 import { CatchWrapper } from "../../utils/CatchWrapper";
 import { upload as UploadFile } from "../../utils/UploadFileToStorage";
 import {
-    getProfileController,
-    updatePasswordController,
-    updateProfileController,
+  deletePhotoProfileController,
+  getProfileController,
+  updatePasswordController,
+  updateProfileController,
 } from "./profileController";
 import { updatePasswordSchema } from "./profileRequest";
-
 
 const route = Router();
 
@@ -17,7 +17,7 @@ route.get("/", VerifyToken, CatchWrapper(getProfileController));
 route.put(
   "/",
   VerifyToken,
-//   validateRequest(updateProfileSchema),
+  //   validateRequest(updateProfileSchema),
   CatchWrapper(UploadFile.single("photo")),
   CatchWrapper(updateProfileController)
 );
@@ -27,5 +27,6 @@ route.put(
   validateRequest(updatePasswordSchema),
   CatchWrapper(updatePasswordController)
 );
+route.delete("/", VerifyToken, CatchWrapper(deletePhotoProfileController));
 
 export default route;

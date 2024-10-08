@@ -23,6 +23,7 @@ export const MESSAGES = {
         ACCOUNT: "User not found",
         FCM: "FCM Token not found",
         FCM_USER: "FCM User not found",
+        PHOTO: "You're doesn't have photo"
       },
       ANGKATAN: {
         ID: "Angkatan ID not found",
@@ -205,6 +206,7 @@ export const MESSAGES = {
     PROFILE: {
       GET: "Success to fetch profile",
       UPDATE: "Success to update profile",
+      DELETE_PHOTO: "Success to delete photo profile",
     },
     ABSENSI: {
       GET: "Success to fetch Absensi",
