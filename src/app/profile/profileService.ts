@@ -173,7 +173,14 @@ export const updateProfileService = async (
 
   if (!user.memberId) {
     const response = await updateProfile(profileField as ProfileDTO);
-    return response;
+    return {
+      ...response,
+      photo: response.photo
+      ? response.photo.includes("https")
+        ? response.photo
+        : ImagePath(`${BUCKET_FOLDER.user}/${response.photo}`)
+      : null,
+    };
   }
   const [profile, anggota] = await Promise.all([
     updateProfile(profileField as ProfileDTO),
