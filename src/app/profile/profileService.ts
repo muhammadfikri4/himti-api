@@ -231,7 +231,14 @@ export const updatePasswordService = async (
   const hashPassword = await bcrypt.hash(newPassword, 10);
 
   const response = await updatePassword({ newPassword: hashPassword, id });
-  return response;
+  return {
+    ...response,
+    photo: response.photo
+      ? response.photo.includes("https")
+        ? response.photo
+        : ImagePath(`${BUCKET_FOLDER.user}/${response.photo}`)
+      : null,
+  };
 };
 
 export const deletePhotoProfile = async (userId: string) => {
