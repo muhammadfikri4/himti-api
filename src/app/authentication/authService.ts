@@ -102,13 +102,13 @@ export const registerService = async ({
   }
 
   if (email) {
-    if (email === isAnggota?.email) {
-      return new ErrorApp(
-        MESSAGES.ERROR.ALREADY.GLOBAL.EMAIL,
-        400,
-        MESSAGE_CODE.BAD_REQUEST
-      );
-    }
+    // if (email === isAnggota?.email) {
+    //   return new ErrorApp(
+    //     MESSAGES.ERROR.ALREADY.GLOBAL.EMAIL,
+    //     400,
+    //     MESSAGE_CODE.BAD_REQUEST
+    //   );
+    // }
     if (email === alreadyUser?.email) {
       return new ErrorApp(
         MESSAGES.ERROR.ALREADY.GLOBAL.EMAIL,

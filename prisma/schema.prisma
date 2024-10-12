@@ -71,7 +71,6 @@ model Generation {
 model Member {
   id           String       @id @default(uuid())
   name         String       @db.VarChar(255)
-  email        String?      @db.VarChar(55)
   nim          String?      @unique @db.VarChar(110)
   generationId String       @map("generation_id")
   isActive     Boolean?     @default(true) @map("is_active")
