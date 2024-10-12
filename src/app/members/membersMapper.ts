@@ -26,8 +26,8 @@ export const memberMapper = (members: MemberData[]) => {
       id,
       nim,
       name,
-      email: member.User.email,
-      photo: member.User?.photo
+      email: member?.User?.email ?? null,
+      photo: member?.User?.photo
         ? ImagePath(`${BUCKET_FOLDER.user}/${member.User?.photo}`)
         : null,
       generation: {
