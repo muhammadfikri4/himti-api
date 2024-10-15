@@ -160,16 +160,16 @@ export const updateProfileService = async (
 
   const profileField: Partial<ProfileDTO> = { id: userId };
 
-  if (name) profileField.name = name;
-  if (email) profileField.email = email;
-  if (nim) profileField.nim = nim;
-  if (photoName) profileField.photo = photoName;
+  if (typeof name === 'string') profileField.name = name;
+  if (typeof email === 'string') profileField.email = email;
+  if (typeof nim === 'string') profileField.nim = nim;
+  if (typeof photoName === 'string') profileField.photo = photoName;
 
   const sosmedField: Partial<MemberSosmedDTO> = { id: user.memberId as string };
-  if (instagram) sosmedField.instagram = instagram;
-  if (twitter) sosmedField.twitter = twitter;
-  if (linkedin) sosmedField.linkedin = linkedin;
-  if (facebook) sosmedField.facebook = facebook;
+  if (typeof instagram === 'string') sosmedField.instagram = instagram;
+  if (typeof twitter === 'string') sosmedField.twitter = twitter;
+  if (typeof linkedin === 'string') sosmedField.linkedin = linkedin;
+  if (typeof facebook === 'string') sosmedField.facebook = facebook;
 
   if (!user.memberId) {
     const response = await updateProfile(profileField as ProfileDTO);
