@@ -145,7 +145,7 @@ export const updateProfileService = async (
 
   if (photo) {
     const img = photo as Express.Multer.File;
-    photoName = `${img?.originalname.replace(FileType[img.mimetype], "")} - ${+new Date()}.webp`;
+    photoName = `${img?.originalname.replace(FileType[img.mimetype], "")}${+new Date()}.webp`;
     const quality = (img?.size as number) > 5 * 1024 * 1024 ? 75 : 100;
     const compress = await sharp(img.buffer).webp({ quality }).toBuffer();
 
