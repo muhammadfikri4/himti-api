@@ -111,10 +111,10 @@ export const getMemberCount = async (
       },
       {
         User: {
-            email: {
-              contains: search,
-            },
+          email: {
+            contains: search,
           },
+        },
       },
       {
         nim: {
@@ -142,6 +142,16 @@ export const getMemberByNIM = async (nim: string) => {
     select: {
       id: true,
       name: true,
+    },
+  });
+};
+
+export const getMemberByNIMandName = async (name: string) => {
+  return await prisma.member.findFirst({
+    where: {
+      name: {
+        contains: name,
+      },
     },
   });
 };

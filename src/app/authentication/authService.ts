@@ -69,12 +69,22 @@ export const registerService = async ({
       MESSAGE_CODE.BAD_REQUEST
     );
   }
+  let isContains = false;
+  const splitName = name?.split(" ");
 
+  splitName.forEach((item) => {
+    if (isAnggota?.name.toLowerCase().includes(item.toLowerCase())) {
+      isContains = true;
+    }
+  });
+  console.log(isContains);
+  console.log(isAnggota);
+console.log((!isAnggota?.name.includes(name) && !isContains))
   if (
     isAnggota &&
     code &&
     code === environment.ANGGOTA_CODE &&
-    !isAnggota.name.includes(name)
+    (!isAnggota.name.includes(name) && !isContains)
   ) {
     return new ErrorApp(
       MESSAGES.ERROR.INVALID.NAME_MEMBER,
