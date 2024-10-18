@@ -1,4 +1,4 @@
-import { Query } from "interface/Query"
+import { Query } from "../../interface/Query"
 
 export interface AttendanceDTO {
     userId?: string

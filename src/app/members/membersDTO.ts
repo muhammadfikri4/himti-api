@@ -3,7 +3,6 @@ export interface MemberBodyDTO {
     id?: string
     nim?: string
     name?: string,
-    email?: string,
     generationId?: string,
     isActive?: boolean
 }

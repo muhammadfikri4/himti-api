@@ -1,5 +1,7 @@
 import { Member, Point, Role, User } from "@prisma/client";
 import { ProfileDTO } from "./profileDTO";
+import { ImagePath } from "../../utils/ImagePath";
+import { BUCKET_FOLDER } from "../../utils/UploadFileToStorage";
 
 export interface ProfileData extends User {
     Member: Member
@@ -14,6 +16,7 @@ export const ProfileDTOMapper = (data: ProfileData): ProfileDTO => {
         name: data.name,
         nim: data.nim as string,
         role: data.role as Role,
+        photo: data.photo? data.photo.includes("https") ? data.photo : ImagePath(`${BUCKET_FOLDER.user}/${data.photo}`) : null,
         instagram: data?.Member?.instagram as string,
         facebook: data?.Member?.facebook as string,
         twitter: data?.Member?.twitter as string,

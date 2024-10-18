@@ -28,7 +28,6 @@ export const createAttendanceValidate = async ({ meetingId, image, userId, coord
     const getAnggota = await getMemberByNIM(getUser.nim as string)
     if (getUser && !getAnggota) {
         return new ErrorApp(MESSAGES.ERROR.INVALID.ANGGOTA, 400, MESSAGE_CODE.BAD_REQUEST);
-
     }
     if (!coordinate) {
 

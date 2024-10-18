@@ -1,14 +1,32 @@
-import { Router } from "express"
-import { validateRequest } from "../../middleware/validateRequest"
-import { VerifyToken } from "../../middleware/verifyToken"
-import { CatchWrapper } from "../../utils/CatchWrapper"
-import { getProfileController, updatePasswordController, updateProfileController } from "./profileController"
-import { updatePasswordSchema, updateProfileSchema } from "./profileRequest"
+import { Router } from "express";
+import { validateRequest } from "../../middleware/validateRequest";
+import { VerifyToken } from "../../middleware/verifyToken";
+import { CatchWrapper } from "../../utils/CatchWrapper";
+import { upload as UploadFile } from "../../utils/UploadFileToStorage";
+import {
+  deletePhotoProfileController,
+  getProfileController,
+  updatePasswordController,
+  updateProfileController,
+} from "./profileController";
+import { updatePasswordSchema } from "./profileRequest";
 
-const route = Router()
+const route = Router();
 
-route.get("/", VerifyToken, CatchWrapper(getProfileController))
-route.put('/', VerifyToken, validateRequest(updateProfileSchema), CatchWrapper(updateProfileController))
-route.put('/password', VerifyToken, validateRequest(updatePasswordSchema), CatchWrapper(updatePasswordController))
+route.get("/", VerifyToken, CatchWrapper(getProfileController));
+route.put(
+  "/",
+  VerifyToken,
+  //   validateRequest(updateProfileSchema),
+  CatchWrapper(UploadFile.single("photo")),
+  CatchWrapper(updateProfileController)
+);
+route.put(
+  "/password",
+  VerifyToken,
+  validateRequest(updatePasswordSchema),
+  CatchWrapper(updatePasswordController)
+);
+route.delete("/", VerifyToken, CatchWrapper(deletePhotoProfileController));
 
-export default route
+export default route;

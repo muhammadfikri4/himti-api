@@ -4,7 +4,7 @@ import { MESSAGE_CODE } from "../../utils/ErrorCode";
 import { FormatIDTime } from "../../utils/FormatIDTime";
 import { ErrorApp } from "../../utils/HttpError";
 import { MESSAGES } from "../../utils/Messages";
-import { FileType, UploadFileToStorage } from "../../utils/UploadFileToStorage";
+import { BUCKET_FOLDER, FileType, UploadFileToStorage } from "../../utils/UploadFileToStorage";
 import { getMeetingById } from "../meetings/meetingsRepository";
 import { addPoint } from "../point/pointRepository";
 import { AttendanceDTO, FilterAttendance } from "./attendancesDTO";
@@ -23,6 +23,7 @@ import {
   getAttendances,
 } from "./attendancesRepository";
 import { createAttendanceValidate } from "./attendancesValidate";
+import sharp from "sharp";
 
 export const createAttendanceService = async (
   { meetingId, image, coordinate, address, attendanceTime }: AttendanceDTO,
@@ -67,13 +68,18 @@ export const createAttendanceService = async (
   }
 
   const img = image as Express.Multer.File;
-  const filename = `${img?.originalname.replace(FileType[img.mimetype], "")} - ${+new Date()}${FileType[img?.mimetype as string]}`;
-
+  // const filename = `${img?.originalname.replace(FileType[img.mimetype], "")} - ${+new Date()}${FileType[img?.mimetype as string]}`;
+  const filename = `${img?.originalname.replace(FileType[img.mimetype], "")} - ${+new Date()}.webp`;
+  const quality =
+    ((image as unknown as Express.Multer.File)?.size as number) > 5 * 1024 * 1024
+      ? 75
+      : 100;
+  const compress = await sharp(img.buffer).webp({ quality }).toBuffer();
   await UploadFileToStorage({
     Bucket: environment.STORAGE.BUCKET,
-    Key: `${environment.STORAGE.BUCKET_FOLDER}/attendance/${filename}`,
-    Body: img?.buffer as Buffer,
-    ContentType: img?.mimetype as string,
+    Key: `${environment.STORAGE.BUCKET_FOLDER}/${BUCKET_FOLDER.attendance}/${filename}`,
+    Body: compress,
+    ContentType: FileType['image/webp'],
     ACL: "public-read",
   });
 

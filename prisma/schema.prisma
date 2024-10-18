@@ -14,7 +14,8 @@ model User {
   password            String                @db.VarChar(110)
   role                Role?                 @default(ADMIN)
   nim                 String?               @db.VarChar(20)
-  memberId            String?               @map("member_id") @db.VarChar(110)
+  memberId            String?               @unique @map("member_id") @db.VarChar(110)
+  photo               String?               @db.VarChar(255)
   Attendance          Attendance[]
   createdAt           DateTime              @default(now()) @map("created_at") @db.DateTime(0)
   updatedAt           DateTime              @updatedAt @map("updated_at") @db.DateTime(0)
@@ -70,7 +71,6 @@ model Generation {
 model Member {
   id           String       @id @default(uuid())
   name         String       @db.VarChar(255)
-  email        String?      @db.VarChar(55)
   nim          String?      @unique @db.VarChar(110)
   generationId String       @map("generation_id")
   isActive     Boolean?     @default(true) @map("is_active")
@@ -82,7 +82,7 @@ model Member {
   Structural   Structural[]
   createdAt    DateTime     @default(now()) @map("created_at") @db.Timestamp(0)
   updatedAt    DateTime     @updatedAt @map("updated_at") @db.Timestamp(0)
-  User         User[]
+  User         User?        @relation
 
   @@index([generationId], map: "member_fk_1")
   @@map("member")
@@ -119,13 +119,13 @@ model Event {
 }
 
 model EventMeeting {
-  id                  String                @id @unique @default(uuid())
-  name                String                @db.VarChar(155)
-  description         String?               @db.VarChar(500)
-  createdAt           DateTime              @default(now()) @map("created_at") @db.Timestamp(0)
-  updatedAt           DateTime              @updatedAt @map("updated_at") @db.Timestamp(0)
-  Meeting             Meeting[]
-  Attendance          Attendance[]
+  id          String       @id @unique @default(uuid())
+  name        String       @db.VarChar(155)
+  description String?      @db.VarChar(500)
+  createdAt   DateTime     @default(now()) @map("created_at") @db.Timestamp(0)
+  updatedAt   DateTime     @updatedAt @map("updated_at") @db.Timestamp(0)
+  Meeting     Meeting[]
+  Attendance  Attendance[]
 
   @@map("event_meeting")
 }
@@ -224,18 +224,18 @@ model Point {
 }
 
 model NotificationHistory {
-  id             String        @id @unique @default(uuid())
-  eventId        String?       @map("acara_id") @db.VarChar(110)
-  userId         String        @map("user_id") @db.VarChar(110)
-  meetingId      String?       @map("meeting_id") @db.VarChar(110)
-  Event          Event?        @relation(fields: [eventId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  User           User          @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  Meeting        Meeting?      @relation(fields: [meetingId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  title          String        @db.VarChar(155)
-  body           String        @db.LongText
-  isRead         Boolean
-  createdAt      DateTime      @default(now()) @map("created_at") @db.Timestamp(0)
-  updatedAt      DateTime      @updatedAt @map("updated_at") @db.Timestamp(0)
+  id        String   @id @unique @default(uuid())
+  eventId   String?  @map("acara_id") @db.VarChar(110)
+  userId    String   @map("user_id") @db.VarChar(110)
+  meetingId String?  @map("meeting_id") @db.VarChar(110)
+  Event     Event?   @relation(fields: [eventId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  User      User     @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  Meeting   Meeting? @relation(fields: [meetingId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  title     String   @db.VarChar(155)
+  body      String   @db.LongText
+  isRead    Boolean
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamp(0)
+  updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamp(0)
 
   @@index([eventId], map: "notification_history_fk_1")
   @@index([userId], map: "notification_history_fk_2")

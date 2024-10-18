@@ -23,6 +23,7 @@ export const MESSAGES = {
         ACCOUNT: "User not found",
         FCM: "FCM Token not found",
         FCM_USER: "FCM User not found",
+        PHOTO: "You're doesn't have photo"
       },
       ANGKATAN: {
         ID: "Angkatan ID not found",
@@ -92,7 +93,7 @@ export const MESSAGES = {
       NEW_PASSWORD: "New password cannot be the same as the old password",
       NIM_ANGGOTA: "Anggota cannot change their NIM",
       CODE_ANGGOTA: "Code is invalid",
-      IMAGE_SIZE: "Image size must be less than 5mb",
+      IMAGE_SIZE: "Image size must be less than 7mb",
       ROLE_ADMIN: "You're not admin",
       CODE_USER: "User is not allowed to use Code",
       FILE_TYPE: "Invalid Image Type",
@@ -112,6 +113,7 @@ export const MESSAGES = {
       DATE: "Date is invalid",
       START_TIME: "Start Time must be date time",
       END_TIME: "End Time must be date",
+      NAME_MEMBER: "The name entered must match the registered NIM"
     },
     UNAUTHORIZED: {
       AUTH: "If you are not logged in, please log in first",
@@ -204,6 +206,7 @@ export const MESSAGES = {
     PROFILE: {
       GET: "Success to fetch profile",
       UPDATE: "Success to update profile",
+      DELETE_PHOTO: "Success to delete photo profile",
     },
     ABSENSI: {
       GET: "Success to fetch Absensi",

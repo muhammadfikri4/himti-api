@@ -69,6 +69,29 @@ export const registerService = async ({
       MESSAGE_CODE.BAD_REQUEST
     );
   }
+  let isContains = false;
+  const splitName = name?.split(" ");
+
+  splitName.forEach((item) => {
+    if (isAnggota?.name.toLowerCase().includes(item.toLowerCase())) {
+      isContains = true;
+    }
+  });
+  console.log(isContains);
+  console.log(isAnggota);
+console.log((!isAnggota?.name.includes(name) && !isContains))
+  if (
+    isAnggota &&
+    code &&
+    code === environment.ANGGOTA_CODE &&
+    (!isAnggota.name.includes(name) && !isContains)
+  ) {
+    return new ErrorApp(
+      MESSAGES.ERROR.INVALID.NAME_MEMBER,
+      400,
+      MESSAGE_CODE.BAD_REQUEST
+    );
+  }
 
   if (!isAnggota && code) {
     return new ErrorApp(
@@ -89,13 +112,13 @@ export const registerService = async ({
   }
 
   if (email) {
-    if (email === isAnggota?.email) {
-      return new ErrorApp(
-        MESSAGES.ERROR.ALREADY.GLOBAL.EMAIL,
-        400,
-        MESSAGE_CODE.BAD_REQUEST
-      );
-    }
+    // if (email === isAnggota?.email) {
+    //   return new ErrorApp(
+    //     MESSAGES.ERROR.ALREADY.GLOBAL.EMAIL,
+    //     400,
+    //     MESSAGE_CODE.BAD_REQUEST
+    //   );
+    // }
     if (email === alreadyUser?.email) {
       return new ErrorApp(
         MESSAGES.ERROR.ALREADY.GLOBAL.EMAIL,
