@@ -149,6 +149,9 @@ export const updateProfileService = async (
     const quality = (img?.size as number) > 5 * 1024 * 1024 ? 75 : 100;
     const compress = await sharp(img.buffer).webp({ quality }).toBuffer();
 
+    if (user.photo) {
+      await RemoveFileFromStorage(`${environment.STORAGE.BUCKET_FOLDER}/${BUCKET_FOLDER.user}/${user.photo}`);
+    }
     await UploadFileToStorage({
       Bucket: environment.STORAGE.BUCKET,
       Key: `${environment.STORAGE.BUCKET_FOLDER}/${BUCKET_FOLDER.user}/${photoName}`,
@@ -166,23 +169,23 @@ export const updateProfileService = async (
   if (photo) profileField.photo = photoName;
 
   const sosmedField: Partial<MemberSosmedDTO> = { id: user.memberId as string };
-  if (typeof instagram === 'string') sosmedField.instagram = instagram;
-  if (typeof twitter === 'string') sosmedField.twitter = twitter;
-  if (typeof linkedin === 'string') sosmedField.linkedin = linkedin;
-  if (typeof facebook === 'string') sosmedField.facebook = facebook;
+  if (typeof instagram === "string") sosmedField.instagram = instagram;
+  if (typeof twitter === "string") sosmedField.twitter = twitter;
+  if (typeof linkedin === "string") sosmedField.linkedin = linkedin;
+  if (typeof facebook === "string") sosmedField.facebook = facebook;
 
-  if(user.memberId || user.role === 'ANGGOTA') {
-    profileField.nim = user.nim as string
+  if (user.memberId || user.role === "ANGGOTA") {
+    profileField.nim = user.nim as string;
   }
   if (!user.memberId) {
     const response = await updateProfile(profileField as ProfileDTO);
     return {
       ...response,
       photo: response.photo
-      ? response.photo.includes("https")
-        ? response.photo
-        : ImagePath(`${BUCKET_FOLDER.user}/${response.photo}`)
-      : null,
+        ? response.photo.includes("https")
+          ? response.photo
+          : ImagePath(`${BUCKET_FOLDER.user}/${response.photo}`)
+        : null,
     };
   }
   const [profile, anggota] = await Promise.all([
