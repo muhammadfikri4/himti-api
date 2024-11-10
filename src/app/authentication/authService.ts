@@ -172,13 +172,13 @@ export const loginService = async (data: LoginAuthBodyDTO) => {
   }
 
   // const fcm = await getUserFCMByUserId(user.id)
-  if (user.UserFCM.length > 0) {
-    return new ErrorApp(
-      MESSAGES.ERROR.ALREADY.LOGIN,
-      401,
-      MESSAGE_CODE.UNAUTHORIZED
-    );
-  }
+  // if (user.UserFCM.length > 0) {
+  //   return new ErrorApp(
+  //     MESSAGES.ERROR.ALREADY.LOGIN,
+  //     401,
+  //     MESSAGE_CODE.UNAUTHORIZED
+  //   );
+  // }
   if (fcmToken) {
     await createUserFCM(user.id, fcmToken as string);
   }

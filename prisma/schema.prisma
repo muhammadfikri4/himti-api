@@ -3,7 +3,7 @@ generator client {
 }
 
 datasource db {
-  provider = "mysql"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
@@ -15,11 +15,11 @@ model User {
   role                Role?                 @default(ADMIN)
   nim                 String?               @db.VarChar(20)
   memberId            String?               @unique @map("member_id") @db.VarChar(110)
-  photo               String?               @db.VarChar(255)
   Attendance          Attendance[]
-  createdAt           DateTime              @default(now()) @map("created_at") @db.DateTime(0)
-  updatedAt           DateTime              @updatedAt @map("updated_at") @db.DateTime(0)
-  isLogin             Boolean               @default(false) @map("is_login")
+  createdAt           DateTime              @default(now()) @map("created_at") @db.Timestamp(0)
+  updatedAt           DateTime              @updatedAt @map("updated_at") @db.Timestamp(0)
+  isLogin             Boolean               @default(false) @map("is_login") 
+  photo               String?               @db.VarChar(255)
   Member              Member?               @relation(fields: [memberId], references: [id], onDelete: NoAction)
   Point               Point[]
   UserFCM             UserFCM[]
@@ -133,14 +133,14 @@ model EventMeeting {
 model Meeting {
   id                  String                @id @unique @default(uuid())
   name                String                @db.VarChar(155)
-  description         String?               @db.LongText
+  description         String?               @db.Text
   startTime           DateTime              @map("start_time") @db.Timestamp(0)
   endTime             DateTime              @map("end_time") @db.Timestamp(0)
   eventMeetingId      String                @map("event_meeting_id") @db.VarChar(110)
   EventMeeting        EventMeeting          @relation(fields: [eventMeetingId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   createdAt           DateTime              @default(now()) @map("created_at") @db.Timestamp(0)
   updatedAt           DateTime              @updatedAt @map("updated_at") @db.Timestamp(0)
-  resume              String?               @db.LongText
+  resume              String?               @db.Text
   Attendance          Attendance[]
   NotificationHistory NotificationHistory[]
 
@@ -227,15 +227,15 @@ model NotificationHistory {
   id        String   @id @unique @default(uuid())
   eventId   String?  @map("acara_id") @db.VarChar(110)
   userId    String   @map("user_id") @db.VarChar(110)
-  meetingId String?  @map("meeting_id") @db.VarChar(110)
   Event     Event?   @relation(fields: [eventId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   User      User     @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   Meeting   Meeting? @relation(fields: [meetingId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   title     String   @db.VarChar(155)
-  body      String   @db.LongText
+  body      String   @db.Text
   isRead    Boolean
   createdAt DateTime @default(now()) @map("created_at") @db.Timestamp(0)
   updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamp(0)
+  meetingId String?  @map("meeting_id") @db.VarChar(110)
 
   @@index([eventId], map: "notification_history_fk_1")
   @@index([userId], map: "notification_history_fk_2")
