@@ -282,7 +282,7 @@ export const getAttendances = async (query: FilterAttendance) => {
 export const getAttendancesCount = async (query: FilterAttendance) => {
     const { search, meetingId} = query ?? {};
 
-  return await prisma.attendance.findMany({
+  return await prisma.attendance.count({
     where: {
       meetingId,
       User: {

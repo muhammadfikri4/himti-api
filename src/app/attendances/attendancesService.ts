@@ -4,7 +4,11 @@ import { MESSAGE_CODE } from "../../utils/ErrorCode";
 import { FormatIDTime } from "../../utils/FormatIDTime";
 import { ErrorApp } from "../../utils/HttpError";
 import { MESSAGES } from "../../utils/Messages";
-import { BUCKET_FOLDER, FileType, UploadFileToStorage } from "../../utils/UploadFileToStorage";
+import {
+  BUCKET_FOLDER,
+  FileType,
+  UploadFileToStorage,
+} from "../../utils/UploadFileToStorage";
 import { getMeetingById } from "../meetings/meetingsRepository";
 import { addPoint } from "../point/pointRepository";
 import { AttendanceDTO, FilterAttendance } from "./attendancesDTO";
@@ -21,6 +25,7 @@ import {
   getAttendanceByMeetingId,
   getAttendanceByUserId,
   getAttendances,
+  getAttendancesCount,
 } from "./attendancesRepository";
 import { createAttendanceValidate } from "./attendancesValidate";
 import sharp from "sharp";
@@ -71,7 +76,8 @@ export const createAttendanceService = async (
   // const filename = `${img?.originalname.replace(FileType[img.mimetype], "")} - ${+new Date()}${FileType[img?.mimetype as string]}`;
   const filename = `${img?.originalname.replace(FileType[img.mimetype], "")} - ${+new Date()}.webp`;
   const quality =
-    ((image as unknown as Express.Multer.File)?.size as number) > 5 * 1024 * 1024
+    ((image as unknown as Express.Multer.File)?.size as number) >
+    5 * 1024 * 1024
       ? 75
       : 100;
   const compress = await sharp(img.buffer).webp({ quality }).toBuffer();
@@ -79,7 +85,7 @@ export const createAttendanceService = async (
     Bucket: environment.STORAGE.BUCKET,
     Key: `${environment.STORAGE.BUCKET_FOLDER}/${BUCKET_FOLDER.attendance}/${filename}`,
     Body: compress,
-    ContentType: FileType['image/webp'],
+    ContentType: FileType["image/webp"],
     ACL: "public-read",
   });
 
@@ -150,14 +156,19 @@ export const getAttendanceByIdService = async (id: number) => {
 };
 
 export const getAttendancesService = async (query: FilterAttendance) => {
-  const {  page = "1", perPage = "10" } = query;
+  const { page = "1", perPage = "10" } = query;
 
-  const absensies = await getAttendances(query);
+  const [absensies, totalData] = await Promise.all([
+    getAttendances(query),
+    getAttendancesCount(query),
+  ]);
 
-  const meta = Meta(Number(page), Number(perPage), absensies.length);
+  const meta = Meta(Number(page), Number(perPage), totalData);
 
   return {
-    data: getAttendanceByMeetingMapper(absensies as unknown as AttendanceData[]),
-    meta
-  }
+    data: getAttendanceByMeetingMapper(
+      absensies as unknown as AttendanceData[]
+    ),
+    meta,
+  };
 };
